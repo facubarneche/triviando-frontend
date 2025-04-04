@@ -64,14 +64,14 @@ git checkout develop
 git pull origin develop
 git checkout -b DOCS/SCRUM-9-definir-convencion
 
-# Trabajar en la funcionalidad...
+Trabajar en la funcionalidad...
 
 git commit -m "[DOCS] Definicion de convencion"
 git push origin DOCS/SCRUM-9-definir-convencion
 
-# Abrir un PR para fusionar en develop
+Abrir un PR para fusionar en develop
 
-# Una vez listo para finalizar una versión
+Una vez listo para finalizar una versión
 
 git tag -a v1.2.0 -m "Release versión 1.2.0"
 git push origin v1.2.0
