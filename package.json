@@ -1,5 +1,5 @@
 {
-  "name": "Flashcards",
+  "name": "flashcards",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -22,8 +22,6 @@
     "next": "^15.2.3",
     "next-themes": "^0.4.6",
     "postcss": "^8.5.3",
-    "primeicons": "^7.0.0",
-    "primereact": "^10.9.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",

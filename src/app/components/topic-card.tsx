@@ -3,18 +3,13 @@
 import Link from 'next/link';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
+import { IfilteredTopics } from '../(pages)/topics/components/types';
 
-interface TopicProps {
-  readonly topic: {
-    id: number;
-    name: string;
-    icon: string;
-    color: string;
-    questions: number;
-  };
+interface TopicCardProps {
+  readonly topic: IfilteredTopics;
 }
 
-export default function TopicCard({ topic }: TopicProps) {
+export default function TopicCard({ topic }: TopicCardProps) {
   return (
     <Link href={`/quiz/${topic.id}`}>
       <motion.div
