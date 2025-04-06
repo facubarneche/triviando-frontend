@@ -1,6 +1,6 @@
 import TopicCard from '@/app/components/topic-card';
 import { motion } from 'framer-motion';
-import { IfilteredTopics } from './types';
+import { IfilteredTopics } from '../types';
 
 interface TopicsProps {
   filteredTopics: IfilteredTopics[];

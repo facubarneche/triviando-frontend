@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
-import { IfilteredTopics } from '../(pages)/topics/components/types';
+import { IfilteredTopics } from '../(pages)/topics/types';
 
 interface TopicCardProps {
   readonly topic: IfilteredTopics;
