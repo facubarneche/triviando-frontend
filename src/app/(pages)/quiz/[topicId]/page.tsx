@@ -41,7 +41,7 @@ const QuizPage = () => {
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const confettiRef = useRef<HTMLDivElement>(null);
 
-  const topic = topicsMock.find((t) => t.id.toString() === topicId)?.name || 'General';
+  const topic = topicsMock.find((t) => t.id.toString() === topicId)?.name ?? 'General';
 
   // Load sounds only on client side
   useEffect(() => {
@@ -52,7 +52,7 @@ const QuizPage = () => {
         // Crear funciones dummy que no hacen nada
         setPlayHover(() => () => {});
         setPlayClick(() => () => {});
-        setPlayCorrect(() => {
+        setPlayCorrect(() => () => {
           return useSound;
         });
         setPlayWrong(() => () => {});
@@ -266,10 +266,10 @@ const QuizPage = () => {
               >
                 <CardTitle className="text-xl mb-6">{currentQuestion.question}</CardTitle>
 
-                <RadioGroup value={selectedOption || ''} className="space-y-3">
+                <RadioGroup value={selectedOption ?? ''} className="space-y-3">
                   {currentQuestion.options.map((option: string, index: number) => (
                     <motion.div
-                      key={index}
+                      key={crypto.randomUUID()}
                       className="flex items-center"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -331,7 +331,7 @@ const QuizPage = () => {
               <Button
                 onClick={handleNext}
                 disabled={!selectedOption}
-                className="bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 transition-all duration-300"
+                className="bg-teal-400 w-full md:w-auto"
                 onMouseEnter={playHover}
               >
                 Siguiente
@@ -341,7 +341,7 @@ const QuizPage = () => {
               <Button
                 onClick={handleFinish}
                 disabled={!selectedOption}
-                className="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 transition-all duration-300"
+                className="bg-teal-400 w-full md:w-auto"
                 onMouseEnter={playHover}
               >
                 Finalizar
@@ -353,7 +353,7 @@ const QuizPage = () => {
       </div>
 
       <Dialog open={showExplanation} onOpenChange={setShowExplanation}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl bg-white">
           <DialogHeader>
             <DialogTitle>Aprendamos juntos</DialogTitle>
             <DialogDescription>Entendiendo la respuesta correcta</DialogDescription>
@@ -376,16 +376,13 @@ const QuizPage = () => {
               <div className="space-y-2">
                 <h3 className="text-lg font-medium">Explicación:</h3>
                 <div className="prose max-w-none">
-                  {explanation.split('\n').map((paragraph, i) => (
-                    <p key={i}>{paragraph}</p>
+                  {explanation.split('\n').map((paragraph) => (
+                    <p key={crypto.randomUUID()}>{paragraph}</p>
                   ))}
                 </div>
               </div>
 
-              <Button
-                className="w-full bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 mt-4"
-                onClick={() => setShowExplanation(false)}
-              >
+              <Button className="w-full bg-teal-400 mt-4" onClick={() => setShowExplanation(false)}>
                 Entendido
               </Button>
             </div>
