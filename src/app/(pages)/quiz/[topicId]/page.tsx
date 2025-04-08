@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, X, Loader2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, X } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Progress } from '@/app/components/ui/progress';
@@ -10,16 +10,12 @@ import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { Label } from '@/app/components/ui/label';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/app/components/ui/dialog';
 import { topicsMock } from '../../topics/helpers';
-import { explicationMock, questionsMock } from './helpers';
+import { explicationMock, questionsMock, variants } from './helpers';
 import { IQuiz } from './types';
+import WaitingModal from './components/WaitingModal';
+import ProblemModal from './components/ProblemModal';
+import LearnTogether from './components/LearnTogether';
 
 const QuizPage = () => {
   const params = useParams<{ topicId: string }>();
@@ -30,10 +26,6 @@ const QuizPage = () => {
   const [answers, setAnswers] = useState<string[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [direction, setDirection] = useState(0);
-  const [playHover, setPlayHover] = useState(() => () => {});
-  const [playClick, setPlayClick] = useState(() => () => {});
-  const [playCorrect, setPlayCorrect] = useState(() => () => {});
-  const [playWrong, setPlayWrong] = useState(() => () => {});
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<IQuiz[]>([]);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -42,27 +34,6 @@ const QuizPage = () => {
   const confettiRef = useRef<HTMLDivElement>(null);
 
   const topic = topicsMock.find((t) => t.id.toString() === topicId)?.name ?? 'General';
-
-  // Load sounds only on client side
-  useEffect(() => {
-    const loadSounds = async () => {
-      try {
-        // Importar dinámicamente para evitar errores de SSR
-        const { default: useSound } = await import('use-sound');
-        // Crear funciones dummy que no hacen nada
-        setPlayHover(() => () => {});
-        setPlayClick(() => () => {});
-        setPlayCorrect(() => () => {
-          return useSound;
-        });
-        setPlayWrong(() => () => {});
-      } catch (error) {
-        console.error('Failed to load sounds:', error);
-      }
-    };
-
-    loadSounds();
-  }, []);
 
   // Load questions from AI
   useEffect(() => {
@@ -86,7 +57,6 @@ const QuizPage = () => {
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   const handleOptionSelect = (option: string) => {
-    playClick();
     setSelectedOption(option);
 
     // Update answers array
@@ -97,7 +67,6 @@ const QuizPage = () => {
     // Check if answer is correct
     if (currentQuestion && option === currentQuestion.correctAnswer) {
       setIsCorrect(true);
-      playCorrect();
 
       // Trigger confetti
       if (confettiRef.current) {
@@ -113,12 +82,10 @@ const QuizPage = () => {
       }
     } else {
       setIsCorrect(false);
-      playWrong();
     }
   };
 
   const handleNext = () => {
-    playClick();
     if (currentQuestionIndex < questions.length - 1) {
       setDirection(1);
       setIsCorrect(null);
@@ -139,12 +106,6 @@ const QuizPage = () => {
       (answer, index) => answer === questions[index]?.correctAnswer,
     ).length;
 
-    if (correctAnswers >= 3) {
-      playCorrect();
-    } else {
-      playWrong();
-    }
-
     router.push(`/results?score=${correctAnswers}&total=${questions.length}`);
   };
 
@@ -164,64 +125,14 @@ const QuizPage = () => {
     }
   };
 
-  const variants = {
-    enter: (direction: number) => {
-      return {
-        x: direction > 0 ? 1000 : -1000,
-        opacity: 0,
-      };
-    },
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => {
-      return {
-        zIndex: 0,
-        x: direction < 0 ? 1000 : -1000,
-        opacity: 0,
-      };
-    },
+  const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: string, option: string) => {
+    if (isCorrect !== null && option === correctAnswer) return 'border-green-500 bg-green-100';
+    if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4">
-        <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm p-8 w-full max-w-md">
-          <div className="flex flex-col items-center justify-center">
-            <Loader2 className="h-12 w-12 text-cyan-600 animate-spin mb-4" />
-            <h2 className="text-xl font-medium">Generando preguntas sobre {topic}...</h2>
-            <p className="text-muted-foreground mt-2 text-center">
-              Estamos preparando un quiz personalizado para ti. Esto puede tomar unos segundos.
-            </p>
-          </div>
-        </Card>
-      </div>
-    );
-  }
+  if (isLoading) return <WaitingModal topic={topic} />;
 
-  if (!currentQuestion) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4">
-        <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm p-8 w-full max-w-md">
-          <div className="flex flex-col items-center justify-center">
-            <X className="h-12 w-12 text-red-500 mb-4" />
-            <h2 className="text-xl font-medium">No se pudieron cargar las preguntas</h2>
-            <p className="text-muted-foreground mt-2 text-center">
-              Hubo un problema al generar el quiz. Por favor, intenta de nuevo.
-            </p>
-            <Button
-              className="mt-6 bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700"
-              onClick={() => router.push('/topics')}
-            >
-              Volver a Temas
-            </Button>
-          </div>
-        </Card>
-      </div>
-    );
-  }
+  if (!currentQuestion) return <ProblemModal />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 p-4">
@@ -230,10 +141,8 @@ const QuizPage = () => {
           variant="ghost"
           className="text-white mb-4 hover:bg-white/20"
           onClick={() => {
-            playClick();
             router.push('/topics');
           }}
-          onMouseEnter={playHover}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Volver a Temas
@@ -284,14 +193,11 @@ const QuizPage = () => {
                       />
                       <Label
                         htmlFor={`option-${index}`}
-                        className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 hover:bg-cyan-50 hover:border-cyan-200 peer-data-[state=checked]:border-cyan-500 peer-data-[state=checked]:bg-cyan-50 [&:has([data-state=checked])]:border-cyan-500 transition-all duration-200 ${
-                          isCorrect !== null && option === currentQuestion.correctAnswer
-                            ? 'border-green-500 bg-green-50'
-                            : isCorrect === false && option === selectedOption
-                            ? 'border-red-500 bg-red-50'
-                            : ''
-                        }`}
-                        onMouseEnter={playHover}
+                        className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${getAnswerStyles(
+                          isCorrect,
+                          currentQuestion.correctAnswer,
+                          option,
+                        )}`}
                       >
                         {option}
                         {isCorrect !== null && option === currentQuestion.correctAnswer && (
@@ -315,7 +221,6 @@ const QuizPage = () => {
                       variant="outline"
                       className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-200 flex items-center justify-center"
                       onClick={handleLearnTogether}
-                      onMouseEnter={playHover}
                     >
                       <BookOpen className="mr-2 h-4 w-4" />
                       Aprendamos juntos
@@ -332,7 +237,6 @@ const QuizPage = () => {
                 onClick={handleNext}
                 disabled={!selectedOption}
                 className="bg-teal-400 w-full md:w-auto"
-                onMouseEnter={playHover}
               >
                 Siguiente
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -342,7 +246,6 @@ const QuizPage = () => {
                 onClick={handleFinish}
                 disabled={!selectedOption}
                 className="bg-teal-400 w-full md:w-auto"
-                onMouseEnter={playHover}
               >
                 Finalizar
                 <CheckCircle2 className="ml-2 h-4 w-4" />
@@ -352,43 +255,13 @@ const QuizPage = () => {
         </Card>
       </div>
 
-      <Dialog open={showExplanation} onOpenChange={setShowExplanation}>
-        <DialogContent className="max-w-2xl bg-white">
-          <DialogHeader>
-            <DialogTitle>Aprendamos juntos</DialogTitle>
-            <DialogDescription>Entendiendo la respuesta correcta</DialogDescription>
-          </DialogHeader>
-
-          {isLoadingExplanation ? (
-            <div className="flex flex-col items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 text-cyan-600 animate-spin mb-4" />
-              <p className="text-muted-foreground">Generando explicación...</p>
-            </div>
-          ) : (
-            <div className="mt-4 space-y-4">
-              <div className="rounded-md bg-cyan-50 p-4 border border-cyan-200">
-                <p className="font-medium text-cyan-800">Pregunta:</p>
-                <p className="mt-1">{currentQuestion.question}</p>
-                <p className="font-medium text-cyan-800 mt-3">Respuesta correcta:</p>
-                <p className="mt-1">{currentQuestion.correctAnswer}</p>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-lg font-medium">Explicación:</h3>
-                <div className="prose max-w-none">
-                  {explanation.split('\n').map((paragraph) => (
-                    <p key={crypto.randomUUID()}>{paragraph}</p>
-                  ))}
-                </div>
-              </div>
-
-              <Button className="w-full bg-teal-400 mt-4" onClick={() => setShowExplanation(false)}>
-                Entendido
-              </Button>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <LearnTogether
+        showExplanation={showExplanation}
+        setShowExplanation={setShowExplanation}
+        currentQuestion={currentQuestion}
+        explanation={explanation}
+        isLoadingExplanation={isLoadingExplanation}
+      />
     </div>
   );
 };
