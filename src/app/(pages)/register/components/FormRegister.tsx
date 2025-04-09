@@ -39,7 +39,9 @@ const FormRegister = () => {
           transition={{ delay: 0.2 }}
           className="space-y-2"
         >
-          <Label htmlFor="username">Nombre de usuario</Label>
+          <Label htmlFor="username" data-testid="username">
+            Nombre de usuario
+          </Label>
           <Input
             id="username"
             placeholder="quizmaster123"
