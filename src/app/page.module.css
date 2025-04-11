@@ -16,8 +16,6 @@
   font-family: var(--font-geist-sans);
 }
 
-
-
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();

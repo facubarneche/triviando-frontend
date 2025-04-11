@@ -1,1 +1,0 @@
-// Ejemplo test componente
