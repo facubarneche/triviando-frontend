@@ -69,4 +69,25 @@ describe('FormRegister', () => {
 
     expect(pushMock).toHaveBeenCalledWith('/topics');
   });
+
+  it('debería mostrar un error si las contraseñas no coinciden', async () => {
+    render(<FormRegister />);
+
+    fireEvent.change(screen.getByLabelText(/nombre de usuario/i), {
+      target: { value: 'facu' },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'facu@email.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/^contraseña$/i), {
+      target: { value: '12345678' },
+    });
+    fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
+      target: { value: '87654321' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
+
+    expect(await screen.findByText(/las contraseñas deben coincidir/i)).toBeInTheDocument();
+  });
 });
