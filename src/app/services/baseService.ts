@@ -1,4 +1,3 @@
-// src/services/BaseService.ts
 import axios, { AxiosInstance } from 'axios';
 
 export class BaseService {
