@@ -6,7 +6,7 @@ const Header = () => {
     <CardHeader className="space-y-1">
       <CardTitle className="text-2xl font-bold text-center">Crear una cuenta</CardTitle>
       <CardDescription className="text-center">
-        Únete a QuizMaster y pon a prueba tus conocimientos
+        Únete a Flashcards y pon a prueba tus conocimientos
       </CardDescription>
     </CardHeader>
   );

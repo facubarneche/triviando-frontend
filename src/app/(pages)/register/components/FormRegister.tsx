@@ -7,31 +7,38 @@ import { Label } from '@/app/components/ui/label';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { FaGoogle } from 'react-icons/fa';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { formRegisterSchema } from '@/app/schemas/formRegisterSchema';
+
+type FormData = z.infer<typeof formRegisterSchema>;
 
 const FormRegister = () => {
   const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    //TODO: Manejo logica registracion por inputs
-    console.log('Register with:', username, email, password);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formRegisterSchema),
+  });
+
+  const onSubmit = (data: FormData) => {
+    //TODO: Enviar data backend
+    console.log('Register with:', data);
     router.push('/topics');
   };
 
   const handleGoogleRegister = () => {
-    //TODO: Manejo logica Google registration
     console.log('Register with Google');
     router.push('/topics');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
         <motion.div
           initial={{ x: -20, opacity: 0 }}
@@ -39,18 +46,16 @@ const FormRegister = () => {
           transition={{ delay: 0.2 }}
           className="space-y-2"
         >
-          <Label htmlFor="username" data-testid="username">
-            Nombre de usuario
-          </Label>
+          <Label htmlFor="username">Nombre de usuario</Label>
           <Input
             id="username"
-            placeholder="quizmaster123"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
+            placeholder="flashcardsMaster"
+            {...register('username')}
             className="border-cyan-200 focus:border-cyan-400"
           />
+          {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
         </motion.div>
+
         <motion.div
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -61,13 +66,13 @@ const FormRegister = () => {
           <Input
             id="email"
             type="email"
-            placeholder="tu@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            placeholder="flashcardsMaster@email.com"
+            {...register('email')}
             className="border-cyan-200 focus:border-cyan-400"
           />
+          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
         </motion.div>
+
         <motion.div
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -78,29 +83,31 @@ const FormRegister = () => {
           <Input
             id="password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            {...register('password')}
             className="border-cyan-200 focus:border-cyan-400"
           />
+          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
         </motion.div>
+
         <motion.div
           initial={{ x: -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
           className="space-y-2"
         >
-          <Label htmlFor="confirm-password">Confirmar Contraseña</Label>
+          <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
           <Input
-            id="confirm-password"
+            id="confirmPassword"
             type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
+            {...register('confirmPassword')}
             className="border-cyan-200 focus:border-cyan-400"
           />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
+          )}
         </motion.div>
       </CardContent>
+
       <CardFooter className="flex flex-col space-y-4">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
