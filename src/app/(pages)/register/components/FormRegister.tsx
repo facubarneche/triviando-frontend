@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { Button } from '@/app/components/ui/button';
@@ -12,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formRegisterSchema } from '@/app/schemas/formRegisterSchema';
+import { userService } from '@/app/services/userService';
 
 type FormData = z.infer<typeof formRegisterSchema>;
 
@@ -28,12 +30,18 @@ const FormRegister = () => {
 
   const onSubmit = (data: FormData) => {
     //TODO: Enviar data backend
-    console.log('Register with:', data);
-    router.push('/topics');
+    try {
+      userService.createUser({ ...data });
+      router.push('/topics');
+    } catch (e: any) {
+      console.error(e);
+      //TODO: Agregar toast cuando mergee guarain
+    }
   };
 
   const handleGoogleRegister = () => {
     console.log('Register with Google');
+    //TODO: Implementar validacion con google cuando corresponda
     router.push('/topics');
   };
 
