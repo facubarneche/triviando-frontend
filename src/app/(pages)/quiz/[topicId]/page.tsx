@@ -1,0 +1,269 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, X } from 'lucide-react';
+import { Button } from '@/app/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { Progress } from '@/app/components/ui/progress';
+import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
+import { Label } from '@/app/components/ui/label';
+import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
+import { topicsMock } from '../../topics/helpers';
+import { explicationMock, questionsMock, variants } from './helpers';
+import { IQuiz } from './types';
+import WaitingModal from './components/WaitingModal';
+import ProblemModal from './components/ProblemModal';
+import LearnTogether from './components/LearnTogether';
+
+const QuizPage = () => {
+  const params = useParams<{ topicId: string }>();
+  const { topicId } = params;
+  const router = useRouter();
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [direction, setDirection] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState<IQuiz[]>([]);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [explanation, setExplanation] = useState('');
+  const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
+  const confettiRef = useRef<HTMLDivElement>(null);
+
+  const topic = topicsMock.find((t) => t.id.toString() === topicId)?.name ?? 'General';
+
+  // Load questions from AI
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setIsLoading(true);
+      try {
+        const generatedQuestions = questionsMock(topic);
+        setQuestions(generatedQuestions);
+        setAnswers(Array(generatedQuestions.length).fill(null));
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, [topic]);
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
+
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+
+    // Update answers array
+    const newAnswers = [...answers];
+    newAnswers[currentQuestionIndex] = option;
+    setAnswers(newAnswers);
+
+    // Check if answer is correct
+    if (currentQuestion && option === currentQuestion.correctAnswer) {
+      setIsCorrect(true);
+
+      // Trigger confetti
+      if (confettiRef.current) {
+        const rect = confettiRef.current.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { x, y: y - 0.1 },
+        });
+      }
+    } else {
+      setIsCorrect(false);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setDirection(1);
+      setIsCorrect(null);
+      setTimeout(() => {
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+        setSelectedOption(answers[currentQuestionIndex + 1]);
+      }, 300);
+    } else {
+      setTimeout(() => {
+        handleFinish();
+      }, 500);
+    }
+  };
+
+  const handleFinish = () => {
+    // Calculate score and redirect to results
+    const correctAnswers = answers.filter(
+      (answer, index) => answer === questions[index]?.correctAnswer,
+    ).length;
+
+    router.push(`/results?score=${correctAnswers}&total=${questions.length}`);
+  };
+
+  const handleLearnTogether = async () => {
+    if (!currentQuestion) return;
+
+    setIsLoadingExplanation(true);
+    setShowExplanation(true);
+
+    try {
+      const result = explicationMock(currentQuestion);
+      setExplanation(result);
+    } catch (error) {
+      console.error('Error generating explanation:', error);
+    } finally {
+      setIsLoadingExplanation(false);
+    }
+  };
+
+  const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: string, option: string) => {
+    if (isCorrect !== null && option === correctAnswer) return 'border-green-500 bg-green-100';
+    if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
+  };
+
+  if (isLoading) return <WaitingModal topic={topic} />;
+
+  if (!currentQuestion) return <ProblemModal />;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 p-4">
+      <div className="max-w-2xl mx-auto">
+        <Button
+          variant="ghost"
+          className="text-white mb-4 hover:bg-white/20"
+          onClick={() => {
+            router.push('/topics');
+          }}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Volver a Temas
+        </Button>
+
+        <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm" ref={confettiRef}>
+          <CardHeader>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium">
+                Pregunta {currentQuestionIndex + 1} de {questions.length}
+              </span>
+              <span className="text-sm font-medium">{Math.round(progress)}%</span>
+            </div>
+            <Progress value={progress} className="h-2 bg-cyan-100" />
+          </CardHeader>
+
+          <CardContent className="pt-6 overflow-hidden">
+            <AnimatePresence custom={direction} mode="wait">
+              <motion.div
+                key={currentQuestionIndex}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: 'spring', stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 },
+                }}
+              >
+                <CardTitle className="text-xl mb-6">{currentQuestion.question}</CardTitle>
+
+                <RadioGroup value={selectedOption ?? ''} className="space-y-3">
+                  {currentQuestion.options.map((option: string, index: number) => (
+                    <motion.div
+                      key={crypto.randomUUID()}
+                      className="flex items-center"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <RadioGroupItem
+                        value={option}
+                        id={`option-${index}`}
+                        onClick={() => handleOptionSelect(option)}
+                        className="peer sr-only"
+                        disabled={isCorrect !== null}
+                      />
+                      <Label
+                        htmlFor={`option-${index}`}
+                        className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${getAnswerStyles(
+                          isCorrect,
+                          currentQuestion.correctAnswer,
+                          option,
+                        )}`}
+                      >
+                        {option}
+                        {isCorrect !== null && option === currentQuestion.correctAnswer && (
+                          <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
+                        )}
+                        {isCorrect === false && option === selectedOption && (
+                          <X className="h-5 w-5 text-red-500 ml-2" />
+                        )}
+                      </Label>
+                    </motion.div>
+                  ))}
+                </RadioGroup>
+
+                {isCorrect === false && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6"
+                  >
+                    <Button
+                      variant="outline"
+                      className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-200 flex items-center justify-center"
+                      onClick={handleLearnTogether}
+                    >
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      Aprendamos juntos
+                    </Button>
+                  </motion.div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </CardContent>
+
+          <CardFooter className="flex justify-end">
+            {currentQuestionIndex < questions.length - 1 ? (
+              <Button
+                onClick={handleNext}
+                disabled={!selectedOption}
+                className="bg-teal-400 w-full md:w-auto"
+              >
+                Siguiente
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            ) : (
+              <Button
+                onClick={handleFinish}
+                disabled={!selectedOption}
+                className="bg-teal-400 w-full md:w-auto"
+              >
+                Finalizar
+                <CheckCircle2 className="ml-2 h-4 w-4" />
+              </Button>
+            )}
+          </CardFooter>
+        </Card>
+      </div>
+
+      <LearnTogether
+        showExplanation={showExplanation}
+        setShowExplanation={setShowExplanation}
+        currentQuestion={currentQuestion}
+        explanation={explanation}
+        isLoadingExplanation={isLoadingExplanation}
+      />
+    </div>
+  );
+};
+
+export default QuizPage;

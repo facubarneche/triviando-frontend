@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { PrimeReactProvider } from 'primereact/api';
-import 'primereact/resources/themes/lara-light-purple/theme.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -21,10 +19,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { readonly children: React.ReactNode }) {
   return (
-    <PrimeReactProvider>
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
-      </html>
-    </PrimeReactProvider>
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+    </html>
   );
 }
