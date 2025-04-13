@@ -5,9 +5,18 @@ Grupo **Nullpointer**
 
 ---
 
+## 🐳 Levantar el proyecto con Docker
+
+docker-compose up --build
+docker-compose up
+
+## Sin docker
+
+npm run dev
+
 ## ✨ Descripción
 
-**Flashcards** es una aplicación web *mobile first* diseñada para fomentar el hábito de estudio mediante la gamificación del aprendizaje. A partir de una temática ingresada por el usuario, la app genera automáticamente preguntas y desafíos que ayudan a reforzar conocimientos de manera divertida y competitiva.
+**Flashcards** es una aplicación web _mobile first_ diseñada para fomentar el hábito de estudio mediante la gamificación del aprendizaje. A partir de una temática ingresada por el usuario, la app genera automáticamente preguntas y desafíos que ayudan a reforzar conocimientos de manera divertida y competitiva.
 
 ---
 
@@ -117,27 +126,27 @@ git commit -m "[FEATURE] Implementar autenticación de usuario" git commit -m "[
 
 Seguiremos un enfoque estructurado de Git Flow para mantener nuestro proceso de desarrollo organizado y fluido.
 
-* Desarrollo de Funcionalidades
+- Desarrollo de Funcionalidades
 
-    Crear una nueva rama desde develop usando la convención de nombres de ramas.
+  Crear una nueva rama desde develop usando la convención de nombres de ramas.
 
-    Trabajar en la funcionalidad, haciendo commits con el formato de mensaje adecuado.
+  Trabajar en la funcionalidad, haciendo commits con el formato de mensaje adecuado.
 
-* Pull Request y Revisión
+- Pull Request y Revisión
 
-    Una vez la funcionalidad esté lista, se abre un Pull Request (PR) hacia develop.
+  Una vez la funcionalidad esté lista, se abre un Pull Request (PR) hacia develop.
 
-    Un miembro del equipo revisa el código y proporciona retroalimentación.
+  Un miembro del equipo revisa el código y proporciona retroalimentación.
 
-* Merge y Despliegue
+- Merge y Despliegue
 
-    Después de la aprobación, el autor del pull request  fusiona la rama en develop
+  Después de la aprobación, el autor del pull request fusiona la rama en develop
 
-    Una vez que la rama develop esté lista y validada para fusionar a main con una nueva versión se debe  crear un tag para marcar esta versión específica.
+  Una vez que la rama develop esté lista y validada para fusionar a main con una nueva versión se debe crear un tag para marcar esta versión específica.
 
-    El nombre del tag debe seguir la convención vX.Y.Z,  (por ejemplo, v1.2.0).
+  El nombre del tag debe seguir la convención vX.Y.Z, (por ejemplo, v1.2.0).
 
-    Los lanzamientos de producción se gestionan desde la rama main.
+  Los lanzamientos de producción se gestionan desde la rama main.
 
 ## ✅ Ejemplo de Comandos de Flujo de Trabajo:
 
@@ -174,29 +183,29 @@ Patch (Parche): Corrección de errores y mejoras menores compatibles con la vers
 
 Para hacer un seguimiento de nuestro progreso de desarrollo, usamos JIRA con un flujo de trabajo estructurado que consta de cinco estados clave:
 
-* To-Do 📝 – La tarea ha sido creada y está lista para ser trabajada.
+- To-Do 📝 – La tarea ha sido creada y está lista para ser trabajada.
 
-* In Progress 🚧 – La tarea está siendo desarrollada activamente.
+- In Progress 🚧 – La tarea está siendo desarrollada activamente.
 
-* Code Review 🔍 – Se ha enviado un pull request (PR) y está esperando revisión (Aprobable solo por el encargado de ver los PRs).
+- Code Review 🔍 – Se ha enviado un pull request (PR) y está esperando revisión (Aprobable solo por el encargado de ver los PRs).
 
-* Critic Code Review rescue worker’s helmet - Se ha enviado un pull request (PR) Critico y está esperando revisión (Aprobable por cualquier miembro del equipo).
+- Critic Code Review rescue worker’s helmet - Se ha enviado un pull request (PR) Critico y está esperando revisión (Aprobable por cualquier miembro del equipo).
 
-* Develop ✅ – El PR ha sido aprobado y fusionado con la rama develop.
+- Develop ✅ – El PR ha sido aprobado y fusionado con la rama develop.
 
-* Main 🚀 – La tarea está completada y ha sido fusionada con la rama main (lista para producción).
+- Main 🚀 – La tarea está completada y ha sido fusionada con la rama main (lista para producción).
 
 ## Ejemplo de Flujo de Trabajo:
 
-* Se crea una nueva tarea y se coloca en To-Do.
+- Se crea una nueva tarea y se coloca en To-Do.
 
-* Una vez que empieza el desarrollo, se mueve a In Progress.
+- Una vez que empieza el desarrollo, se mueve a In Progress.
 
-* Cuando la funcionalidad está completa, se abre un PR, y la tarea se mueve a Code Review.
+- Cuando la funcionalidad está completa, se abre un PR, y la tarea se mueve a Code Review.
 
-* Si es aprobada, la rama se fusiona con develop, y la tarea se mueve a Develop.
+- Si es aprobada, la rama se fusiona con develop, y la tarea se mueve a Develop.
 
-* Cuando la funcionalidad se incluye en un release y se fusiona con main, la tarea se mueve a Main y se considera hecha.
+- Cuando la funcionalidad se incluye en un release y se fusiona con main, la tarea se mueve a Main y se considera hecha.
 
 Este enfoque estructurado asegura una clara visibilidad de las tareas, una colaboración fluida y un ciclo de desarrollo eficiente. 🚀
 
