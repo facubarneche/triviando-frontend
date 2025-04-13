@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 export class BaseService {
   protected readonly axiosService: AxiosInstance;
 
-  constructor(baseURL: string = process.env.API_BASE_URL!) {
+  constructor(baseURL = 'http://localhost:8080') {
     this.axiosService = axios.create({ baseURL });
   }
 }

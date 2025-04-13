@@ -28,10 +28,10 @@ const FormRegister = () => {
     resolver: zodResolver(formRegisterSchema),
   });
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     //TODO: Enviar data backend
     try {
-      userService.createUser({ ...data });
+      await userService.createUser({ ...data });
       router.push('/topics');
     } catch (e: any) {
       console.error(e);
