@@ -8,17 +8,24 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { loginService } from '@/app/services/loginService';
+import { handleError } from '@/app/utils/errorHandler';
+import { toast } from 'react-toastify';
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login with:', email, password);
-    router.push('/topics');
+    try {
+      await loginService.login({ email, password });
+      toast.success('Inicio de sesión exitoso');
+      router.push('/topics');
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   const handleGoogleLogin = () => {
