@@ -1,11 +1,18 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import FormRegister from './FormRegister';
+import FormRegister from '../../(pages)/register/components/FormRegister';
 import { useRouter } from 'next/navigation';
 import '@testing-library/jest-dom';
 
 // Mock del useRouter de Next.js
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
+}));
+
+// Mock userService
+jest.mock('@/app/services/userService', () => ({
+  userService: {
+    createUser: jest.fn().mockResolvedValue({ success: true }),
+  },
 }));
 
 describe('FormRegister', () => {
@@ -36,22 +43,18 @@ describe('FormRegister', () => {
   });
 
   it('debería enviar el formulario y redirigir a /topics', async () => {
-    render(<FormRegister />);
+    const { getByLabelText, getByText } = render(<FormRegister />);
 
-    fireEvent.change(screen.getByLabelText(/nombre de usuario/i), {
-      target: { value: 'facuUser' },
-    });
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: 'facu@email.com' },
-    });
-    fireEvent.change(screen.getByLabelText(/^contraseña$/i), {
+    fireEvent.change(getByLabelText(/Nombre de usuario/i), { target: { value: 'facu' } });
+    fireEvent.change(getByLabelText(/Email/i), { target: { value: 'facu@mail.com' } });
+    fireEvent.change(screen.getByLabelText('Contraseña', { exact: true }), {
       target: { value: '12345678' },
     });
-    fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
+    fireEvent.change(screen.getByLabelText('Confirmar Contraseña'), {
       target: { value: '12345678' },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
+    fireEvent.click(getByText(/Crear Cuenta/i));
 
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith('/topics');
