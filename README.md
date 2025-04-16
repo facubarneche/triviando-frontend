@@ -193,7 +193,7 @@ Para hacer un seguimiento de nuestro progreso de desarrollo, usamos JIRA con un 
 
 - Develop ✅ – El PR ha sido aprobado y fusionado con la rama develop.
 
-- Main 🚀 – La tarea está completada y ha sido fusionada con la rama main (lista para producción).
+- Done 🚀 – La tarea está completada y ha sido fusionada con la rama main (lista para producción).
 
 ## Ejemplo de Flujo de Trabajo:
 
