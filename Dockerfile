@@ -1,11 +1,11 @@
 # Usamos una imagen de Node como base
 FROM node:23-slim
 
-# Copiamos el package.json y package-lock.json
-COPY package*.json ./
-
 # Creamos un directorio dentro del contenedor para la app
 WORKDIR /app
+
+# Copiamos el package.json y package-lock.json
+COPY package*.json ./
 
 # Instalamos las dependencias
 RUN npm install

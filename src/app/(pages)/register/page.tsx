@@ -9,7 +9,7 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 p-4">
       <div className="w-full max-w-md z-10">
         <Link
-          href="/"
+          href="/login"
           className="inline-flex items-center text-white mb-6 hover:text-cyan-100 font-bold"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />

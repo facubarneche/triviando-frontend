@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { formRegisterSchema } from '@/app/schemas/formRegisterSchema';
 import { userService } from '@/app/services/userService';
+import { toast } from 'react-toastify';
 
 type FormData = z.infer<typeof formRegisterSchema>;
 
@@ -29,13 +30,12 @@ const FormRegister = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    //TODO: Enviar data backend
     try {
       await userService.createUser({ ...data });
+      toast.success('Registro exitoso');
       router.push('/topics');
     } catch (e: any) {
-      console.error(e);
-      //TODO: Agregar toast cuando mergee guarain
+      toast.error(e.message ?? 'Falló el registro');
     }
   };
 
@@ -160,9 +160,9 @@ const FormRegister = () => {
           transition={{ delay: 0.8 }}
           className="text-center text-sm"
         >
-          ¿Ya tienes una cuenta?{' '}
+          ¿Ya tienes una cuenta?
           <Link
-            href="/"
+            href="/login"
             className="text-cyan-600 hover:text-cyan-800 font-medium transition-colors"
           >
             Iniciar sesión

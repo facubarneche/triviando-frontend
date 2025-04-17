@@ -11,9 +11,11 @@ const Header = () => (
       <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
         <Link href="/leaderboard">Ranking</Link>
       </Button>
-      <Button variant="ghost" className="text-white hover:bg-white/20">
-        <LogOut className="h-4 w-4" />
-        Salir
+      <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
+        <Link href="/login" className="flex items-center">
+          <LogOut className="h-4 w-4" />
+          Salir
+        </Link>
       </Button>
     </div>
     <h1 className="text-2xl font-bold text-white whitespace-nowrap text-center md:justify-start">
