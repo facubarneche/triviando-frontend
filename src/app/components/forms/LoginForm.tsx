@@ -38,9 +38,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 p-4">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -inset-[10px] opacity-30">
-          {Array.from({ length: 20 }).map((_, i) => (
+          {Array.from({ length: 20 }).map(() => (
             <motion.div
-              key={i}
+              key={crypto.randomUUID()}
               className="absolute rounded-full bg-white"
               initial={{
                 opacity: Math.random() * 0.5 + 0.3,

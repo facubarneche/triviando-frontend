@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { Button } from '@/app/components/ui/button';
@@ -34,6 +33,7 @@ const FormRegister = () => {
       await userService.createUser({ ...data });
       toast.success('Registro exitoso');
       router.push('/topics');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       toast.error(e.message ?? 'Falló el registro');
     }
