@@ -13,6 +13,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
   return (
     <Link href={`/quiz/${topic.id}`}>
       <motion.div
+        style={{ height: '100%' }}
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.98 }}
         transition={{ type: 'spring', stiffness: 400, damping: 17 }}

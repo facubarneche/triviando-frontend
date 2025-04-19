@@ -1,5 +1,5 @@
 export interface IfilteredTopics {
-  id: number;
+  id: string;
   name: string;
   icon: string;
   color: string;
