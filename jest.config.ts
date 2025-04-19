@@ -29,6 +29,7 @@ const customJestConfig = {
       statements: 20,
     },
   },
+  setupFilesAfterEnv: ['<rootDir>/src/app/tests/jest.setup.ts'],
 };
 
 export default createJestConfig(customJestConfig);

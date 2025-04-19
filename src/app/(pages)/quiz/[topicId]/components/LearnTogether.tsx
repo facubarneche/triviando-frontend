@@ -24,6 +24,7 @@ const LearnTogether = ({
   currentQuestion,
   explanation,
 }: LearnTogetherProps) => {
+  const { id, question, correctAnswer } = currentQuestion;
   return (
     <Dialog open={showExplanation} onOpenChange={setShowExplanation}>
       <DialogContent className="max-w-xl m-0 bg-white">
@@ -41,16 +42,16 @@ const LearnTogether = ({
           <div className="mt-4 space-y-4">
             <div className="rounded-md bg-cyan-50 p-4 border border-cyan-200">
               <p className="font-medium text-cyan-800">Pregunta:</p>
-              <p className="mt-1">{currentQuestion.question}</p>
+              <p className="mt-1">{question}</p>
               <p className="font-medium text-cyan-800 mt-3">Respuesta correcta:</p>
-              <p className="mt-1">{currentQuestion.correctAnswer}</p>
+              <p className="mt-1">{correctAnswer}</p>
             </div>
 
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Explicación:</h3>
               <div className="prose max-w-none">
                 {explanation.split('\n').map((paragraph) => (
-                  <p key={crypto.randomUUID()}>{paragraph}</p>
+                  <p key={id}>{paragraph}</p>
                 ))}
               </div>
             </div>

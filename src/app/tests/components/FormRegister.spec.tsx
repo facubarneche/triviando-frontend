@@ -1,7 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import FormRegister from '../../(pages)/register/components/FormRegister';
 import { useRouter } from 'next/navigation';
-import '@testing-library/jest-dom';
 
 // Mock del useRouter de Next.js
 jest.mock('next/navigation', () => ({
