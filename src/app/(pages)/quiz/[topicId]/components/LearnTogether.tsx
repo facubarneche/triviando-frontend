@@ -24,7 +24,8 @@ const LearnTogether = ({
   currentQuestion,
   explanation,
 }: LearnTogetherProps) => {
-  const { id, question, correctAnswer } = currentQuestion;
+  const { id, question, options } = currentQuestion;
+  const correctAnswer = options.find((option) => option.correctAnswer)?.option || '';
   return (
     <Dialog open={showExplanation} onOpenChange={setShowExplanation}>
       <DialogContent className="max-w-xl m-0 bg-white">
