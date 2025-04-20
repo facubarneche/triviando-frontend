@@ -8,10 +8,12 @@ import Topics from './components/Topics';
 import { topicService } from '@/app/services/topicService';
 import axios from 'axios';
 import { ITopic } from './types';
+import TopicsSkeleton from './components/TopicsSkeleton';
 
 export default function TopicsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [topics, setTopics] = useState<ITopic[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getTopics = async () => {
@@ -24,6 +26,8 @@ export default function TopicsPage() {
           throw new Error(error.response.data.error);
         }
         throw new Error('Hubo un error al obtener los topicos');
+      } finally {
+        setLoading(false);
       }
     };
     getTopics();
@@ -38,7 +42,7 @@ export default function TopicsPage() {
       <Header />
       <main className="p-4 max-w-4xl mx-auto">
         <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <Topics topics={filteredTopics} />
+        {loading ? <TopicsSkeleton /> : <Topics topics={filteredTopics} />}
       </main>
     </div>
   );
