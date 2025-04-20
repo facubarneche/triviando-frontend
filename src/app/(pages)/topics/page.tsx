@@ -1,21 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { topicsMock } from './helpers';
+import { parserTopics } from './helpers';
 import Header from './components/Header';
 import Filter from './components/Filter';
 import Topics from './components/Topics';
 import { topicService } from '@/app/services/topicService';
 import axios from 'axios';
+import { ITopic } from './types';
 
 export default function TopicsPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [topics, setTopics] = useState<ITopic[]>([]);
 
   useEffect(() => {
     const getTopics = async () => {
       try {
         const topics = await topicService.getTopics();
-        console.log(topics);
+        const parsedTopics = parserTopics(topics);
+        setTopics(parsedTopics);
       } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response?.data?.error) {
           throw new Error(error.response.data.error);
@@ -26,7 +29,7 @@ export default function TopicsPage() {
     getTopics();
   }, []);
 
-  const filteredTopics = topicsMock.filter((topic) =>
+  const filteredTopics = topics.filter((topic) =>
     topic.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
@@ -35,7 +38,7 @@ export default function TopicsPage() {
       <Header />
       <main className="p-4 max-w-4xl mx-auto">
         <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <Topics filteredTopics={filteredTopics} />
+        <Topics topics={filteredTopics} />
       </main>
     </div>
   );

@@ -1,7 +1,13 @@
-export interface IfilteredTopics {
+export interface ITopicDTO {
+  id: string;
+  topico: string;
+  cantidadPreguntas: number;
+}
+
+export interface ITopic {
   id: string;
   name: string;
   icon: string;
   color: string;
-  questions: number;
+  questionsCount: number;
 }

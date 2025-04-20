@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
-import { IfilteredTopics } from '../(pages)/topics/types';
+import { ITopic } from '../(pages)/topics/types';
 
 interface TopicCardProps {
-  readonly topic: IfilteredTopics;
+  readonly topic: ITopic;
 }
 
 export default function TopicCard({ topic }: TopicCardProps) {
@@ -28,7 +28,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
               <span className="text-3xl">{topic.icon}</span>
             </motion.div>
             <h3 className="text-xl font-bold mb-1">{topic.name}</h3>
-            <p className="text-sm text-muted-foreground">{topic.questions} preguntas</p>
+            <p className="text-sm text-muted-foreground">{topic.questionsCount} preguntas</p>
           </CardContent>
         </Card>
       </motion.div>
