@@ -15,23 +15,6 @@ const ProfileInfo = () => {
     lastName: 'Rodríguez',
     email: 'champion@example.com',
     joinDate: 'Marzo 2023',
-    totalQuizzes: 42,
-    correctAnswers: 378,
-    totalQuestions: 520,
-    badges: [
-      { name: 'Experto en Ciencia', icon: '🔬', description: 'Completó 10 quizzes de ciencia' },
-      { name: 'Historiador', icon: '🏛️', description: '90% de precisión en quizzes de historia' },
-      {
-        name: 'Pensador Rápido',
-        icon: '⚡',
-        description: 'Completó un quiz en menos de 2 minutos',
-      },
-    ],
-    recentActivity: [
-      { topic: 'Geografía', date: 'hace 2 días', score: '8/10', percentage: 80 },
-      { topic: 'Películas', date: 'hace 5 días', score: '7/10', percentage: 70 },
-      { topic: 'Ciencia', date: 'hace 1 semana', score: '9/10', percentage: 90 },
-    ],
   };
 
   const router = useRouter();
@@ -72,7 +55,6 @@ const ProfileInfo = () => {
                   size="sm"
                   variant="outline"
                   className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
-
                   //TODO: Ajustar la ruta de edición de perfil (currentPath + '/edit')
                   onClick={() => router.push('/profile/edit')}
                 >
