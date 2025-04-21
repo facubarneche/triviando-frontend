@@ -1,0 +1,99 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
+import { Badge } from '@/app/components/ui/badge';
+import { Button } from '@/app/components/ui/button';
+import { Card, CardContent } from '@/app/components/ui/card';
+import { motion } from 'framer-motion';
+import { Edit, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+import React from 'react';
+
+const ProfileInfo = () => {
+  const userData = {
+    username: 'QuizChampion',
+    firstName: 'Carlos',
+    lastName: 'Rodríguez',
+    email: 'champion@example.com',
+    joinDate: 'Marzo 2023',
+    totalQuizzes: 42,
+    correctAnswers: 378,
+    totalQuestions: 520,
+    badges: [
+      { name: 'Experto en Ciencia', icon: '🔬', description: 'Completó 10 quizzes de ciencia' },
+      { name: 'Historiador', icon: '🏛️', description: '90% de precisión en quizzes de historia' },
+      {
+        name: 'Pensador Rápido',
+        icon: '⚡',
+        description: 'Completó un quiz en menos de 2 minutos',
+      },
+    ],
+    recentActivity: [
+      { topic: 'Geografía', date: 'hace 2 días', score: '8/10', percentage: 80 },
+      { topic: 'Películas', date: 'hace 5 días', score: '7/10', percentage: 70 },
+      { topic: 'Ciencia', date: 'hace 1 semana', score: '9/10', percentage: 90 },
+    ],
+  };
+
+  const router = useRouter();
+  const fullName = `${userData.firstName} ${userData.lastName}`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <Avatar className="w-24 h-24 border-4 border-[#9d4edd]/30">
+              <AvatarImage src="/placeholder-user.jpg" alt="@user" />
+              <AvatarFallback className="text-2xl bg-[#7b2cbf] text-white">
+                {userData.firstName.charAt(0) + userData.lastName.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+
+            <div className="flex-1 text-center sm:text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                <h1 className="text-2xl font-bold text-[#3c096c]">{userData.username}</h1>
+                <Badge
+                  variant="outline"
+                  className="bg-[#9d4edd]/10 text-[#5a189a] border-[#9d4edd]/30 self-center"
+                >
+                  Quiz Master
+                </Badge>
+              </div>
+              <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>
+              <p className="text-muted-foreground">{userData.email}</p>
+              <p className="text-sm text-muted-foreground">Miembro desde {userData.joinDate}</p>
+
+              <div className="flex gap-2 mt-4 justify-center sm:justify-start">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
+
+                  //TODO: Ajustar la ruta de edición de perfil (currentPath + '/edit')
+                  onClick={() => router.push('/profile/edit')}
+                >
+                  <Edit className="h-4 w-4" />
+                  Editar Perfil
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1 text-red-500 border-red-200 hover:bg-red-100 hover:text-red-600"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Cerrar Sesión
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+};
+
+export default ProfileInfo;

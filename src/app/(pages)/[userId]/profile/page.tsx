@@ -1,110 +1,96 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, LogOut } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Button } from '@/app/components/ui/button';
-import { Progress } from '@radix-ui/react-progress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
+import { Button } from '@/app/components/ui/button';
+import { Progress } from '@/app/components/ui/progress';
+import { Badge } from '@/app/components/ui/badge';
+import ProfileInfo from './components/ProfileInfo';
 
-//Mock data
-//Toda esta info me vendra en un endpoint de la API
+// Mock data
 const userData = {
   username: 'QuizChampion',
+  firstName: 'Carlos',
+  lastName: 'Rodríguez',
   email: 'champion@example.com',
-  joinDate: 'March 2023',
+  joinDate: 'Marzo 2023',
   totalQuizzes: 42,
   correctAnswers: 378,
   totalQuestions: 520,
   badges: [
-    { name: 'Science Expert', icon: '🔬', description: 'Completed 10 science quizzes' },
-    { name: 'History Buff', icon: '🏛️', description: '90% accuracy in history quizzes' },
-    { name: 'Quick Thinker', icon: '⚡', description: 'Completed a quiz in under 2 minutes' },
+    { name: 'Experto en Ciencia', icon: '🔬', description: 'Completó 10 quizzes de ciencia' },
+    { name: 'Historiador', icon: '🏛️', description: '90% de precisión en quizzes de historia' },
+    { name: 'Pensador Rápido', icon: '⚡', description: 'Completó un quiz en menos de 2 minutos' },
   ],
   recentActivity: [
-    { topic: 'Geography', date: '2 days ago', score: '8/10', percentage: 80 },
-    { topic: 'Movies', date: '5 days ago', score: '7/10', percentage: 70 },
-    { topic: 'Science', date: '1 week ago', score: '9/10', percentage: 90 },
+    { topic: 'Geografía', date: 'hace 2 días', score: '8/10', percentage: 80 },
+    { topic: 'Películas', date: 'hace 5 días', score: '7/10', percentage: 70 },
+    { topic: 'Ciencia', date: 'hace 1 semana', score: '9/10', percentage: 90 },
   ],
 };
 
 export default function Profile() {
-  const accuracy = Math.round((userData.correctAnswers / userData.totalQuestions) * 100);
+  const router = useRouter();
+      const accuracy = Math.round((userData.correctAnswers / userData.totalQuestions) * 100);
+  
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-500 to-indigo-700">
+    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
       <header className="p-4">
-        <Link href="/topics" className="inline-flex items-center text-white hover:underline">
+        <Link
+          href="/topics"
+          className="inline-flex items-center text-white hover:text-[#9d4edd] transition-colors"
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Topics
+          Volver a Temas
         </Link>
       </header>
 
       <main className="p-4 max-w-3xl mx-auto">
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <Avatar className="w-24 h-24 border-4 border-purple-200">
-                <AvatarImage src="/placeholder-user.jpg" alt="@user" />
-                <AvatarFallback className="text-2xl">QC</AvatarFallback>
-              </Avatar>
+        <ProfileInfo />
 
-              <div className="flex-1 text-center sm:text-left">
-                <h1 className="text-2xl font-bold">{userData.username}</h1>
-                <p className="text-muted-foreground">{userData.email}</p>
-                <p className="text-sm text-muted-foreground">Member since {userData.joinDate}</p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <div className="grid gap-6 md:grid-cols-3 mb-6">
+            <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg text-[#3c096c]">Total de Quizzes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold text-[#5a189a]">{userData.totalQuizzes}</p>
+              </CardContent>
+            </Card>
 
-                <div className="flex gap-2 mt-4 justify-center sm:justify-start">
-                  <Button size="sm" variant="outline" className="gap-1">
-                    <Edit className="h-4 w-4" />
-                    Edit Profile
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="gap-1 text-red-500 border-red-200 hover:bg-red-100 hover:text-red-600"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Logout
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg text-[#3c096c]">Respuestas Correctas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold text-[#5a189a]">{userData.correctAnswers}</p>
+                <p className="text-sm text-muted-foreground">
+                  de {userData.totalQuestions} preguntas
+                </p>
+              </CardContent>
+            </Card>
 
-        <div className="grid gap-6 md:grid-cols-3 mb-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Total Quizzes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{userData.totalQuizzes}</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Correct Answers</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{userData.correctAnswers}</p>
-              <p className="text-sm text-muted-foreground">
-                out of {userData.totalQuestions} questions
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Accuracy</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">{accuracy}%</p>
-              <Progress value={accuracy} className="h-2 mt-2" />
-            </CardContent>
-          </Card>
-        </div>
+            <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg text-[#3c096c]">Precisión</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold text-[#5a189a]">{accuracy}%</p>
+                <Progress value={accuracy} className="h-2 mt-2 bg-[#9d4edd]/20" />
+              </CardContent>
+            </Card>
+          </div>
+        </motion.div>
       </main>
     </div>
   );
