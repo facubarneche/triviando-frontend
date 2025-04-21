@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar'
 import { Badge } from '@/app/components/ui/badge';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
-import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { formatDateToMonthYear } from '@/app/utils/formatDateToMonthYear';
 import { motion } from 'framer-motion';
@@ -30,7 +29,7 @@ const ProfileInfo = () => {
     const fetchJoinDate = async () => {
       try {
         //Obtengo el ID desde cookies o JWT
-        const userId = 1;
+        // const userId = 1;
         // const date = await userService.getUserRegisterDate(userId);
         //Hardcodeo un valor para simular la llamada al backend'
         //Date en formato ISO

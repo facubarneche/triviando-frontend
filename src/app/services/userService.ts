@@ -39,7 +39,19 @@ class UserService extends BaseService {
       }
       throw new Error('Error al obtener la fecha de registro del usuario');
     }
-  }
+  };
+
+  getUserStatistics = async (userId: number) => {
+    try {
+      const { data } = await this.axiosService.get(`/users/${userId}/statistics`);
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error('Error al obtener las estadísticas del usuario');
+    }
+  };
 }
 
 // Aquí estás inicializando la instancia correctamente

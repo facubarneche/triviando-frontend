@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import ProfileInfo from './components/ProfileInfo';
+import ProfileStatistics from './components/ProfileStatistics';
 
 export default function Profile() {
   return (
@@ -19,6 +20,7 @@ export default function Profile() {
 
       <main className="p-4 max-w-3xl mx-auto">
         <ProfileInfo />
+        <ProfileStatistics />
       </main>
     </div>
   );
