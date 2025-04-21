@@ -28,6 +28,18 @@ class UserService extends BaseService {
       throw new Error('Registro fallido');
     }
   };
+
+  getUserRegisterDate = async (userId: number) => {
+    try {
+      const { data } = await this.axiosService.get(`/users/${userId}/register-date`);
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error('Error al obtener la fecha de registro del usuario');
+    }
+  }
 }
 
 // Aquí estás inicializando la instancia correctamente

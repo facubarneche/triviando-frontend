@@ -2,20 +2,47 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar'
 import { Badge } from '@/app/components/ui/badge';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
+import { userService } from '@/app/services/userService';
+import { handleError } from '@/app/utils/errorHandler';
+import { formatDateToMonthYear } from '@/app/utils/formatDateToMonthYear';
 import { motion } from 'framer-motion';
 import { Edit, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const ProfileInfo = () => {
+  //Debe venir del backend con el endpoint getUserRegisterDate del userService
+  const [joinDate, setJoinDate] = useState('');
+  //   const joinDate = getUserRegisterDate(userData.id);  Simulación de llamada al backend
+
+  //User mock data
   const userData = {
-    username: 'QuizChampion',
-    firstName: 'Carlos',
-    lastName: 'Rodríguez',
-    email: 'champion@example.com',
+    username: 'QuizChampion', //Lo tengo en las cookies
+    firstName: 'Carlos', //Lo tengo en las cookies
+    lastName: 'Rodríguez', //Lo tengo en las cookies
+    email: 'champion@example.com', //Lo tengo en las cookies
     joinDate: 'Marzo 2023',
   };
+
+  //TODO: Conectar con el backend para obtener la fecha de registro del usuario y cambiar las variables
+  useEffect(() => {
+    const fetchJoinDate = async () => {
+      try {
+        //Obtengo el ID desde cookies o JWT
+        const userId = 1;
+        // const date = await userService.getUserRegisterDate(userId);
+        //Hardcodeo un valor para simular la llamada al backend'
+        //Date en formato ISO
+        const date = '2023-03-15T00:00:00Z'; // Simulación de fecha de registro
+        setJoinDate(formatDateToMonthYear(date));
+      } catch (error) {
+        handleError(error);
+      }
+    };
+
+    fetchJoinDate();
+  }, []);
 
   const router = useRouter();
   const fullName = `${userData.firstName} ${userData.lastName}`;
@@ -48,7 +75,7 @@ const ProfileInfo = () => {
               </div>
               <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>
               <p className="text-muted-foreground">{userData.email}</p>
-              <p className="text-sm text-muted-foreground">Miembro desde {userData.joinDate}</p>
+              <p className="text-sm text-muted-foreground">Miembro desde {joinDate}</p>
 
               <div className="flex gap-2 mt-4 justify-center sm:justify-start">
                 <Button

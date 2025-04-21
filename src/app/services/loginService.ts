@@ -25,15 +25,15 @@ async function login(credentials: LoginCredentials): Promise<Usuario> {
   }
 }
 
-export function logout() {
+function logout() {
   Cookies.remove('usuario');
 }
 
-export function getUsuarioActual(): Usuario | null {
+function getUsuarioActual(): Usuario | null {
   const usuario = Cookies.get('usuario');
   return usuario ? JSON.parse(usuario) : null;
 }
 
-export function isAuthenticated(): boolean {
+function isAuthenticated(): boolean {
   return !!Cookies.get('usuario');
 }
