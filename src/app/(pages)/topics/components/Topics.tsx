@@ -1,14 +1,14 @@
 import TopicCard from '@/app/components/topic-card';
 import { motion } from 'framer-motion';
-import { IfilteredTopics } from '../types';
+import { ITopic } from '../types';
 
 interface TopicsProps {
-  filteredTopics: IfilteredTopics[];
+  topics: ITopic[];
 }
 
-const Topics = ({ filteredTopics }: TopicsProps) => (
+const Topics = ({ topics }: TopicsProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-    {filteredTopics.map((topic, index) => (
+    {topics.map((topic, index) => (
       <motion.div
         key={topic.id}
         initial={{ opacity: 0, x: 70, y: 40 }}

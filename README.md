@@ -191,9 +191,7 @@ Para hacer un seguimiento de nuestro progreso de desarrollo, usamos JIRA con un 
 
 - Critic Code Review rescue worker’s helmet - Se ha enviado un pull request (PR) Critico y está esperando revisión (Aprobable por cualquier miembro del equipo).
 
-- Develop ✅ – El PR ha sido aprobado y fusionado con la rama develop.
-
-- Done 🚀 – La tarea está completada y ha sido fusionada con la rama main (lista para producción).
+- Done 🚀 – La tarea está completada y ha sido fusionada con la rama develop / main.
 
 ## Ejemplo de Flujo de Trabajo:
 
@@ -203,9 +201,7 @@ Para hacer un seguimiento de nuestro progreso de desarrollo, usamos JIRA con un 
 
 - Cuando la funcionalidad está completa, se abre un PR, y la tarea se mueve a Code Review.
 
-- Si es aprobada, la rama se fusiona con develop, y la tarea se mueve a Develop.
-
-- Cuando la funcionalidad se incluye en un release y se fusiona con main, la tarea se mueve a Main y se considera hecha.
+- Si es aprobada, la rama se fusiona con develop, y la tarea se mueve a Done.
 
 Este enfoque estructurado asegura una clara visibilidad de las tareas, una colaboración fluida y un ciclo de desarrollo eficiente. 🚀
 

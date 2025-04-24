@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, X } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/ui/card';
@@ -10,16 +10,18 @@ import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { Label } from '@/app/components/ui/label';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { topicsMock } from '../../topics/helpers';
-import { explicationMock, questionsMock, variants } from './helpers';
-import { IQuiz } from './types';
+import { explicationBackUp, parserQuiz, variants } from './helpers';
 import WaitingModal from './components/WaitingModal';
 import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
+import { quizService } from '@/app/services/quizService';
+import { IQuiz } from './types';
 
 const QuizPage = () => {
   const params = useParams<{ topicId: string }>();
   const { topicId } = params;
+  const searchParams = useSearchParams();
+  const name = searchParams.get('name');
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -28,21 +30,20 @@ const QuizPage = () => {
   const [direction, setDirection] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<IQuiz[]>([]);
+  const [score, setScore] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const confettiRef = useRef<HTMLDivElement>(null);
 
-  const topic = topicsMock.find((t) => t.id.toString() === topicId)?.name ?? 'General';
-
-  // Load questions from AI
   useEffect(() => {
     const fetchQuestions = async () => {
       setIsLoading(true);
       try {
-        const generatedQuestions = questionsMock(topic);
-        setQuestions(generatedQuestions);
-        setAnswers(Array(generatedQuestions.length).fill(null));
+        const quiz = await quizService.getQuiz(topicId);
+        const parsedQuiz = parserQuiz(quiz);
+        setQuestions(parsedQuiz);
+        setAnswers(Array(parsedQuiz.length).fill(null));
       } catch (error) {
         console.error('Error fetching questions:', error);
       } finally {
@@ -51,12 +52,12 @@ const QuizPage = () => {
     };
 
     fetchQuestions();
-  }, [topic]);
+  }, [topicId]);
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
-  const handleOptionSelect = (option: string) => {
+  const handleOptionSelect = (option: string, correctAnswer: boolean) => {
     setSelectedOption(option);
 
     // Update answers array
@@ -64,8 +65,12 @@ const QuizPage = () => {
     newAnswers[currentQuestionIndex] = option;
     setAnswers(newAnswers);
 
+    if (correctAnswer) {
+      setScore(score + 1);
+    }
+
     // Check if answer is correct
-    if (currentQuestion && option === currentQuestion.correctAnswer) {
+    if (currentQuestion && correctAnswer) {
       setIsCorrect(true);
 
       // Trigger confetti
@@ -101,12 +106,7 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
-    // Calculate score and redirect to results
-    const correctAnswers = answers.filter(
-      (answer, index) => answer === questions[index]?.correctAnswer,
-    ).length;
-
-    router.push(`/results?score=${correctAnswers}&total=${questions.length}`);
+    router.push(`/results?score=${score}&total=${questions.length}`);
   };
 
   const handleLearnTogether = async () => {
@@ -116,7 +116,7 @@ const QuizPage = () => {
     setShowExplanation(true);
 
     try {
-      const result = explicationMock(currentQuestion);
+      const result = currentQuestion.explanation || explicationBackUp;
       setExplanation(result);
     } catch (error) {
       console.error('Error generating explanation:', error);
@@ -125,12 +125,12 @@ const QuizPage = () => {
     }
   };
 
-  const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: string, option: string) => {
-    if (isCorrect !== null && option === correctAnswer) return 'border-green-500 bg-green-100';
+  const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: boolean, option: string) => {
+    if (isCorrect !== null && correctAnswer) return 'border-green-500 bg-green-100';
     if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
   };
 
-  if (isLoading) return <WaitingModal topic={topic} />;
+  if (isLoading) return <WaitingModal topic={name ?? 'General'} />;
 
   if (!currentQuestion) return <ProblemModal />;
 
@@ -176,18 +176,18 @@ const QuizPage = () => {
                 <CardTitle className="text-xl mb-6">{currentQuestion.question}</CardTitle>
 
                 <RadioGroup value={selectedOption ?? ''} className="space-y-3">
-                  {currentQuestion.options.map((option: string, index: number) => (
+                  {currentQuestion.options.map(({ option, correctAnswer }, index: number) => (
                     <motion.div
                       key={crypto.randomUUID()}
                       className="flex items-center"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ delay: 1 * 0.1 }}
                     >
                       <RadioGroupItem
                         value={option}
                         id={`option-${index}`}
-                        onClick={() => handleOptionSelect(option)}
+                        onClick={() => handleOptionSelect(option, correctAnswer)}
                         className="peer sr-only"
                         disabled={isCorrect !== null}
                       />
@@ -195,12 +195,12 @@ const QuizPage = () => {
                         htmlFor={`option-${index}`}
                         className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${getAnswerStyles(
                           isCorrect,
-                          currentQuestion.correctAnswer,
+                          correctAnswer,
                           option,
                         )}`}
                       >
                         {option}
-                        {isCorrect !== null && option === currentQuestion.correctAnswer && (
+                        {isCorrect !== null && correctAnswer && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
                         {isCorrect === false && option === selectedOption && (

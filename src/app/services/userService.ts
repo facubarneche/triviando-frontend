@@ -54,5 +54,4 @@ class UserService extends BaseService {
   };
 }
 
-// Aquí estás inicializando la instancia correctamente
 export const userService = new UserService();
