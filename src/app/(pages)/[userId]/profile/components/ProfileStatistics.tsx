@@ -6,15 +6,6 @@ import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 
 const ProfileStatistics = () => {
-  //User mock data viene del endpoint getUserStatistics del userService
-  const userData = {
-    totalQuizzes: 10,
-    correctAnswers: 35,
-    totalQuestions: 50,
-  };
-  //Calcular la precisión como un porcentaje
-  const accuracy = Math.round((userData.correctAnswers / userData.totalQuestions) * 100);
-
   const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(null);
 
   useEffect(() => {
@@ -24,13 +15,28 @@ const ProfileStatistics = () => {
         // const userId = 1; // Obtener el ID desde cookies o JWT
         // const statistics = await userService.getUserStatistics(userId);
         // setUserData(statistics);
-        setUserStatistics(userData); // Simulación de datos
+
+        //Mock data viene del endpoint getUserStatistics del userService
+        setUserStatistics({
+          totalQuizzes: 10,
+          correctAnswers: 35,
+          totalQuestions: 50,
+        }); // Simulación de datos
       } catch (error) {
         handleError(error);
       }
     };
     fetchUserStatistics();
   }, []);
+
+  if (!userStatistics) {
+    return <p>Cargando estadísticas...</p>; //Placeholder para la carga de datos
+  }
+
+  //Calcular la precisión como un porcentaje
+  const accuracy = Math.round(
+    (userStatistics.correctAnswers / userStatistics.totalQuestions) * 100,
+  );
 
   return (
     <motion.div
@@ -44,7 +50,7 @@ const ProfileStatistics = () => {
             <CardTitle className="text-lg text-[#3c096c]">Total de Quizzes</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-[#5a189a]">{userData.totalQuizzes}</p>
+            <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.totalQuizzes}</p>
           </CardContent>
         </Card>
 
@@ -53,8 +59,10 @@ const ProfileStatistics = () => {
             <CardTitle className="text-lg text-[#3c096c]">Respuestas Correctas</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold text-[#5a189a]">{userData.correctAnswers}</p>
-            <p className="text-sm text-muted-foreground">de {userData.totalQuestions} preguntas</p>
+            <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.correctAnswers}</p>
+            <p className="text-sm text-muted-foreground">
+              de {userStatistics.totalQuestions} preguntas
+            </p>
           </CardContent>
         </Card>
 

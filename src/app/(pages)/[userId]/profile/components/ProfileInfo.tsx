@@ -57,7 +57,7 @@ const ProfileInfo = () => {
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <Avatar className="w-24 h-24 border-4 border-[#9d4edd]/30">
               <AvatarImage src="/placeholder-user.jpg" alt="@user" />
-              <AvatarFallback className="text-2xl bg-[#7b2cbf] text-white">
+              <AvatarFallback className="text-2xl text-purple-900 text-white">
                 {userData.firstName.charAt(0) + userData.lastName.charAt(0)}
               </AvatarFallback>
             </Avatar>
@@ -74,7 +74,9 @@ const ProfileInfo = () => {
               </div>
               <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>
               <p className="text-muted-foreground">{userData.email}</p>
-              <p className="text-sm text-muted-foreground">Miembro desde {joinDate}</p>
+              <p className="text-sm text-muted-foreground text-gray-600 mt-2">
+                Miembro desde {joinDate}
+              </p>
 
               <div className="flex gap-2 mt-4 justify-center sm:justify-start">
                 <Button
