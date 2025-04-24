@@ -47,7 +47,7 @@ const ProfileStatistics = () => {
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg text-[#3c096c]">Total de Quizzes</CardTitle>
+            <CardTitle className="text-lg text-black">Total de Quizzes</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.totalQuizzes}</p>
@@ -56,11 +56,11 @@ const ProfileStatistics = () => {
 
         <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg text-[#3c096c]">Respuestas Correctas</CardTitle>
+            <CardTitle className="text-lg text-black">Respuestas Correctas</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.correctAnswers}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground text-gray-600">
               de {userStatistics.totalQuestions} preguntas
             </p>
           </CardContent>
@@ -68,7 +68,7 @@ const ProfileStatistics = () => {
 
         <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg text-[#3c096c]">Precisión</CardTitle>
+            <CardTitle className="text-lg text-black">Precisión</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-[#5a189a]">{accuracy}%</p>
