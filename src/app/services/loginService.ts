@@ -11,18 +11,12 @@ export const loginService = {
 };
 
 async function login(credentials: LoginCredentials): Promise<Usuario> {
-  try {
-    const response = await axios.post<Usuario>(`${env.baseURL}/api/v1/users/login`, credentials);
-    const user = response.data;
-    //Esta cookie expira en 1 día
-    Cookies.set('usuario', JSON.stringify(user), { expires: 1 });
-    return user;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error) && error.response?.data?.message) {
-      throw new Error(error.response.data.message);
-    }
-    throw new Error('Login fallido');
-  }
+  const response = await axios.post<Usuario>(`${env.baseURL}/api/v1/users/login`, credentials);
+  const user = response.data;
+  console.log('Usuario logueado:', response);
+  //Esta cookie expira en 1 día
+  Cookies.set('usuario', JSON.stringify(user), { expires: 1 });
+  return user;
 }
 
 function logout() {
