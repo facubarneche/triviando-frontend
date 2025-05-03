@@ -40,6 +40,7 @@ export default function TopicsPage() {
       <Header />
       <main className="p-4 max-w-4xl mx-auto">
         <StreakModal />
+        {/* TODO: Cambiar filter a use client y dejar todo SSR */}
         <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         {loading ? <TopicsSkeleton /> : <Topics topics={filteredTopics} />}
       </main>

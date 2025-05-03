@@ -1,12 +1,10 @@
 'use client';
-
 import { useState, useEffect } from 'react';
 import { Flame } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 
 interface StreakData {
-  racha: boolean;
   diasConsecutivos: string;
 }
 
@@ -20,12 +18,11 @@ export function StreakModal() {
         // Simulación de respuesta del backend (hardcodeada)
         // Esto se reemplazará luego por la llamada real a userService
         const mockResponse: StreakData = {
-          racha: true,
           diasConsecutivos: '5',
         };
         setStreakData(mockResponse);
 
-        //Luego utilizar el servicio real
+        //TODO: Luego utilizar el servicio real
         //const data = await userService.getStreak();
         //setStreakData(data);
         //Si hay racha se abre el modal, sino simplemente aparecen los topicos

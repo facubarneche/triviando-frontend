@@ -8,9 +8,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
 import { toast } from 'react-toastify';
+import { loginService } from '@/app/services/loginService';
 
 export default function LoginPage() {
   const router = useRouter();
