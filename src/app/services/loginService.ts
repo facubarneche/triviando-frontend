@@ -12,7 +12,7 @@ export const loginService = {
 
 async function login(credentials: LoginCredentials): Promise<Usuario> {
   try {
-    const response = await axios.post<Usuario>(env.baseURL, credentials);
+    const response = await axios.post<Usuario>(`${env.baseURL}/api/v1/users/login`, credentials);
     const user = response.data;
     //Esta cookie expira en 1 día
     Cookies.set('usuario', JSON.stringify(user), { expires: 1 });
