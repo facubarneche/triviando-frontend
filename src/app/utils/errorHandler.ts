@@ -4,7 +4,7 @@ import axios from 'axios';
 export function handleError(error: unknown): void {
   if (axios.isAxiosError(error)) {
     const status = error.response?.status;
-    const message = error.response?.data?.message;
+    const message = error.response?.data?.error || error.response?.data?.message;
 
     switch (status) {
       case 400:
