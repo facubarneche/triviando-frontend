@@ -9,6 +9,8 @@ export const TOPIC_ICONS: Record<string, string> = {
   'machine learning': '📈',
   'desarrollo móvil': '📱',
   'testing de software': '🧪',
+  historia: '📜',
+  astronomía: '🌌',
 };
 
 export const TOPIC_COLORS = [
