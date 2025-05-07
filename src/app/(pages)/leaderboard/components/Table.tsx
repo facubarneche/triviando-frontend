@@ -1,9 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
 import { styledRank } from '../utils/helpers';
 
-//TODO: Tipar al conectar con back
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Table = ({ data }: { data: any[] }) => {
+const Table = ({ data }: { data: ILeaderBoard[] }) => {
   return (
     <main className="py-4 md:max-w-3xl mx-auto">
       <div className="space-y-2">

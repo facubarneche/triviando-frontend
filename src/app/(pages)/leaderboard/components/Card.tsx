@@ -8,8 +8,13 @@ import {
   CardTitle,
 } from '@/app/components/ui/card';
 import Table from './Table';
+import Paginator from '@/app/components/paginator';
 
-const Card = () => {
+interface CardProps {
+  historicalData: ILeaderBoard[];
+}
+
+const Card = ({ historicalData }: CardProps) => {
   return (
     <UICard className="bg-white">
       <CardHeader>
@@ -31,10 +36,11 @@ const Card = () => {
             <Table data={leaderboardDataMock.weekly} />
           </TabsContent>
           <TabsContent value="allTime">
-            <Table data={leaderboardDataMock.allTime} />
+            <Table data={historicalData} />
           </TabsContent>
         </Tabs>
       </CardContent>
+      <Paginator totalPages={10} />
     </UICard>
   );
 };

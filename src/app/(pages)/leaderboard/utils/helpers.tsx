@@ -7,3 +7,12 @@ export const styledRank = (rank: number) => {
 
   return rankStyles[rank] || 'bg-purple-400';
 };
+
+export const parseLeaderboardData = (users: ILeaderBoardDTO[]): ILeaderBoard[] => {
+  return users.map((user, index) => ({
+    rank: index++,
+    username: user.fullName,
+    score: user.score,
+    avatar: '/placeholder-user.jpg',
+  }));
+};

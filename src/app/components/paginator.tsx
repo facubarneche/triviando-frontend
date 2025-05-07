@@ -56,7 +56,7 @@ const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 mt-6 py-3 px-4 rounded-xl shadow-md border bg-purple-100">
+    <div className="flex items-center justify-center gap-1 pb-2 rounded-xl shadow-md">
       <Button
         variant="ghost"
         size="icon"
