@@ -4,10 +4,17 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaGoogle } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/app/components/ui/card';
+import { Label } from '@/app/components/ui/label';
+import { Input } from '@/app/components/ui/input';
+import { Button } from '@/app/components/ui/button';
 import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
 import { toast } from 'react-toastify';
