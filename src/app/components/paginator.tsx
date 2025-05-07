@@ -43,8 +43,8 @@ const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
           onClick={() => handlePageChange(i)}
           className={`h-9 w-9 p-0 font-medium ${
             i === currentPage
-              ? 'bg-white border-2 border-purple-600 text-purple-800'
-              : 'hover:bg-purple-100'
+              ? 'bg-purple-200 border-2 border-purple-600 text-purple-800'
+              : 'hover:bg-purple-200'
           }`}
         >
           {i}
@@ -56,13 +56,13 @@ const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 mt-6 py-3 px-4 bg-white rounded-xl shadow-md border border-purple-100">
+    <div className="flex items-center justify-center gap-1 mt-6 py-3 px-4 rounded-xl shadow-md border bg-purple-100">
       <Button
         variant="ghost"
         size="icon"
         onClick={() => handlePageChange(FIRST_PAGE)}
         disabled={currentPage === FIRST_PAGE}
-        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-100 disabled:opacity-50"
+        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-200 disabled:opacity-50"
         aria-label="Primera página"
       >
         <ChevronsLeft className="w-4 h-4" />
@@ -73,7 +73,7 @@ const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
         size="icon"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === FIRST_PAGE}
-        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-100 disabled:opacity-50"
+        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-200 disabled:opacity-50"
         aria-label="Página anterior"
       >
         <ChevronLeft className="w-5 h-5" />
@@ -86,7 +86,7 @@ const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
         size="icon"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-100 disabled:opacity-50"
+        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-200 disabled:opacity-50"
         aria-label="Página siguiente"
       >
         <ChevronRight className="w-5 h-5" />
@@ -97,7 +97,7 @@ const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
         size="icon"
         onClick={() => handlePageChange(totalPages)}
         disabled={currentPage === totalPages}
-        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-100 disabled:opacity-50"
+        className="h-9 w-9 p-0 text-purple-700 hover:bg-purple-200 disabled:opacity-50"
         aria-label="Última página"
       >
         <ChevronsRight className="w-4 h-4" />

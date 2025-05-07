@@ -13,7 +13,7 @@ const Card = () => {
   return (
     <UICard className="bg-white">
       <CardHeader>
-        <CardTitle className="text-2xl text-center">Ranking</CardTitle>
+        <CardTitle className="text-2xl text-center mb-4">🏆 Ranking</CardTitle>
         <CardDescription className="text-center">
           Sigue de cerca a los mejores jugadores
         </CardDescription>
