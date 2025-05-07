@@ -14,21 +14,24 @@ const Card = () => {
     <UICard className="bg-white mx-2 md:mx-10">
       <CardHeader>
         <CardTitle className="text-2xl text-center">Ranking</CardTitle>
-        <CardDescription className="text-center">Observe a los mejores jugadores</CardDescription>
+        <CardDescription className="text-center">
+          Sigue de cerca a los mejores jugadores
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="weekly">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="weekly">Esta Semana</TabsTrigger>
+            <TabsTrigger value="weekly" disabled>
+              Esta Semana
+            </TabsTrigger>
             <TabsTrigger value="allTime">Historico</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="weekly">
-            <Table data={leaderboardDataMock.weekly} />
-          </TabsContent>
-
           <TabsContent value="allTime">
             <Table data={leaderboardDataMock.allTime} />
+          </TabsContent>
+          <TabsContent value="weekly">
+            <Table data={leaderboardDataMock.weekly} />
           </TabsContent>
         </Tabs>
       </CardContent>
