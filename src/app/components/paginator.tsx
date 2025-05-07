@@ -6,17 +6,17 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 
 interface PaginatorProps {
   totalPages: number;
-  onPageChange?: (page: number) => void;
+  data: any;
 }
 
-const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
+const Paginator = ({ totalPages, ...data }: PaginatorProps) => {
+  console.log(data);
   const FIRST_PAGE = 1;
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      onPageChange?.(newPage);
     }
   };
 

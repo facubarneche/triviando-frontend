@@ -8,9 +8,9 @@ export const styledRank = (rank: number) => {
   return rankStyles[rank] || 'bg-purple-400';
 };
 
-export const parseLeaderboardData = (users: ILeaderBoardDTO[]): ILeaderBoard[] => {
+export const parseLeaderboardData = (users: ILeaderBoardContentDTO[]): ILeaderContentBoard[] => {
   return users.map((user, index) => ({
-    rank: index++,
+    rank: ++index,
     username: user.fullName,
     score: user.score,
     avatar: '/placeholder-user.jpg',

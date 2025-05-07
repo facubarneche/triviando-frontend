@@ -9,12 +9,16 @@ import {
 } from '@/app/components/ui/card';
 import Table from './Table';
 import Paginator from '@/app/components/paginator';
+import { parseLeaderboardData } from '../utils/helpers';
 
 interface CardProps {
-  historicalData: ILeaderBoard[];
+  leaderBoardData: ILeaderBoardDTO;
 }
 
-const Card = ({ historicalData }: CardProps) => {
+const Card = ({ leaderBoardData }: CardProps) => {
+  const { content, ...paginatorData } = leaderBoardData;
+  const historicalData = parseLeaderboardData(content);
+
   return (
     <UICard className="bg-white">
       <CardHeader>
@@ -40,7 +44,7 @@ const Card = ({ historicalData }: CardProps) => {
           </TabsContent>
         </Tabs>
       </CardContent>
-      <Paginator totalPages={10} />
+      <Paginator {...paginatorData} />
     </UICard>
   );
 };
