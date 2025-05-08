@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
 import { styledRank } from '../utils/helpers';
 
-const Table = ({ data }: { data: ILeaderBoard[] }) => {
+const Table = ({ data }: { data: ILeaderContentBoard[] }) => {
   return (
     <main className="py-4 md:max-w-3xl mx-auto">
       <div className="space-y-2">

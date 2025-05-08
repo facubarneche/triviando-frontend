@@ -10,6 +10,7 @@ export const styledRank = (rank: number) => {
 
 export const parseLeaderboardData = (users: ILeaderBoardContentDTO[]): ILeaderContentBoard[] => {
   return users.map((user, index) => ({
+    //TODO: Cuando venga el ranking del back obtenerlo y sacar el index
     rank: ++index,
     username: user.fullName,
     score: user.score,
