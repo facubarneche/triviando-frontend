@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,10 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
   const { push } = useRouter();
   const FIRST_PAGE = 1;
   const [currentPage, setCurrentPage] = useState(number + 1);
+
+  useEffect(() => {
+    setCurrentPage(number + 1);
+  }, [number]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {

@@ -1,3 +1,4 @@
+'use server';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
 import { leaderboardDataMock } from '../utils/mocks';
 import {
@@ -10,6 +11,7 @@ import {
 import Table from './Table';
 import Paginator from '@/app/components/paginator';
 import { parseLeaderboardData } from '../utils/helpers';
+import ButtonPosition from './ButtonPosition';
 
 interface CardProps {
   leaderBoardData: ILeaderBoardDTO;
@@ -17,8 +19,8 @@ interface CardProps {
 
 const Card = ({ leaderBoardData }: CardProps) => {
   const { content, ...paginatorData } = leaderBoardData;
-  const historicalData = parseLeaderboardData(content);
-
+  //TODO: Eliminar paginatorData al recibir ranking desde el back
+  const historicalData = parseLeaderboardData(content, paginatorData.number);
   return (
     <UICard className="bg-white">
       <CardHeader>
@@ -26,6 +28,7 @@ const Card = ({ leaderBoardData }: CardProps) => {
         <CardDescription className="text-center">
           Sigue de cerca a los mejores jugadores
         </CardDescription>
+        <ButtonPosition />
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="allTime">
