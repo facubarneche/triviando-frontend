@@ -1,5 +1,5 @@
-import LearnTogether from '@/app/(pages)/quiz/[topicId]/components/LearnTogether';
-import { IQuiz } from '@/app/(pages)/quiz/[topicId]/types';
+import LearnTogether from '@/app/(pages)/quiz/[topic]/components/LearnTogether';
+import { IQuiz } from '@/app/(pages)/quiz/[topic]/types';
 import { render, screen } from '@testing-library/react';
 
 const mockQuestion: IQuiz = {

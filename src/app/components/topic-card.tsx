@@ -10,9 +10,9 @@ interface TopicCardProps {
 }
 
 export default function TopicCard({ topic }: TopicCardProps) {
-  const { id, name, questionsCount, color, icon } = topic;
+  const { name, questionsCount, color, icon } = topic;
   return (
-    <Link href={{ pathname: `/quiz/${id}`, query: { name } }}>
+    <Link href={{ pathname: `/quiz/${name}` }}>
       <motion.div
         style={{ height: '100%' }}
         whileHover={{ scale: 1.03 }}
