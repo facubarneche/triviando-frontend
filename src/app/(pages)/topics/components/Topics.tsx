@@ -10,7 +10,7 @@ const Topics = ({ topics }: TopicsProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
     {topics.map((topic, index) => (
       <motion.div
-        key={topic.id}
+        key={topic.name}
         initial={{ opacity: 0, x: 70, y: 40 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
