@@ -8,6 +8,7 @@ import Topics from './components/Topics';
 import { topicService } from '@/app/services/topicService';
 import { ITopic } from './types';
 import TopicsSkeleton from './components/TopicsSkeleton';
+import { StreakModal } from '@/app/components/modals/StreakModal';
 import { handleError } from '@/app/utils/errorHandler';
 
 export default function TopicsPage() {
@@ -38,6 +39,8 @@ export default function TopicsPage() {
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
       <Header />
       <main className="p-4 max-w-4xl mx-auto">
+        <StreakModal />
+        {/* TODO: Cambiar filter a use client y dejar todo SSR */}
         <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         {loading ? <TopicsSkeleton /> : <Topics topics={filteredTopics} />}
       </main>

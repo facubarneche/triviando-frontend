@@ -19,6 +19,7 @@ import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
 import { toast } from 'react-toastify';
 
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
