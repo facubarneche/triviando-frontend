@@ -1,22 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface PaginatorProps {
   totalPages: number;
-  onPageChange?: (page: number) => void;
+  number: number;
 }
 
-const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
+const Paginator = ({ totalPages, number }: PaginatorProps) => {
+  const { push } = useRouter();
   const FIRST_PAGE = 1;
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(number + 1);
+
+  useEffect(() => {
+    setCurrentPage(number + 1);
+  }, [number]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      onPageChange?.(newPage);
+      push(`?page=${newPage}`);
     }
   };
 
@@ -56,7 +62,7 @@ const Paginator = ({ totalPages, onPageChange }: PaginatorProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 mt-6 py-3 px-4 rounded-xl shadow-md border bg-purple-100">
+    <div className="flex items-center justify-center gap-1 pb-2 rounded-xl shadow-md">
       <Button
         variant="ghost"
         size="icon"
