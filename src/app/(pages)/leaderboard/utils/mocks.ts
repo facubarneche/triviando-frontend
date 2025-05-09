@@ -1,0 +1,26 @@
+export const leaderboardDataMock = {
+  weekly: [
+    { rank: 1, username: 'QuizMaster', score: 1250, avatar: '/placeholder-user.jpg' },
+    { rank: 2, username: 'BrainGenius', score: 1120, avatar: '/placeholder-user.jpg' },
+    { rank: 3, username: 'KnowledgeKing', score: 980, avatar: '/placeholder-user.jpg' },
+    { rank: 4, username: 'QuizWhiz', score: 920, avatar: '/placeholder-user.jpg' },
+    { rank: 5, username: 'FactFinder', score: 890, avatar: '/placeholder-user.jpg' },
+    { rank: 6, username: 'TriviaQueen', score: 850, avatar: '/placeholder-user.jpg' },
+    { rank: 7, username: 'BrainBox', score: 820, avatar: '/placeholder-user.jpg' },
+    { rank: 8, username: 'QuizNinja', score: 780, avatar: '/placeholder-user.jpg' },
+    { rank: 9, username: 'BrainWave', score: 750, avatar: '/placeholder-user.jpg' },
+    { rank: 10, username: 'QuizChampion', score: 720, avatar: '/placeholder-user.jpg' },
+  ],
+  allTime: [
+    { rank: 1, username: 'QuizLegend', score: 15250, avatar: '/placeholder-user.jpg' },
+    { rank: 2, username: 'MindMaster', score: 14120, avatar: '/placeholder-user.jpg' },
+    { rank: 3, username: 'BrainiacPro', score: 13980, avatar: '/placeholder-user.jpg' },
+    { rank: 4, username: 'QuizGenius', score: 12920, avatar: '/placeholder-user.jpg' },
+    { rank: 5, username: 'KnowledgeGuru', score: 11890, avatar: '/placeholder-user.jpg' },
+    { rank: 6, username: 'FactMaster', score: 10850, avatar: '/placeholder-user.jpg' },
+    { rank: 7, username: 'QuizWizard', score: 9820, avatar: '/placeholder-user.jpg' },
+    { rank: 8, username: 'BrainChamp', score: 8780, avatar: '/placeholder-user.jpg' },
+    { rank: 9, username: 'TriviaKing', score: 7750, avatar: '/placeholder-user.jpg' },
+    { rank: 10, username: 'QuizPro', score: 6720, avatar: '/placeholder-user.jpg' },
+  ],
+};

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, X } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/ui/card';
@@ -18,10 +18,8 @@ import { quizService } from '@/app/services/quizService';
 import { IQuiz } from './types';
 
 const QuizPage = () => {
-  const params = useParams<{ topicId: string }>();
-  const { topicId } = params;
-  const searchParams = useSearchParams();
-  const name = searchParams.get('name');
+  const params = useParams<{ topic: string }>();
+  const { topic } = params;
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -40,7 +38,7 @@ const QuizPage = () => {
     const fetchQuestions = async () => {
       setIsLoading(true);
       try {
-        const quiz = await quizService.getQuiz(topicId);
+        const quiz = await quizService.getQuiz(topic);
         const parsedQuiz = parserQuiz(quiz);
         setQuestions(parsedQuiz);
         setAnswers(Array(parsedQuiz.length).fill(null));
@@ -52,7 +50,7 @@ const QuizPage = () => {
     };
 
     fetchQuestions();
-  }, [topicId]);
+  }, [topic]);
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;

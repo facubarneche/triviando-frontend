@@ -1,0 +1,28 @@
+import { getUserId } from '@/app/lib/getUserId';
+
+export const styledRank = (rank: number) => {
+  const rankStyles: Record<number, string> = {
+    1: 'bg-yellow-400 text-yellow-900',
+    2: 'bg-gray-300 text-gray-700',
+    3: 'bg-amber-700 text-amber-100',
+  };
+
+  return rankStyles[rank] || 'bg-purple-400';
+};
+
+export const parseLeaderboardData = (
+  users: ILeaderBoardContentDTO[],
+  page: number,
+): ILeaderContentBoard[] => {
+  return users.map((user, index) => ({
+    //TODO: Cuando venga el ranking del back obtenerlo y sacar el index
+    rank: ++index + page * 10,
+    username: user.fullName,
+    score: user.score,
+    avatar: '/placeholder-user.jpg',
+  }));
+};
+
+export const getProp = async (page: number) => {
+  return page ? { page } : { page, userId: await getUserId() };
+};

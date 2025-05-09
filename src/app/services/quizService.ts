@@ -1,9 +1,9 @@
 import { BaseService } from './baseService';
 
 class QuizService extends BaseService {
-  getQuiz = async (topicId: string) => {
-    const { data } = await this.axiosService.get('/preguntas', {
-      params: { topico: topicId },
+  getQuiz = async (topic: string) => {
+    const { data } = await this.axiosService.get('/api/v1/preguntas', {
+      params: { topico: topic },
     });
 
     return data;

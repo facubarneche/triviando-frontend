@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { parserTopics } from './helpers';
+import { parserTopics } from './utils/helpers';
 import Header from './components/Header';
 import Filter from './components/Filter';
 import Topics from './components/Topics';
