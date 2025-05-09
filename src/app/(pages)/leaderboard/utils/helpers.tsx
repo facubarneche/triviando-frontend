@@ -5,5 +5,5 @@ export const styledRank = (rank: number) => {
     3: 'bg-amber-700 text-amber-100',
   };
 
-  return rankStyles[rank] || 'bg-muted text-muted-foreground';
+  return rankStyles[rank] || 'bg-purple-400';
 };
