@@ -13,10 +13,10 @@ interface PaginatorProps {
 const Paginator = ({ totalPages, number }: PaginatorProps) => {
   const { push } = useRouter();
   const FIRST_PAGE = 1;
-  const [currentPage, setCurrentPage] = useState(number + 1);
+  const [currentPage, setCurrentPage] = useState(number);
 
   useEffect(() => {
-    setCurrentPage(number + 1);
+    setCurrentPage(number);
   }, [number]);
 
   const handlePageChange = (newPage: number) => {
@@ -30,7 +30,7 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
     const pages = [];
 
     let start = currentPage - 1;
-    let end = currentPage + 1;
+    let end = currentPage;
 
     // Asegurar que siempre se muestran 3 botones si es posible
     if (currentPage === FIRST_PAGE) {
