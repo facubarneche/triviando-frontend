@@ -8,3 +8,9 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
+    networks:
+      - flashcardsnet
+
+networks:
+  flashcardsnet:
+    name: flashcardsnet

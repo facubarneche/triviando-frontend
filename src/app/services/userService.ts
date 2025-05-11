@@ -9,7 +9,7 @@ interface IUser {
 class UserService extends BaseService {
   createUser = async ({ username, email, password }: IUser) => {
     try {
-      const { data } = await this.axiosService.post('/api/v1/users', {
+      const { data } = await this.axiosService.post('/users', {
         //! Deberiamos Definir contrato, actualmente se pide username, email y pass (a futuro estaria bueno pedir el resto de datos, hoy van hardcodeados)
         // TODO: Agregar campos para satisfacer al back o el back baja requerimientos
         fullName: username, // Lo usaremos como username
