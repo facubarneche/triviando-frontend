@@ -28,7 +28,7 @@ const QuizPage = () => {
   const [direction, setDirection] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<IQuiz[]>([]);
-  const [score, setScore] = useState(0);
+  // const [score, setScore] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
@@ -106,7 +106,7 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
-    router.push(`/results?score=${score}&total=${questions.length}`);
+    // router.push(`/results?score=${score}&total=${questions.length}`);
   };
 
   const handleLearnTogether = async () => {
