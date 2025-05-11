@@ -8,6 +8,8 @@ interface StreakData {
   diasConsecutivos: string;
 }
 
+//TODO: Hacer responsive el modal en mobile
+
 export function StreakModal() {
   const [open, setOpen] = useState(true);
   const [streakData, setStreakData] = useState<StreakData | null>(null);
