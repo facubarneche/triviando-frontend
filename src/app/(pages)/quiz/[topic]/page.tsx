@@ -55,7 +55,8 @@ const QuizPage = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
-  const handleOptionSelect = (option: string, correctAnswer: boolean) => {
+  // const handleOptionSelect = (option: string, correctAnswer: boolean) => {
+  const handleOptionSelect = (option: string) => {
     setSelectedOption(option);
 
     // Update answers array
@@ -63,12 +64,13 @@ const QuizPage = () => {
     newAnswers[currentQuestionIndex] = option;
     setAnswers(newAnswers);
 
-    if (correctAnswer) {
-      setScore(score + 1);
-    }
+    // if (correctAnswer) {
+    //   setScore(score + 1);
+    // }
 
     // Check if answer is correct
-    if (currentQuestion && correctAnswer) {
+    // if (currentQuestion && correctAnswer) {
+    if (currentQuestion) {
       setIsCorrect(true);
 
       // Trigger confetti
@@ -123,8 +125,13 @@ const QuizPage = () => {
     }
   };
 
-  const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: boolean, option: string) => {
-    if (isCorrect !== null && correctAnswer) return 'border-green-500 bg-green-100';
+  // const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: boolean, option: string) => {
+  //   if (isCorrect !== null && correctAnswer) return 'border-green-500 bg-green-100';
+  //   if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
+  // };
+
+  const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
+    if (isCorrect !== null) return 'border-green-500 bg-green-100';
     if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
   };
 
@@ -174,7 +181,7 @@ const QuizPage = () => {
                 <CardTitle className="text-xl mb-6">{currentQuestion.question}</CardTitle>
 
                 <RadioGroup value={selectedOption ?? ''} className="space-y-3">
-                  {currentQuestion.options.map(({ option, correctAnswer }, index: number) => (
+                  {currentQuestion.options.map(({ text }, index: number) => (
                     <motion.div
                       key={crypto.randomUUID()}
                       className="flex items-center"
@@ -183,9 +190,10 @@ const QuizPage = () => {
                       transition={{ delay: 1 * 0.1 }}
                     >
                       <RadioGroupItem
-                        value={option}
+                        value={text}
                         id={`option-${index}`}
-                        onClick={() => handleOptionSelect(option, correctAnswer)}
+                        // onClick={() => handleOptionSelect(text, correctAnswer)}
+                        onClick={() => handleOptionSelect(text)}
                         className="peer sr-only"
                         disabled={isCorrect !== null}
                       />
@@ -193,15 +201,16 @@ const QuizPage = () => {
                         htmlFor={`option-${index}`}
                         className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${getAnswerStyles(
                           isCorrect,
-                          correctAnswer,
-                          option,
+                          // correctAnswer,
+                          text,
                         )}`}
                       >
-                        {option}
-                        {isCorrect !== null && correctAnswer && (
+                        {text}
+                        {/* {isCorrect !== null && correctAnswer && ( */}
+                        {isCorrect !== null && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
-                        {isCorrect === false && option === selectedOption && (
+                        {isCorrect === false && text === selectedOption && (
                           <X className="h-5 w-5 text-red-500 ml-2" />
                         )}
                       </Label>

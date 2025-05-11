@@ -1,16 +1,12 @@
 import { IQuiz, IQuizDTO } from './types';
 
 export const parserQuiz = (quiz: IQuizDTO[]): IQuiz[] => {
-  //TODO: Ver aca que onda con la respuesta si esta mal
-  console.log(quiz);
   return quiz.map((item) => ({
     id: item.id,
     question: item.enunciado,
-    options: item.opciones.map((option) => ({
-      option: option.opcion,
-      correctAnswer: option.correcta,
-    })),
+    options: item.options,
     explanation: item.explicacion,
+    difficulty: item.difficulty,
   }));
 };
 
