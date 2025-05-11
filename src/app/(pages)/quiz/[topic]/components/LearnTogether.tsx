@@ -25,7 +25,8 @@ const LearnTogether = ({
   explanation,
 }: LearnTogetherProps) => {
   const { id, question, options } = currentQuestion;
-  const correctAnswer = options.find((option) => option.correctAnswer)?.option || '';
+  //TODO: Obtener la verdadera respuesta correcta cuando se obtenga la nueva respuesta del back
+  const correctAnswer = options[0].text;
   return (
     <Dialog open={showExplanation} onOpenChange={setShowExplanation}>
       <DialogContent className="max-w-xl m-0 bg-white">
