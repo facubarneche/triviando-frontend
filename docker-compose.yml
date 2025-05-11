@@ -7,7 +7,8 @@ services:
       - .:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=development
+      - API_URL_SERVER=http://proyecto2025-be-app:8080
+      - NEXT_PUBLIC_API_URL_CLIENT=http://localhost:8080
     networks:
       - flashcardsnet
 

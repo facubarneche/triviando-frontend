@@ -9,12 +9,14 @@ export class BaseService {
   }
 
   private getBaseURL() {
-    if (typeof window === 'undefined') {
-      // SSR
-      return 'http://proyecto2025-be-app:8080/api/v1';
-    } else {
-      // CSR
-      return 'http://localhost:8080/api/v1';
-    }
+    const DEFAULT_API_URL = 'http://localhost:8080';
+
+    const isServer = typeof window === 'undefined';
+
+    const host = isServer
+      ? process.env.API_URL_SERVER ?? DEFAULT_API_URL
+      : process.env.NEXT_PUBLIC_API_URL_CLIENT ?? DEFAULT_API_URL;
+
+    return `${host}/api/v1`;
   }
 }
