@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Trophy, Home, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -10,7 +10,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/comp
 import { Progress } from '@/app/components/ui/progress';
 import { Button } from '@/app/components/ui/button';
 
-export default function Results() {
+function Results() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -147,5 +147,13 @@ export default function Results() {
         </Card>
       </motion.div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Cargando resultados...</div>}>
+      <Results />
+    </Suspense>
   );
 }
