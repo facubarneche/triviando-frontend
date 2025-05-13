@@ -19,7 +19,7 @@ import { IQuiz } from './types';
 
 const QuizPage = () => {
   const params = useParams<{ topic: string }>();
-  const { topic } = params;
+  const topic = decodeURIComponent(params.topic);
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
