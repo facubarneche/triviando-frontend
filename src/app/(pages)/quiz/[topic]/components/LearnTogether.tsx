@@ -25,7 +25,7 @@ const LearnTogether = ({
   explanation,
 }: LearnTogetherProps) => {
   const { id, question, options } = currentQuestion;
-  //TODO: Obtener la verdadera respuesta correcta cuando se obtenga la nueva respuesta del back
+  //TODO: Obtener la verdadera respuesta desde el back (actualmente no trae la opcion correcta)
   const correctAnswer = options[0].text;
   return (
     <Dialog open={showExplanation} onOpenChange={setShowExplanation}>

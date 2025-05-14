@@ -1,5 +1,5 @@
 //TODO: Ver si iba null o no
-type LetterType = 'A' | 'B' | 'C' | 'D';
+export type LetterType = 'A' | 'B' | 'C' | 'D';
 type DifficultyType = 'LOEW' | 'MEDIUM' | 'HIGH';
 
 interface IOptionDTO {

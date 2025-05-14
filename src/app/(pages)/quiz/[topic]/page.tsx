@@ -15,7 +15,7 @@ import WaitingModal from './components/WaitingModal';
 import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
-import { IQuiz } from './types';
+import { IQuiz, LetterType } from './types';
 
 const QuizPage = () => {
   const params = useParams<{ topic: string }>();
@@ -55,7 +55,7 @@ const QuizPage = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
-  const handleOptionSelect = async (quizId: string, option: string) => {
+  const handleOptionSelect = async (quizId: string, option: LetterType) => {
     const { score } = await quizService.getQuizAnswer({
       questionId: quizId,
       userId: 1, //TODO: Obtener el userId
@@ -64,7 +64,6 @@ const QuizPage = () => {
       //!: Maximo 50000ms
       millisecondsSpent: 20000,
     });
-
     setSelectedOption(option);
 
     // Update answers array
@@ -75,7 +74,6 @@ const QuizPage = () => {
     if (score) {
       setScore((prev) => prev + 1);
     }
-
     if (currentQuestion && score) {
       setIsCorrect(true);
 
@@ -132,7 +130,7 @@ const QuizPage = () => {
   };
 
   const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
-    if (isCorrect !== null) return 'border-green-500 bg-green-100';
+    if (isCorrect && option === selectedOption) return 'border-green-500 bg-green-100';
     if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
   };
 
@@ -201,17 +199,17 @@ const QuizPage = () => {
                         htmlFor={`option-${index}`}
                         className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${getAnswerStyles(
                           isCorrect,
-                          // correctAnswer,
-                          text,
+                          letter,
                         )}`}
                       >
                         {text}
-                        {/* {isCorrect !== null && correctAnswer && ( */}
-                        {isCorrect !== null && (
+                        {isCorrect && letter === selectedOption && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
                         {/* {isCorrect === false && text === selectedOption && ( */}
-                        {isCorrect === false && <X className="h-5 w-5 text-red-500 ml-2" />}
+                        {isCorrect === false && letter === selectedOption && (
+                          <X className="h-5 w-5 text-red-500 ml-2" />
+                        )}
                       </Label>
                     </motion.div>
                   ))}
