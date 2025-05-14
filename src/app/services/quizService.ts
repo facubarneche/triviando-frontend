@@ -1,11 +1,24 @@
+import { LetterType } from '../(pages)/quiz/[topic]/types';
 import { BaseService } from './baseService';
+
+interface IAnswerRequestDTO {
+  questionId: string;
+  userId: number;
+  optionSelected: LetterType;
+  millisecondsSpent: number;
+}
 
 class QuizService extends BaseService {
   getQuiz = async (topic: string) => {
-    const { data } = await this.axiosService.get('/api/v1/preguntas', {
+    const { data } = await this.axiosService.get('/preguntas', {
       params: { topico: topic },
     });
 
+    return data;
+  };
+
+  getQuizAnswer = async (body: IAnswerRequestDTO) => {
+    const { data } = await this.axiosService.post('/answers', body);
     return data;
   };
 }

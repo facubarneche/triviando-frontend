@@ -6,7 +6,7 @@ const Header = () => {
     <header className="p-4">
       <Link href="/topics" className="inline-flex items-center text-white hover:underline">
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Topics
+        Volver a Topicos
       </Link>
     </header>
   );

@@ -1,19 +1,26 @@
+//TODO: Ver si iba null o no
+export type LetterType = 'A' | 'B' | 'C' | 'D';
+type DifficultyType = 'LOEW' | 'MEDIUM' | 'HIGH';
+
 interface IOptionDTO {
-  opcion: string;
-  correcta: boolean;
+  id: string;
+  letter: LetterType;
+  text: string;
 }
 
 interface IOption {
-  option: string;
-  correctAnswer: boolean;
+  id: string;
+  letter: LetterType;
+  text: string;
 }
 
 export interface IQuizDTO {
   id: string;
-  topicId: string;
+  topico: string;
   enunciado: string;
-  opciones: IOptionDTO[];
+  options: IOptionDTO[];
   explicacion: string;
+  difficulty: DifficultyType;
 }
 
 export interface IQuiz {
@@ -21,4 +28,5 @@ export interface IQuiz {
   question: string;
   options: IOption[];
   explanation: string;
+  difficulty: DifficultyType;
 }

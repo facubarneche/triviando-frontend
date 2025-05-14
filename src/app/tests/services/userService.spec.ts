@@ -18,7 +18,7 @@ describe('UserService', () => {
 
     const result = await userService.createUser(userPayload);
 
-    expect(postMock).toHaveBeenCalledWith('/api/v1/users', {
+    expect(postMock).toHaveBeenCalledWith('/users', {
       fullName: 'facuDev',
       email: 'facu@email.com',
       password: '12345678',
