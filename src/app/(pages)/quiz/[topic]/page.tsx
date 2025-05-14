@@ -15,11 +15,11 @@ import WaitingModal from './components/WaitingModal';
 import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
-import { IQuiz } from './types';
+import { IQuiz, LetterType } from './types';
 
 const QuizPage = () => {
   const params = useParams<{ topic: string }>();
-  const { topic } = params;
+  const topic = decodeURIComponent(params.topic);
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -55,7 +55,15 @@ const QuizPage = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
-  const handleOptionSelect = (option: string, correctAnswer: boolean) => {
+  const handleOptionSelect = async (quizId: string, option: LetterType) => {
+    const { score } = await quizService.getQuizAnswer({
+      questionId: quizId,
+      userId: 1, //TODO: Obtener el userId
+      optionSelected: option,
+      //TODO: Obtener al implementar timer
+      //!: Maximo 50000ms
+      millisecondsSpent: 20000,
+    });
     setSelectedOption(option);
 
     // Update answers array
@@ -63,12 +71,10 @@ const QuizPage = () => {
     newAnswers[currentQuestionIndex] = option;
     setAnswers(newAnswers);
 
-    if (correctAnswer) {
-      setScore(score + 1);
+    if (score) {
+      setScore((prev) => prev + 1);
     }
-
-    // Check if answer is correct
-    if (currentQuestion && correctAnswer) {
+    if (currentQuestion && score) {
       setIsCorrect(true);
 
       // Trigger confetti
@@ -94,7 +100,7 @@ const QuizPage = () => {
       setIsCorrect(null);
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedOption(answers[currentQuestionIndex + 1]);
+        setSelectedOption(null);
       }, 300);
     } else {
       setTimeout(() => {
@@ -123,8 +129,8 @@ const QuizPage = () => {
     }
   };
 
-  const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: boolean, option: string) => {
-    if (isCorrect !== null && correctAnswer) return 'border-green-500 bg-green-100';
+  const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
+    if (isCorrect && option === selectedOption) return 'border-green-500 bg-green-100';
     if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
   };
 
@@ -174,7 +180,7 @@ const QuizPage = () => {
                 <CardTitle className="text-xl mb-6">{currentQuestion.question}</CardTitle>
 
                 <RadioGroup value={selectedOption ?? ''} className="space-y-3">
-                  {currentQuestion.options.map(({ option, correctAnswer }, index: number) => (
+                  {currentQuestion.options.map(({ text, letter }, index: number) => (
                     <motion.div
                       key={crypto.randomUUID()}
                       className="flex items-center"
@@ -183,9 +189,9 @@ const QuizPage = () => {
                       transition={{ delay: 1 * 0.1 }}
                     >
                       <RadioGroupItem
-                        value={option}
+                        value={letter}
                         id={`option-${index}`}
-                        onClick={() => handleOptionSelect(option, correctAnswer)}
+                        onClick={() => handleOptionSelect(currentQuestion.id, letter)}
                         className="peer sr-only"
                         disabled={isCorrect !== null}
                       />
@@ -193,15 +199,15 @@ const QuizPage = () => {
                         htmlFor={`option-${index}`}
                         className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${getAnswerStyles(
                           isCorrect,
-                          correctAnswer,
-                          option,
+                          letter,
                         )}`}
                       >
-                        {option}
-                        {isCorrect !== null && correctAnswer && (
+                        {text}
+                        {isCorrect && letter === selectedOption && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
-                        {isCorrect === false && option === selectedOption && (
+                        {/* {isCorrect === false && text === selectedOption && ( */}
+                        {isCorrect === false && letter === selectedOption && (
                           <X className="h-5 w-5 text-red-500 ml-2" />
                         )}
                       </Label>
