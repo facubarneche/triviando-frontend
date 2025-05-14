@@ -28,7 +28,7 @@ const QuizPage = () => {
   const [direction, setDirection] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<IQuiz[]>([]);
-  // const [score, setScore] = useState(0);
+  const [score, setScore] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
@@ -55,8 +55,16 @@ const QuizPage = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
-  // const handleOptionSelect = (option: string, correctAnswer: boolean) => {
-  const handleOptionSelect = (option: string) => {
+  const handleOptionSelect = async (quizId: string, option: string) => {
+    const { score } = await quizService.getQuizAnswer({
+      questionId: quizId,
+      userId: 1, //TODO: Obtener el userId
+      optionSelected: option,
+      //TODO: Obtener al implementar timer
+      //!: Maximo 50000ms
+      millisecondsSpent: 20000,
+    });
+
     setSelectedOption(option);
 
     // Update answers array
@@ -64,13 +72,11 @@ const QuizPage = () => {
     newAnswers[currentQuestionIndex] = option;
     setAnswers(newAnswers);
 
-    // if (correctAnswer) {
-    //   setScore(score + 1);
-    // }
+    if (score) {
+      setScore((prev) => prev + 1);
+    }
 
-    // Check if answer is correct
-    // if (currentQuestion && correctAnswer) {
-    if (currentQuestion) {
+    if (currentQuestion && score) {
       setIsCorrect(true);
 
       // Trigger confetti
@@ -96,7 +102,7 @@ const QuizPage = () => {
       setIsCorrect(null);
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setSelectedOption(answers[currentQuestionIndex + 1]);
+        setSelectedOption(null);
       }, 300);
     } else {
       setTimeout(() => {
@@ -106,7 +112,7 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
-    // router.push(`/results?score=${score}&total=${questions.length}`);
+    router.push(`/results?score=${score}&total=${questions.length}`);
   };
 
   const handleLearnTogether = async () => {
@@ -124,11 +130,6 @@ const QuizPage = () => {
       setIsLoadingExplanation(false);
     }
   };
-
-  // const getAnswerStyles = (isCorrect: boolean | null, correctAnswer: boolean, option: string) => {
-  //   if (isCorrect !== null && correctAnswer) return 'border-green-500 bg-green-100';
-  //   if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
-  // };
 
   const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
     if (isCorrect !== null) return 'border-green-500 bg-green-100';
@@ -181,7 +182,7 @@ const QuizPage = () => {
                 <CardTitle className="text-xl mb-6">{currentQuestion.question}</CardTitle>
 
                 <RadioGroup value={selectedOption ?? ''} className="space-y-3">
-                  {currentQuestion.options.map(({ text }, index: number) => (
+                  {currentQuestion.options.map(({ text, letter }, index: number) => (
                     <motion.div
                       key={crypto.randomUUID()}
                       className="flex items-center"
@@ -190,10 +191,9 @@ const QuizPage = () => {
                       transition={{ delay: 1 * 0.1 }}
                     >
                       <RadioGroupItem
-                        value={text}
+                        value={letter}
                         id={`option-${index}`}
-                        // onClick={() => handleOptionSelect(text, correctAnswer)}
-                        onClick={() => handleOptionSelect(text)}
+                        onClick={() => handleOptionSelect(currentQuestion.id, letter)}
                         className="peer sr-only"
                         disabled={isCorrect !== null}
                       />
@@ -210,9 +210,8 @@ const QuizPage = () => {
                         {isCorrect !== null && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
-                        {isCorrect === false && text === selectedOption && (
-                          <X className="h-5 w-5 text-red-500 ml-2" />
-                        )}
+                        {/* {isCorrect === false && text === selectedOption && ( */}
+                        {isCorrect === false && <X className="h-5 w-5 text-red-500 ml-2" />}
                       </Label>
                     </motion.div>
                   ))}

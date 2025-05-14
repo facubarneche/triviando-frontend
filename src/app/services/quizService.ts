@@ -8,6 +8,13 @@ class QuizService extends BaseService {
 
     return data;
   };
+
+  //TODO: Tipar
+  getQuizAnswer = async (body: any) => {
+    const { data } = await this.axiosService.post('/answers', body);
+
+    return data;
+  };
 }
 
 export const quizService = new QuizService();
