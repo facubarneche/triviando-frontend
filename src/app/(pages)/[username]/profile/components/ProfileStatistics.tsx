@@ -40,9 +40,10 @@ const ProfileStatistics = () => {
   }
 
   //Calcular la precisión como un porcentaje
-  const accuracy = Math.round(
-    (userStatistics.correctAnswers / userStatistics.totalQuestions) * 100,
-  );
+  const accuracy =
+    userStatistics.totalQuestions > 0
+      ? Math.round((userStatistics.correctAnswers / userStatistics.totalQuestions) * 100)
+      : 0;
 
   return (
     <motion.div

@@ -29,6 +29,18 @@ class UserService extends BaseService {
     }
   };
 
+  getUserById = async (userId: number) => {
+    try {
+      const { data } = await this.axiosService.get(`/users/${userId}`);
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error('Error al obtener el usuario');
+    }
+  };
+
   getUserRegisterDate = async (userId: number) => {
     try {
       const { data } = await this.axiosService.get(`/users/${userId}/register-date`);

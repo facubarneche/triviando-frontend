@@ -2,32 +2,41 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar'
 import { Badge } from '@/app/components/ui/badge';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
+import { loginService } from '@/app/services/loginService';
+import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { formatDateToMonthYear } from '@/app/utils/formatDateToMonthYear';
 import { motion } from 'framer-motion';
 import { Edit, LogOut } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import React, { useEffect, useState } from 'react';
+import { UserResponse } from '../types/UserResponse';
 
 const ProfileInfo = () => {
   //Debe venir del backend con el endpoint getUserRegisterDate del userService
   const [joinDate, setJoinDate] = useState('');
   //   const joinDate = getUserRegisterDate(userData.id);  Simulación de llamada al backend
-
   //User mock data
-  const userData = {
-    username: 'QuizChampion', //Lo tengo en las cookies
-    firstName: 'Carlos', //Lo tengo en las cookies
-    lastName: 'Rodríguez', //Lo tengo en las cookies
-    email: 'champion@example.com', //Lo tengo en las cookies
-    joinDate: 'Marzo 2023',
-  };
+  // const userData = {
+  //   username: 'QuizChampion', //Lo tengo en las cookies
+  //   firstName: 'Carlos', //Lo tengo en las cookies
+  //   lastName: 'Rodríguez', //Lo tengo en las cookies
+  //   email: 'champion@example.com', //Lo tengo en las cookies
+  //   joinDate: 'Marzo 2023',
+  // };
+
+  //Agarrar username de la url
+  const { username } = useParams();
+
+  const [userLogged, setUserLogged] = useState<UserResponse | null>(null);
 
   //TODO: Conectar con el backend para obtener la fecha de registro del usuario y cambiar las variables
   useEffect(() => {
     const fetchJoinDate = async () => {
       try {
+        const userLogged = await userService.getUserById(loginService.getUserId());
+        setUserLogged(userLogged); // Debugging line // Debugging line
         //Obtengo el ID desde cookies o JWT
         // const userId = 1;
         // const date = await userService.getUserRegisterDate(userId);
@@ -44,7 +53,6 @@ const ProfileInfo = () => {
   }, []);
 
   const router = useRouter();
-  const fullName = `${userData.firstName} ${userData.lastName}`;
 
   return (
     <motion.div
@@ -58,13 +66,13 @@ const ProfileInfo = () => {
             <Avatar className="w-24 h-24 border-4 border-[#9d4edd]/30">
               <AvatarImage src="/placeholder-user.jpg" alt="@user" />
               <AvatarFallback className="text-2xl text-purple-900 text-white">
-                {userData.firstName.charAt(0) + userData.lastName.charAt(0)}
+                {userLogged?.fullName?.charAt(0) || ''}
               </AvatarFallback>
             </Avatar>
 
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                <h1 className="text-2xl font-bold text-[#3c096c]">{userData.username}</h1>
+                <h1 className="text-2xl font-bold text-[#3c096c]">{username}</h1>
                 <Badge
                   variant="outline"
                   className="bg-[#9d4edd]/10 text-[#5a189a] border-[#9d4edd]/30 self-center"
@@ -72,8 +80,10 @@ const ProfileInfo = () => {
                   Quiz Master
                 </Badge>
               </div>
-              <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>
-              <p className="text-muted-foreground">{userData.email}</p>
+              {userLogged && (
+                <h2 className="text-lg font-medium text-[#5a189a] mb-1">{userLogged.fullName}</h2>
+              )}
+              {userLogged && <p className="text-muted-foreground">{userLogged.email}</p>}
               <p className="text-sm text-muted-foreground text-gray-600 mt-2">
                 Miembro desde {joinDate}
               </p>
