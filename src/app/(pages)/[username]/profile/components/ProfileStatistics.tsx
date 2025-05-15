@@ -21,13 +21,6 @@ const ProfileStatistics = () => {
         }
         const statistics = await userService.getUserStatistics(user.id);
         setUserStatistics(statistics);
-
-        //Mock data viene del endpoint getUserStatistics del userService
-        // setUserStatistics({
-        //   totalQuizzes: 10,
-        //   correctAnswers: 35,
-        //   totalQuestions: 50,
-        // }); // Simulación de datos
       } catch (error) {
         handleError(error);
       }

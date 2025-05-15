@@ -17,14 +17,6 @@ const ProfileInfo = () => {
   //Debe venir del backend con el endpoint getUserRegisterDate del userService
   const [joinDate, setJoinDate] = useState('');
   //   const joinDate = getUserRegisterDate(userData.id);  Simulación de llamada al backend
-  //User mock data
-  // const userData = {
-  //   username: 'QuizChampion', //Lo tengo en las cookies
-  //   firstName: 'Carlos', //Lo tengo en las cookies
-  //   lastName: 'Rodríguez', //Lo tengo en las cookies
-  //   email: 'champion@example.com', //Lo tengo en las cookies
-  //   joinDate: 'Marzo 2023',
-  // };
 
   //Agarrar username de la url
   const { username } = useParams();
@@ -37,11 +29,6 @@ const ProfileInfo = () => {
       try {
         const userLogged = await userService.getUserById(loginService.getUserId());
         setUserLogged(userLogged); // Debugging line // Debugging line
-        //Obtengo el ID desde cookies o JWT
-        // const userId = 1;
-        // const date = await userService.getUserRegisterDate(userId);
-        //Hardcodeo un valor para simular la llamada al backend'
-        //Date en formato ISO
         const date = '2023-03-15T00:00:00Z'; // Simulación de fecha de registro
         setJoinDate(formatDateToMonthYear(date));
       } catch (error) {
