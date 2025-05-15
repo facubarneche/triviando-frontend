@@ -5,26 +5,28 @@ export function middleware(request: NextRequest) {
   const cookieUsuario = request.cookies.get('usuario');
   const url = request.nextUrl;
 
-  // Si no hay cookie y la ruta es "/", redirige a /login
+  // Redirección inicial según login
   if (!cookieUsuario && url.pathname === '/') {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // Si hay cookie y la ruta es "/", redirige a /topics
   if (cookieUsuario && url.pathname === '/') {
     return NextResponse.redirect(new URL('/topics', request.url));
   }
 
-  if (url.pathname.includes('/profile')) {
-    const userIdFromPath = url.pathname.split('/')[1];
-    const userIdFromCookie = cookieUsuario ? JSON.parse(cookieUsuario.value).id : null;
+  // Validar rutas con username dinámico (como /[username]/profile)
+  // const pathSegments = url.pathname.split('/').filter(Boolean);
 
-    if (`${userIdFromPath}` !== `${userIdFromCookie}`) {
-      const response = NextResponse.redirect(new URL('/unauthorized', request.url));
-      response.cookies.set('unauthorized', 'true', { path: '/' });
-      return response;
-    }
-  }
+  // if (cookieUsuario && pathSegments.length > 1) {
+  //   const usernameFromPath = pathSegments[0];
+  //   const { username: usernameFromCookie } = JSON.parse(cookieUsuario.value);
 
-  return NextResponse.next(); // Permite continuar si todo está bien
+  //   if (usernameFromPath !== usernameFromCookie) {
+  //     const response = NextResponse.redirect(new URL('/unauthorized', request.url));
+  //     response.cookies.set('unauthorized', 'true', { path: '/' });
+  //     return response;
+  //   }
+  // }
+
+  return NextResponse.next();
 }

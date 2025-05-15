@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Progress } from '@/app/components/ui/progress';
+import { loginService } from '@/app/services/loginService';
+import { userService } from '@/app/services/userService';
 import { UserStatistics } from '@/app/types/UserStatistics';
 import { handleError } from '@/app/utils/errorHandler';
+import { AxiosError } from 'axios';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 
@@ -11,17 +14,20 @@ const ProfileStatistics = () => {
   useEffect(() => {
     const fetchUserStatistics = async () => {
       try {
-        // Simulación de llamada al backend para obtener estadísticas del usuario
-        // const userId = 1; // Obtener el ID desde cookies o JWT
-        // const statistics = await userService.getUserStatistics(userId);
-        // setUserData(statistics);
+        const user = loginService.getUsuarioActual(); // Obtener el ID desde cookies o JWT
+        if (!user) {
+          handleError(new AxiosError('Usuario no autenticado', 'UNAUTHORIZED'));
+          throw new Error('User is not logged in');
+        }
+        const statistics = await userService.getUserStatistics(user.id);
+        setUserStatistics(statistics);
 
         //Mock data viene del endpoint getUserStatistics del userService
-        setUserStatistics({
-          totalQuizzes: 10,
-          correctAnswers: 35,
-          totalQuestions: 50,
-        }); // Simulación de datos
+        // setUserStatistics({
+        //   totalQuizzes: 10,
+        //   correctAnswers: 35,
+        //   totalQuestions: 50,
+        // }); // Simulación de datos
       } catch (error) {
         handleError(error);
       }

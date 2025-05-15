@@ -24,6 +24,14 @@ class LoginService extends BaseService {
   isAuthenticated(): boolean {
     return !!Cookies.get('usuario');
   }
+
+  getUserId(): number {
+    const usuario = this.getUsuarioActual();
+    if (usuario) {
+      return usuario.id;
+    }
+    throw new Error('No se encontró el ID del usuario');
+  }
 }
 
 export const loginService = new LoginService();
