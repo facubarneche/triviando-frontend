@@ -11,7 +11,7 @@ interface StreakData {
 //TODO: Hacer responsive el modal en mobile
 
 export function StreakModal() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [streakData, setStreakData] = useState<StreakData | null>(null);
 
   useEffect(() => {
@@ -29,6 +29,15 @@ export function StreakModal() {
         //setStreakData(data);
         //Si hay racha se abre el modal, sino simplemente aparecen los topicos
         //if (data.racha) setOpen(true);
+
+        //Persisto la fecha de la última vez que se mostró el modal
+        const today = new Date().toISOString().split('T')[0];
+        const lastShownDate = localStorage.getItem('streakModalLastShown');
+
+        //Muestro modal solo si no se mostró hoy
+        if (lastShownDate !== today) {
+          setOpen(true);
+        }
       } catch (error) {
         console.error('Error al verificar la racha:', error);
         //handleError(error);
@@ -38,6 +47,12 @@ export function StreakModal() {
     //Verificar la racha al cargar el componente
     checkStreak();
   }, []);
+
+  const handleClose = () => {
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem('streakModalLastShown', today);
+    setOpen(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -65,7 +80,7 @@ export function StreakModal() {
             type="button"
             variant="outline"
             className="bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 transition-all duration-300 shadow-md hover:shadow-lg text-white"
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
           >
             ¡Genial!
           </Button>
