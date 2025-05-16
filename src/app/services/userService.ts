@@ -64,6 +64,18 @@ class UserService extends BaseService {
       throw new Error('Error al obtener las estadísticas del usuario');
     }
   };
+
+  getStreak = async (userId: number) => {
+    try {
+      const { data } = await this.axiosService.get(`/users/racha/${userId}`);
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error('Error al obtener la racha del usuario');
+    }
+  };
 }
 
 export const userService = new UserService();

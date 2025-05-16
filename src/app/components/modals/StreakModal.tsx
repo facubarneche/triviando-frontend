@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import { Flame } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
+import { userService } from '@/app/services/userService';
+import { loginService } from '@/app/services/loginService';
 
 interface StreakData {
-  diasConsecutivos: string;
+  rachaActual: number;
 }
 
 //TODO: Hacer responsive el modal en mobile
@@ -19,14 +21,15 @@ export function StreakModal() {
       try {
         // Simulación de respuesta del backend (hardcodeada)
         // Esto se reemplazará luego por la llamada real a userService
-        const mockResponse: StreakData = {
-          diasConsecutivos: '5',
-        };
-        setStreakData(mockResponse);
+        // const mockResponse: StreakData = {
+        //   rachaActual: '5',
+        // };
+        // setStreakData(mockResponse);
 
         //TODO: Luego utilizar el servicio real
-        //const data = await userService.getStreak();
-        //setStreakData(data);
+        const userId = loginService.getUserId();
+        const data = await userService.getStreak(userId);
+        setStreakData(data);
         //Si hay racha se abre el modal, sino simplemente aparecen los topicos
         //if (data.racha) setOpen(true);
 
@@ -68,12 +71,12 @@ export function StreakModal() {
               <Flame className="h-16 w-16 text-red-800" />
             </div>
             <div className="absolute -top-2 -right-2 bg-cyan-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold">
-              {streakData?.diasConsecutivos}
+              {streakData?.rachaActual}
             </div>
           </div>
           <h3 className="text-xl font-semibold text-center">¡Felicitaciones!</h3>
           <p className="text-center text-muted-foreground text-gray-600">
-            Has ingresado a la aplicación durante {streakData?.diasConsecutivos} días consecutivos.
+            Has ingresado a la aplicación durante {streakData?.rachaActual} días consecutivos.
             ¡Sigue así para mantener tu racha!
           </p>
           <Button
