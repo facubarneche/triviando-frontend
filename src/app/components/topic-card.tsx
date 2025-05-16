@@ -12,7 +12,7 @@ interface TopicCardProps {
 export default function TopicCard({ topic }: TopicCardProps) {
   const { name, questionsCount, color, icon } = topic;
   return (
-    <Link href={{ pathname: `/quiz/${name}` }}>
+    <Link href={{ pathname: `/quiz/${encodeURIComponent(name)}` }}>
       <motion.div
         style={{ height: '100%' }}
         whileHover={{ scale: 1.03 }}
