@@ -18,6 +18,7 @@ import { quizService } from '@/app/services/quizService';
 import { IQuiz, LetterType } from './types';
 import { getUserIdCSR } from '@/app/lib/getUserIdCSR';
 import Timer, { TimerHandle } from '../../../components/Timer';
+import { playSound } from '@/app/utils/playSound';
 
 const QuizPage = () => {
   const params = useParams<{ topic: string }>();
@@ -62,13 +63,12 @@ const QuizPage = () => {
 
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
     timerRef.current?.stop();
+    const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
     const { score } = await quizService.getQuizAnswer({
       questionId: quizId,
       userId: userId,
       optionSelected: option,
-      //TODO: Obtener al implementar timer
-      //!: Maximo 50000ms
-      millisecondsSpent: 20000,
+      millisecondsSpent,
     });
     setSelectedOption(option);
 
@@ -82,6 +82,7 @@ const QuizPage = () => {
     }
     if (currentQuestion && score) {
       setIsCorrect(true);
+      playSound('/sounds/correct.mp3');
 
       // Trigger confetti
       if (confettiRef.current) {
@@ -97,6 +98,7 @@ const QuizPage = () => {
       }
     } else {
       setIsCorrect(false);
+      playSound('/sounds/incorrect.mp3');
     }
   };
 
