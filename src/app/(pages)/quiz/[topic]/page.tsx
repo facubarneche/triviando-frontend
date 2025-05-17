@@ -110,6 +110,7 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
+    quizService.generateQuiz(topic);
     router.push(`/results?score=${score}&total=${questions.length}`);
   };
 
