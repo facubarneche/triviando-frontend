@@ -19,7 +19,6 @@ import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
 import { toast } from 'react-toastify';
 
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -171,6 +170,7 @@ export default function LoginPage() {
                   variant="outline"
                   className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300"
                   onClick={handleGoogleLogin}
+                  disabled
                 >
                   <FaGoogle className="mr-2 h-4 w-4 text-red-500" />
                   Continuar con Google

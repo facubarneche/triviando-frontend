@@ -3,28 +3,35 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const cookieUsuario = request.cookies.get('usuario');
+  console.log('Cookie usuario:', cookieUsuario);
   const url = request.nextUrl;
 
-  // Si no hay cookie y la ruta es "/", redirige a /login
+  // Redirección inicial según login
   if (!cookieUsuario && url.pathname === '/') {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // Si hay cookie y la ruta es "/", redirige a /topics
   if (cookieUsuario && url.pathname === '/') {
     return NextResponse.redirect(new URL('/topics', request.url));
   }
 
-  if (url.pathname.includes('/profile')) {
-    const userIdFromPath = url.pathname.split('/')[1];
-    const userIdFromCookie = cookieUsuario ? JSON.parse(cookieUsuario.value).id : null;
+  const profileMatch = url.pathname.match(/^\/([^\/]+)\/profile$/);
 
-    if (`${userIdFromPath}` !== `${userIdFromCookie}`) {
-      const response = NextResponse.redirect(new URL('/unauthorized', request.url));
-      response.cookies.set('unauthorized', 'true', { path: '/' });
-      return response;
+  if (cookieUsuario && profileMatch) {
+    try {
+      const user = JSON.parse(decodeURIComponent(cookieUsuario.value));
+      const usernameFromUrl = profileMatch[1]; // lo que viene en la ruta
+      const usernameFromCookie = user.username;
+
+      if (usernameFromUrl !== usernameFromCookie) {
+        // Redirigir a /unauthorized si no coinciden
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+    } catch (err) {
+      console.error('Error al parsear la cookie del usuario', err);
+      return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
 
-  return NextResponse.next(); // Permite continuar si todo está bien
+  return NextResponse.next();
 }
