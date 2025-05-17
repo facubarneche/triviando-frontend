@@ -16,6 +16,8 @@ import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IQuiz, LetterType } from './types';
+import { getUserIdCSR } from '@/app/lib/getUserIdCSR';
+import Timer from './components/Timer';
 
 const QuizPage = () => {
   const params = useParams<{ topic: string }>();
@@ -33,6 +35,7 @@ const QuizPage = () => {
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const confettiRef = useRef<HTMLDivElement>(null);
+  const userId = getUserIdCSR();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -58,7 +61,7 @@ const QuizPage = () => {
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
     const { score } = await quizService.getQuizAnswer({
       questionId: quizId,
-      userId: 1, //TODO: Obtener el userId
+      userId: userId,
       optionSelected: option,
       //TODO: Obtener al implementar timer
       //!: Maximo 50000ms
@@ -155,6 +158,7 @@ const QuizPage = () => {
 
         <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm" ref={confettiRef}>
           <CardHeader>
+            <Timer />
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium">
                 Pregunta {currentQuestionIndex + 1} de {questions.length}
