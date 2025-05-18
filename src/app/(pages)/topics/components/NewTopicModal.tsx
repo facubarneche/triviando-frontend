@@ -16,6 +16,7 @@ import { Label } from '@/app/components/ui/label';
 import { Input } from '@/app/components/ui/input';
 import { Button } from '@/app/components/ui/button';
 import { Textarea } from '@/app/components/ui/textarea';
+import { topicService } from '@/app/services/topicService';
 
 interface CreateTopicModalProps {
   isOpen: boolean;
@@ -31,9 +32,9 @@ export default function CreateTopicModal({
   const [topicName, setTopicName] = useState('');
   const [topicContext, setTopicContext] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; context?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; context?: string; general?: string }>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validación
@@ -55,18 +56,18 @@ export default function CreateTopicModal({
     // Simular envío
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      onCreateTopic({
-        name: topicName,
-        context: topicContext,
-      });
-
-      // Resetear el formulario
+    try {
+      const createdTopic = await topicService.createTopic(topicName, topicContext);
+      if (onCreateTopic) onCreateTopic(createdTopic);
       setTopicName('');
       setTopicContext('');
-      setErrors({});
+      onClose();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      setErrors({ general: 'Error al crear el tema. Intenta nuevamente.' });
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   const handleClose = () => {
@@ -163,7 +164,7 @@ export default function CreateTopicModal({
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
                   />
-                  Creando...
+                  Creando... Esto puede demorar hasta 1 minuto.
                 </>
               ) : (
                 <>

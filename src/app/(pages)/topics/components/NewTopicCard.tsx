@@ -4,10 +4,17 @@ import { motion } from 'framer-motion';
 import { Plus, Sparkles } from 'lucide-react';
 import NewTopicModal from './NewTopicModal';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const NewTopicCard = () => {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
+  const handleCreateTopic = () => {
+    setOpen(false); // Cierra el modal
+    router.refresh(); // Refresca la ruta actual (/topics)
+  };
+  
   return (
     <motion.div
       style={{ height: '100%' }}
@@ -41,7 +48,7 @@ const NewTopicCard = () => {
       <NewTopicModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onCreateTopic={() => setOpen(false)}
+        onCreateTopic={handleCreateTopic}
       />
     </motion.div>
   );
