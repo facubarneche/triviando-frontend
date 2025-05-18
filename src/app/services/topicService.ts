@@ -8,11 +8,11 @@ class TopicService extends BaseService {
 
   createTopic = async (name: string, context: string) => {
     const { data } = await this.axiosService.post('/preguntas/generate', {
-      name,
-      context,
+      topic: name,
+      promptContext: context,
     });
     return data;
-  }
+  };
 }
 
 export const topicService = new TopicService();
