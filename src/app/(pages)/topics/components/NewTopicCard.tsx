@@ -14,11 +14,13 @@ const NewTopicCard = () => {
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-      onClick={() => setOpen(true)}
     >
       <Card
         className="h-[200px] border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
-        onClick={() => setOpen(true)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
       >
         <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
           <motion.div
