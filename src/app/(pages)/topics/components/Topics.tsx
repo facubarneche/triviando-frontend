@@ -1,13 +1,24 @@
 import TopicCard from '@/app/components/topic-card';
 import { motion } from 'framer-motion';
 import { ITopic } from '../types';
+import NewTopicCard from './NewTopicCard';
 
 interface TopicsProps {
   topics: ITopic[];
 }
 
 const Topics = ({ topics }: TopicsProps) => (
+
+  
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <motion.div
+      key={'new-topic'}
+      initial={{ opacity: 0, x: 70, y: 40 }}
+      animate={{ opacity: 1, x: 0, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <NewTopicCard />
+    </motion.div>
     {topics.map((topic, index) => (
       <motion.div
         key={topic.name}
