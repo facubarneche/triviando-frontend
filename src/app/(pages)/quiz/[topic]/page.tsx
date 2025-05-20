@@ -47,11 +47,14 @@ const QuizPage = () => {
         const parsedQuiz = parserQuiz(quiz);
         setQuestions(parsedQuiz);
         setAnswers(Array(parsedQuiz.length).fill(null));
-        timerRef.current?.start();
       } catch (error) {
         console.error('Error fetching questions:', error);
       } finally {
         setIsLoading(false);
+        setTimeout(() => {
+          //TODO: Ver si al refactorizar se puede eliminar el setTimeout
+          timerRef.current?.start();
+        }, 200);
       }
     };
 
@@ -64,7 +67,7 @@ const QuizPage = () => {
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
     timerRef.current?.stop();
     const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
-    const { score } = await quizService.getQuizAnswer({
+    const { score, correctOption } = await quizService.getQuizAnswer({
       questionId: quizId,
       userId: userId,
       optionSelected: option,
@@ -77,29 +80,29 @@ const QuizPage = () => {
     newAnswers[currentQuestionIndex] = option;
     setAnswers(newAnswers);
 
-    if (score) {
-      setScore((prev) => prev + 1);
-    }
-    if (currentQuestion && score) {
+    if (currentQuestion && correctOption.letter === option) {
       setIsCorrect(true);
-      playSound('/sounds/correct.mp3');
 
-      // Trigger confetti
-      if (confettiRef.current) {
-        const rect = confettiRef.current.getBoundingClientRect();
-        const x = (rect.left + rect.width / 2) / window.innerWidth;
-        const y = (rect.top + rect.height / 2) / window.innerHeight;
+      if (score) {
+        setScore((prev) => prev + 1);
+        playSound('/sounds/correct.mp3');
 
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { x, y: y - 0.1 },
-        });
+        // Trigger confetti
+        if (confettiRef.current) {
+          const rect = confettiRef.current.getBoundingClientRect();
+          const x = (rect.left + rect.width / 2) / window.innerWidth;
+          const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+          return confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { x, y: y - 0.1 },
+          });
+        }
       }
-    } else {
-      setIsCorrect(false);
-      playSound('/sounds/incorrect.mp3');
     }
+    setIsCorrect(false);
+    playSound('/sounds/incorrect.mp3');
   };
 
   const handleNext = () => {

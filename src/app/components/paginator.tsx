@@ -16,7 +16,7 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
   const [currentPage, setCurrentPage] = useState(number);
 
   useEffect(() => {
-    setCurrentPage(number);
+    setCurrentPage(number + 1);
   }, [number]);
 
   const handlePageChange = (newPage: number) => {

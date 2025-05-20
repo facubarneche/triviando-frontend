@@ -2,6 +2,7 @@ interface ILeaderBoardContentDTO {
   id: number;
   fullName: string;
   score: number;
+  position: number;
 }
 
 interface ILeaderBoardDTO {
