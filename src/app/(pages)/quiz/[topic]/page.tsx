@@ -16,6 +16,9 @@ import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IQuiz, LetterType } from './types';
+import { getUserIdCSR } from '@/app/lib/getUserIdCSR';
+import Timer, { TimerHandle } from '../../../components/Timer';
+import { playSound } from '@/app/utils/playSound';
 
 const QuizPage = () => {
   const params = useParams<{ topic: string }>();
@@ -33,6 +36,8 @@ const QuizPage = () => {
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const confettiRef = useRef<HTMLDivElement>(null);
+  const userId = getUserIdCSR();
+  const timerRef = useRef<TimerHandle>(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -42,6 +47,7 @@ const QuizPage = () => {
         const parsedQuiz = parserQuiz(quiz);
         setQuestions(parsedQuiz);
         setAnswers(Array(parsedQuiz.length).fill(null));
+        timerRef.current?.start();
       } catch (error) {
         console.error('Error fetching questions:', error);
       } finally {
@@ -56,13 +62,13 @@ const QuizPage = () => {
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
+    timerRef.current?.stop();
+    const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
     const { score } = await quizService.getQuizAnswer({
       questionId: quizId,
-      userId: 1, //TODO: Obtener el userId
+      userId: userId,
       optionSelected: option,
-      //TODO: Obtener al implementar timer
-      //!: Maximo 50000ms
-      millisecondsSpent: 20000,
+      millisecondsSpent,
     });
     setSelectedOption(option);
 
@@ -76,6 +82,7 @@ const QuizPage = () => {
     }
     if (currentQuestion && score) {
       setIsCorrect(true);
+      playSound('/sounds/correct.mp3');
 
       // Trigger confetti
       if (confettiRef.current) {
@@ -91,11 +98,13 @@ const QuizPage = () => {
       }
     } else {
       setIsCorrect(false);
+      playSound('/sounds/incorrect.mp3');
     }
   };
 
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
+      timerRef.current?.start();
       setDirection(1);
       setIsCorrect(null);
       setTimeout(() => {
@@ -155,6 +164,7 @@ const QuizPage = () => {
 
         <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm" ref={confettiRef}>
           <CardHeader>
+            <Timer ref={timerRef} />
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium">
                 Pregunta {currentQuestionIndex + 1} de {questions.length}
