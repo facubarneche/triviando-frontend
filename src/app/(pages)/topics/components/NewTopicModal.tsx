@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Lightbulb, Save } from 'lucide-react';
 import {
   Dialog,
@@ -16,7 +15,6 @@ import { Label } from '@/app/components/ui/label';
 import { Input } from '@/app/components/ui/input';
 import { Button } from '@/app/components/ui/button';
 import { Textarea } from '@/app/components/ui/textarea';
-import { topicService } from '@/app/services/topicService';
 
 interface CreateTopicModalProps {
   isOpen: boolean;
@@ -31,43 +29,24 @@ export default function CreateTopicModal({
 }: CreateTopicModalProps) {
   const [topicName, setTopicName] = useState('');
   const [topicContext, setTopicContext] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; context?: string; general?: string }>({});
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validación
     const newErrors: { name?: string; context?: string } = {};
-
-    if (!topicName.trim()) {
-      newErrors.name = 'El nombre del tema es obligatorio';
-    }
-
-    if (!topicContext.trim()) {
-      newErrors.context = 'La descripción del tema es obligatoria';
-    }
-
+    if (!topicName.trim()) newErrors.name = 'El nombre del tema es obligatorio';
+    if (!topicContext.trim()) newErrors.context = 'La descripción del tema es obligatoria';
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // Simular envío
-    setIsSubmitting(true);
-
-    try {
-      const createdTopic = await topicService.createTopic(topicName, topicContext);
-      if (onCreateTopic) onCreateTopic(createdTopic);
-      setTopicName('');
-      setTopicContext('');
-      onClose();
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setErrors({ general: 'Error al crear el tema. Intenta nuevamente.' });
-    } finally {
-      setIsSubmitting(false);
-    }
+    if (onCreateTopic) onCreateTopic({ name: topicName, context: topicContext });
+    setTopicName('');
+    setTopicContext('');
+    onClose();
   };
 
   const handleClose = () => {
@@ -155,23 +134,9 @@ export default function CreateTopicModal({
             <Button
               type="submit"
               className="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white"
-              disabled={isSubmitting}
             >
-              {isSubmitting ? (
-                <>
-                  <motion.div
-                    className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
-                  />
-                  Creando... Esto puede demorar hasta 1 minuto.
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  Crear Tema
-                </>
-              )}
+              <Save className="mr-2 h-4 w-4" />
+              Crear Tema
             </Button>
           </DialogFooter>
         </form>

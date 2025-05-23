@@ -10,8 +10,9 @@ class TopicService extends BaseService {
     const { data } = await this.axiosService.post('/preguntas/generate', {
       topic: name,
       promptContext: context,
-      prompType: 'topicPrompter',
+      promptType: 'topicPrompter',
     });
+
     return data;
   };
 }
