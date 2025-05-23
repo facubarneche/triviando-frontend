@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const cookieUsuario = request.cookies.get('usuario');
-  console.log('Cookie usuario:', cookieUsuario);
   const url = request.nextUrl;
 
   // Redirección inicial según login

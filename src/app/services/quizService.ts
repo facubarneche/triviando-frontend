@@ -21,6 +21,13 @@ class QuizService extends BaseService {
     const { data } = await this.axiosService.post('/answers', body);
     return data;
   };
+
+  generateQuiz = (topic: string) =>
+    this.axiosService.post(`/preguntas/generate`, {
+      topic,
+      promptContext: '',
+      promptType: 'questionPrompter',
+    });
 }
 
 export const quizService = new QuizService();

@@ -16,6 +16,9 @@ import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IQuiz, LetterType } from './types';
+import { getUserIdCSR } from '@/app/lib/getUserIdCSR';
+import Timer, { TimerHandle } from '../../../components/Timer';
+import { playSound } from '@/app/utils/playSound';
 
 const QuizPage = () => {
   const params = useParams<{ topic: string }>();
@@ -33,6 +36,8 @@ const QuizPage = () => {
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const confettiRef = useRef<HTMLDivElement>(null);
+  const userId = getUserIdCSR();
+  const timerRef = useRef<TimerHandle>(null);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -46,6 +51,10 @@ const QuizPage = () => {
         console.error('Error fetching questions:', error);
       } finally {
         setIsLoading(false);
+        setTimeout(() => {
+          //TODO: Ver si al refactorizar se puede eliminar el setTimeout
+          timerRef.current?.start();
+        }, 200);
       }
     };
 
@@ -56,13 +65,13 @@ const QuizPage = () => {
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
-    const { score } = await quizService.getQuizAnswer({
+    timerRef.current?.stop();
+    const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
+    const { score, correctOption } = await quizService.getQuizAnswer({
       questionId: quizId,
-      userId: 1, //TODO: Obtener el userId
+      userId: userId,
       optionSelected: option,
-      //TODO: Obtener al implementar timer
-      //!: Maximo 50000ms
-      millisecondsSpent: 20000,
+      millisecondsSpent,
     });
     setSelectedOption(option);
 
@@ -71,31 +80,34 @@ const QuizPage = () => {
     newAnswers[currentQuestionIndex] = option;
     setAnswers(newAnswers);
 
-    if (score) {
-      setScore((prev) => prev + 1);
-    }
-    if (currentQuestion && score) {
+    if (currentQuestion && correctOption.letter === option) {
       setIsCorrect(true);
 
-      // Trigger confetti
-      if (confettiRef.current) {
-        const rect = confettiRef.current.getBoundingClientRect();
-        const x = (rect.left + rect.width / 2) / window.innerWidth;
-        const y = (rect.top + rect.height / 2) / window.innerHeight;
+      if (score) {
+        setScore((prev) => prev + 1);
+        playSound('/sounds/correct.mp3');
 
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { x, y: y - 0.1 },
-        });
+        // Trigger confetti
+        if (confettiRef.current) {
+          const rect = confettiRef.current.getBoundingClientRect();
+          const x = (rect.left + rect.width / 2) / window.innerWidth;
+          const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+          return confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { x, y: y - 0.1 },
+          });
+        }
       }
-    } else {
-      setIsCorrect(false);
     }
+    setIsCorrect(false);
+    playSound('/sounds/incorrect.mp3');
   };
 
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
+      timerRef.current?.start();
       setDirection(1);
       setIsCorrect(null);
       setTimeout(() => {
@@ -110,6 +122,7 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
+    quizService.generateQuiz(topic);
     router.push(`/results?score=${score}&total=${questions.length}`);
   };
 
@@ -154,6 +167,7 @@ const QuizPage = () => {
 
         <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm" ref={confettiRef}>
           <CardHeader>
+            <Timer ref={timerRef} />
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium">
                 Pregunta {currentQuestionIndex + 1} de {questions.length}

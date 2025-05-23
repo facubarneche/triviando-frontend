@@ -19,8 +19,7 @@ interface CardProps {
 
 const Card = ({ leaderBoardData }: CardProps) => {
   const { content, ...paginatorData } = leaderBoardData;
-  //TODO: Eliminar paginatorData al recibir ranking desde el back
-  const historicalData = parseLeaderboardData(content, paginatorData.number - 1);
+  const historicalData = parseLeaderboardData(content);
   return (
     <UICard className="bg-white">
       <CardHeader>

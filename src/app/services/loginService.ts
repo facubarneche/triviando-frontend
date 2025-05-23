@@ -6,7 +6,7 @@ class LoginService extends BaseService {
   async login(credentials: LoginCredentials): Promise<Usuario> {
     const response = await this.axiosService.post<Usuario>(`/users/login`, credentials);
     const user = response.data;
-    console.log('USUARIO LOGEADO:', user);
+
     //Esta cookie expira en 1 día
     Cookies.set('usuario', JSON.stringify(user), { expires: 1 });
     return user;
