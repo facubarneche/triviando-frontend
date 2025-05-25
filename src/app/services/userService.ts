@@ -55,7 +55,7 @@ class UserService extends BaseService {
 
   getUserStatistics = async (userId: number) => {
     try {
-      const { data } = await this.axiosService.get(`/users/${userId}/statistics`);
+      const { data } = await this.axiosService.get(`/users/statistics/${userId}`);
       return data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {
