@@ -6,6 +6,16 @@ interface IUser {
   email: string;
   password: string;
 }
+
+export interface IUserData {
+  id: number;
+  fullName: string;
+  age: number;
+  email: string;
+  phoneNumber: string;
+  createdAt: string;
+}
+
 class UserService extends BaseService {
   createUser = async ({ username, email, password }: IUser) => {
     try {
@@ -29,7 +39,7 @@ class UserService extends BaseService {
     }
   };
 
-  getUserById = async (userId: number) => {
+  getUserById = async (userId: number): Promise<IUserData> => {
     try {
       const { data } = await this.axiosService.get(`/users/${userId}`);
       return data;
@@ -38,6 +48,18 @@ class UserService extends BaseService {
         throw new Error(error.response.data.error);
       }
       throw new Error('Error al obtener el usuario');
+    }
+  };
+
+  editUserById = async (userId: number, userData: Partial<IUser>) => {
+    try {
+      const { data } = await this.axiosService.patch(`/users/${userId}`, userData);
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error('Error al editar el usuario');
     }
   };
 

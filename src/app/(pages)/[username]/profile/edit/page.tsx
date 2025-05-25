@@ -2,7 +2,7 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Camera, User, Mail, Lock, Save, Phone, Calendar } from 'lucide-react';
@@ -26,34 +26,85 @@ import {
   SelectValue,
 } from '@/app/components/ui/select';
 import { motion } from 'framer-motion';
-
-// Códigos de país más comunes
-
+import { countryCodes } from '@/app/utils/countryCodes';
+import { userService } from '@/app/services/userService';
+import { loginService } from '@/app/services/loginService';
+import { handleError } from '@/app/utils/errorHandler';
+import type { IUserData } from '@/app/services/userService';
 
 // Mock data - en una aplicación real, esto vendría de una API o contexto
-const userData = {
-  username: 'QuizChampion',
-  firstName: 'Carlos',
-  lastName: 'Rodríguez',
-  email: 'champion@example.com',
-  countryCode: '+52',
-  phoneNumber: '5551234567',
-  birthDate: '1990-05-15',
-  joinDate: 'Marzo 2023',
-};
+// const userData = {
+//   username: 'QuizChampion',
+//   firstName: 'Carlos',
+//   lastName: 'Rodríguez',
+//   email: 'champion@example.com',
+//   countryCode: '+52',
+//   phoneNumber: '5551234567',
+//   birthDate: '1990-05-15',
+//   joinDate: 'Marzo 2023',
+// };
 
 export default function EditProfile() {
-  const router = useRouter();
+  const [userData, setUserData] = useState<IUserData | null>(null); // <-- null al inicio
   const [formData, setFormData] = useState({
-    username: userData.username,
-    firstName: userData.firstName,
-    lastName: userData.lastName,
-    email: userData.email,
-    countryCode: userData.countryCode,
-    phoneNumber: userData.phoneNumber,
-    birthDate: userData.birthDate,
+    username: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    countryCode: '',
+    phoneNumber: '',
+    birthDate: '',
     currentPassword: '',
   });
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = await userService.getUserById(loginService.getUserId());
+      setUserData(userData);
+    };
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    if (userData) {
+      // 1. Split fullName
+      const [firstName, ...rest] = userData.fullName.split(' ');
+      const lastName = rest.join(' ');
+
+      // 2. Extract country code and phone number (ej: "+54 91123456789" o "+5491123456789")
+      let countryCode = '';
+      let phoneNumber = '';
+      const phoneMatch = userData.phoneNumber.match(/^(\+\d+)[\s-]?(.+)$/);
+      if (phoneMatch) {
+        countryCode = phoneMatch[1];
+        phoneNumber = phoneMatch[2].replace(/\D/g, '');
+      } else {
+        phoneNumber = userData.phoneNumber.replace(/\D/g, '');
+      }
+
+      // 3. Calculate birthDate from age
+      const today = new Date();
+      const birthYear = today.getFullYear() - userData.age;
+      const birthDate = `${birthYear}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(
+        today.getDate(),
+      ).padStart(2, '0')}`;
+
+      const username = loginService.getUsuarioActual()?.username;
+
+      setFormData({
+        username: username || '',
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: userData.email || '',
+        countryCode,
+        phoneNumber,
+        birthDate,
+        currentPassword: '',
+      });
+    }
+  }, [userData]);
+
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -157,13 +208,19 @@ export default function EditProfile() {
 
     setIsSubmitting(true);
 
-    // Simular llamada a API
-    setTimeout(() => {
-      console.log('Profile updated:', formData);
+    try {
+      const updatedUser = {
+        ...formData,
+      };
+
+      userService.editUserById(loginService.getUserId(), updatedUser).then(() => {
+        setIsSubmitting(false);
+        router.push('/profile');
+      });
+    } catch (error) {
       setIsSubmitting(false);
-      router.push('/profile');
-      // Aquí actualizarías los datos del usuario en una aplicación real
-    }, 1500);
+      handleError(error);
+    }
   };
 
   return (
@@ -203,7 +260,7 @@ export default function EditProfile() {
                         <>
                           <AvatarImage src="/placeholder-user.jpg" alt="@user" />
                           <AvatarFallback className="text-2xl bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
-                            {userData.firstName.charAt(0) + userData.lastName.charAt(0)}
+                            {userData?.fullName}
                           </AvatarFallback>
                         </>
                       )}

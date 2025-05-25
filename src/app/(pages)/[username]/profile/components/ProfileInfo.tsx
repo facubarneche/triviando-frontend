@@ -81,7 +81,7 @@ const ProfileInfo = () => {
                   variant="outline"
                   className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
                   //TODO: Ajustar la ruta de edición de perfil (currentPath + '/edit')
-                  onClick={() => router.push('/profile/edit')}
+                  onClick={() => router.push(`/${username}/profile/edit`)}
                 >
                   <Edit className="h-4 w-4" />
                   Editar Perfil
