@@ -20,6 +20,7 @@ interface CardProps {
 const Card = ({ leaderBoardData }: CardProps) => {
   const { content, ...paginatorData } = leaderBoardData;
   const historicalData = parseLeaderboardData(content);
+
   return (
     <UICard className="bg-white">
       <CardHeader>

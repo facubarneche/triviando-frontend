@@ -13,7 +13,7 @@ interface PaginatorProps {
 const Paginator = ({ totalPages, number }: PaginatorProps) => {
   const { push } = useRouter();
   const FIRST_PAGE = 1;
-  const [currentPage, setCurrentPage] = useState(number);
+  const [currentPage, setCurrentPage] = useState(number + 1);
 
   useEffect(() => {
     setCurrentPage(number + 1);
