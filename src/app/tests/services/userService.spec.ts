@@ -19,12 +19,9 @@ describe('UserService', () => {
     const result = await userService.createUser(userPayload);
 
     expect(postMock).toHaveBeenCalledWith('/users', {
-      fullName: 'facuDev',
+      username: 'facuDev',
       email: 'facu@email.com',
       password: '12345678',
-      age: 30,
-      phoneNumber: '+54 11 1234 5678',
-      birthDate: '1995-07-15',
     });
 
     expect(result).toEqual(mockResponse);

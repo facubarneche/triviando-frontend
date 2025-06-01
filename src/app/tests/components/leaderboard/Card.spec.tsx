@@ -4,8 +4,8 @@ import '@testing-library/jest-dom';
 
 const mockLeaderBoardData = {
   content: [
-    { id: 1, fullName: 'Jane Doe', score: 100 },
-    { id: 2, fullName: 'John Smith', score: 80 },
+    { id: 1, username: 'John Smith', score: 80, position: 2 },
+    { id: 2, username: 'Jane Doe', score: 100, position: 1 },
   ],
   totalElements: 2,
   totalPages: 1,
