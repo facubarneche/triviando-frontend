@@ -32,11 +32,13 @@ const Card = ({ leaderBoardData }: CardProps) => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="allTime">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="weekly" disabled>
+          <TabsList className="grid w-full grid-cols-2 cursor-pointer">
+            <TabsTrigger value="weekly" className="cursor-pointer" disabled>
               Esta Semana
             </TabsTrigger>
-            <TabsTrigger value="allTime">Historico</TabsTrigger>
+            <TabsTrigger value="allTime" className="cursor-pointer">
+              Historico
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="weekly">
