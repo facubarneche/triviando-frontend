@@ -22,7 +22,7 @@ const Header = () => {
           </Link>
         </Button>
       </div>
-      <h1 className="text-2xl font-bold text-white whitespace-nowrap text-center md:justify-start">
+      <h1 className="text-2xl font-bold text-white whitespace-nowrap text-center md:justify-start cursor-default">
         Elige un Tema
       </h1>
     </header>

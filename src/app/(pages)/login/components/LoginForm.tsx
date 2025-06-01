@@ -168,7 +168,7 @@ export default function LoginPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300 cursor-pointer"
+                  className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300  "
                   onClick={handleGoogleLogin}
                   disabled
                 >
