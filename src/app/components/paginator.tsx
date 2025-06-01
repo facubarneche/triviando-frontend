@@ -29,16 +29,12 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
   const renderPageButtons = () => {
     const pages = [];
 
-    let start = currentPage - 1;
-    let end = currentPage;
+    let start = Math.max(currentPage - 1, 1);
+    let end = Math.min(start + 2, totalPages);
 
     // Asegurar que siempre se muestran 3 botones si es posible
-    if (currentPage === FIRST_PAGE) {
-      start = FIRST_PAGE;
-      end = Math.min(3, totalPages);
-    } else if (currentPage === totalPages) {
-      end = totalPages;
-      start = Math.max(1, totalPages - 2);
+    if (end - start < 2) {
+      start = Math.max(end - 2, 1);
     }
 
     for (let i = start; i <= end; i++) {
