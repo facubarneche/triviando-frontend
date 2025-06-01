@@ -30,7 +30,7 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
     const pages = [];
 
     let start = Math.max(currentPage - 1, 1);
-    let end = Math.min(start + 2, totalPages);
+    const end = Math.min(start + 2, totalPages);
 
     // Asegurar que siempre se muestran 3 botones si es posible
     if (end - start < 2) {
