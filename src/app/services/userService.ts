@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BaseService } from './baseService';
+import Cookies from 'js-cookie';
 
 interface IUser {
   username: string;
@@ -14,6 +15,9 @@ class UserService extends BaseService {
         email: email,
         password: password,
       });
+
+      //Esta cookie expira en 1 día
+      Cookies.set('usuario', JSON.stringify(data), { expires: 1 });
 
       return data;
     } catch (error: unknown) {
