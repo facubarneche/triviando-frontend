@@ -80,7 +80,7 @@ export default function LoginPage() {
         className="w-full max-w-md z-10"
       >
         <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
-          <CardHeader className="space-y-1">
+          <CardHeader className="space-y-1 cursor-default">
             <motion.div
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
@@ -147,13 +147,13 @@ export default function LoginPage() {
               >
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                  className="w-full bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
                 >
                   Iniciar Sesión
                 </Button>
               </motion.div>
 
-              <div className="relative w-full flex items-center gap-2 my-2">
+              <div className="relative w-full flex items-center gap-2 my-2 cursor-default">
                 <div className="flex-1 border-t border-gray-300"></div>
                 <span className="text-xs text-gray-500">o continúa con</span>
                 <div className="flex-1 border-t border-gray-300"></div>
@@ -168,7 +168,7 @@ export default function LoginPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300"
+                  className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300 cursor-pointer"
                   onClick={handleGoogleLogin}
                   disabled
                 >
@@ -181,7 +181,7 @@ export default function LoginPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="text-center text-sm"
+                className="text-center text-sm cursor-default"
               >
                 ¿No tienes una cuenta?{' '}
                 <Link

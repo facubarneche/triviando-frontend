@@ -148,6 +148,7 @@ const FormRegister = () => {
             variant="outline"
             className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300 cursor-pointer"
             onClick={handleGoogleRegister}
+            disabled
           >
             <FaGoogle className="mr-2 h-4 w-4 text-red-500" />
             Continuar con Google
