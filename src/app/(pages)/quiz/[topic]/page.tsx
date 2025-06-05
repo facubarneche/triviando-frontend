@@ -33,6 +33,10 @@ const QuizPage = () => {
   const [questions, setQuestions] = useState<IQuiz[]>([]);
   const [score, setScore] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [correctOption, setCorrectOption] = useState<{ text: string; letter: LetterType }>({
+    text: '',
+    letter: 'A',
+  });
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const confettiRef = useRef<HTMLDivElement>(null);
@@ -69,11 +73,12 @@ const QuizPage = () => {
     const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
     const { score, correctOption } = await quizService.getQuizAnswer({
       questionId: quizId,
-      userId: userId,
+      user: { id: userId },
       optionSelected: option,
       millisecondsSpent,
     });
     setSelectedOption(option);
+    setCorrectOption({ text: correctOption.text, letter: correctOption.letter });
 
     // Update answers array
     const newAnswers = [...answers];
@@ -281,6 +286,7 @@ const QuizPage = () => {
         currentQuestion={currentQuestion}
         explanation={explanation}
         isLoadingExplanation={isLoadingExplanation}
+        correctOption={correctOption}
       />
     </div>
   );
