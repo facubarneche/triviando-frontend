@@ -1,6 +1,6 @@
 'use server';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
-import { leaderboardDataMock } from '../utils/mocks';
 import {
   Card as UICard,
   CardContent,
@@ -21,7 +21,7 @@ interface CardProps {
 const Card = ({ weekly, historical }: CardProps) => {
   const { content: historicalContent, ...historicalPagination } = historical;
   const { content: weeklyContent, ...weeklyPagination } = weekly;
-  console.log('weekly', weekly);
+
   const historicalData = parseLeaderboardData(historicalContent);
   const weeklyData = parseLeaderboardData(weeklyContent);
 
