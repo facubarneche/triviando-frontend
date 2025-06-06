@@ -1,45 +1,63 @@
-import { motion } from "framer-motion";
-import NewTopicCard from "./NewTopicCard";
-import TopicCardLoader from "./TopicCardLoader";
-import TopicCard from "@/app/components/topic-card";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ITopic } from "../types";
-import { topicService } from "@/app/services/topicService";
-import { handleError } from "@/app/utils/errorHandler";
-import { toast } from "react-toastify";
+'use client';
+
+import { motion } from 'framer-motion';
+import NewTopicCard from './NewTopicCard';
+import TopicCardLoader from './TopicCardLoader';
+import TopicCard from '@/app/components/topic-card';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ITopic } from '../types';
+import { topicService } from '@/app/services/topicService';
+import { handleError } from '@/app/utils/errorHandler';
+import { toast } from 'react-toastify';
 
 interface TopicsProps {
   topics: ITopic[];
 }
 
-
-
 const Topics = ({ topics }: TopicsProps) => {
-  const [creating, setCreating] = useState<null | string>(null); //nombre del tópico en creación
-  const router = useRouter();
+  const [creating, setCreating] = useState<null | string>(null); // nombre del tópico en creación
+  const [localTopics, setLocalTopics] = useState<ITopic[]>(topics); // estado local de tópicos
 
-  // 1. Restaurar el estado desde sessionStorage al montar
+  // Restaurar el estado desde sessionStorage al montar
   useEffect(() => {
     const stored = sessionStorage.getItem('creatingTopic');
     if (stored) setCreating(stored);
   }, []);
 
-  // 2. Limpiar el loader si el tópico real ya existe
+  // Sincronizar con props iniciales (opcional si siempre se renderiza con los mismos topics)
   useEffect(() => {
-    if (creating && topics.some((t) => t.name === creating)) {
+    setLocalTopics(topics);
+  }, [topics]);
+
+  // Limpiar el loader si el tópico real ya existe
+  useEffect(() => {
+    if (creating && localTopics.some((t) => t.name === creating)) {
       setCreating(null);
       sessionStorage.removeItem('creatingTopic');
     }
-  }, [topics, creating]);
+  }, [localTopics, creating]);
 
   const handleCreateTopic = async (name: string, context: string) => {
     setCreating(name);
     sessionStorage.setItem('creatingTopic', name);
     try {
+      // Crear el tópico vía servicio
+      // Si tu API devuelve el tópico, usalo directamente:
+      // const newTopic = await topicService.createTopic(name, context);
       await topicService.createTopic(name, context);
+
       toast.success(`Tópico "${name}" creado exitosamente.`);
-      router.refresh();
+
+      // Construir tópico manualmente (si el API no lo devuelve)
+      const newTopic: ITopic = {
+        name,
+        context,
+        // Agregá otros campos requeridos si los hay (como id, fecha, etc.)
+      };
+
+      // Agregar al estado local
+      setLocalTopics((prev) => [...prev, newTopic]);
     } catch (error) {
       handleError(error);
     } finally {
@@ -58,8 +76,10 @@ const Topics = ({ topics }: TopicsProps) => {
       >
         <NewTopicCard onCreateTopic={handleCreateTopic} />
       </motion.div>
+
       {creating && <TopicCardLoader name={creating} />}
-      {topics.map((topic, index) => (
+
+      {localTopics.map((topic, index) => (
         <motion.div
           key={topic.name}
           initial={{ opacity: 0, x: 70, y: 40 }}
