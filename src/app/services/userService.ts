@@ -9,11 +9,26 @@ interface IUser {
 
 export interface IUserData {
   id: number;
-  fullName: string;
-  age: number;
+  name: string;
+  lastName: string;
+  username: string;
   email: string;
   phoneNumber: string;
-  createdAt: string;
+  countryCode: string;
+  birthDate: string; 
+  joinDate: string; 
+}
+
+export interface IUpdateUserData {
+  id: number;
+  name: string;
+  lastName: string;
+  username: string;
+  email: string;
+  birthDate: string; // ISO: YYYY-MM-DD
+  phoneNumber: string;
+  countryCode: string;
+  currentPassword: string;
 }
 
 class UserService extends BaseService {
@@ -51,9 +66,9 @@ class UserService extends BaseService {
     }
   };
 
-  editUserById = async (userId: number, userData: Partial<IUser>) => {
+  editUserById = async (userData: Partial<IUpdateUserData>) => {
     try {
-      const { data } = await this.axiosService.patch(`/users/${userId}`, userData);
+      const { data } = await this.axiosService.put(`/users`, userData);
       return data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {

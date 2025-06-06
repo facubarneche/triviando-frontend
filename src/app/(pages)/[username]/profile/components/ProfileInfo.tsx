@@ -2,44 +2,66 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar'
 import { Badge } from '@/app/components/ui/badge';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
-import { loginService } from '@/app/services/loginService';
 import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { formatDateToMonthYear } from '@/app/utils/formatDateToMonthYear';
 import { motion } from 'framer-motion';
 import { Edit, LogOut } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
-
 import React, { useEffect, useState } from 'react';
-import { UserResponse } from '../types/UserResponse';
+import type { IUserData } from '@/app/services/userService';
+import { loginService } from '@/app/services/loginService';
+import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
+
+
 
 const ProfileInfo = () => {
-  //Debe venir del backend con el endpoint getUserRegisterDate del userService
-  const [joinDate, setJoinDate] = useState('');
-  //   const joinDate = getUserRegisterDate(userData.id);  Simulación de llamada al backend
-
-  //Agarrar username de la url
   const { username } = useParams();
+  const [user, setUser] = useState<IUserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  const [userLogged, setUserLogged] = useState<UserResponse | null>(null);
-
-  //TODO: Conectar con el backend para obtener la fecha de registro del usuario y cambiar las variables
   useEffect(() => {
-    const fetchJoinDate = async () => {
+    const fetchUser = async () => {
       try {
-        const userLogged = await userService.getUserById(loginService.getUserId());
-        setUserLogged(userLogged); // Debugging line // Debugging line
-        const date = '2023-03-15T00:00:00Z'; // Simulación de fecha de registro
-        setJoinDate(formatDateToMonthYear(date));
+        // Si username es string, buscar por username, si es id, parsear a number
+        // Pero getUserById espera un number (id), así que hay que obtener el id del usuario logueado
+        // Si el perfil es el propio, usamos loginService.getUserId(), si no, habría que buscar por username
+        let userId: number;
+        if (loginService.getUsuarioActual()?.username === username) {
+          userId = loginService.getUserId();
+        } else {
+          // Si no es el usuario logueado, habría que buscar el id por username (no implementado aquí)
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+        const userData = await userService.getUserById(userId);
+        setUser(userData);
       } catch (error) {
         handleError(error);
+      } finally {
+        setLoading(false);
       }
     };
+    fetchUser();
+  }, [username]);
 
-    fetchJoinDate();
-  }, []);
+  if (loading) {
+    return <ProfileInfoSkeleton />;
+  }
 
-  const router = useRouter();
+  if (!user) {
+    return (
+      <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+        <CardContent className="p-6 text-center text-gray-500">
+          No se pudo cargar el perfil.
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const fullName = [user.name, user.lastName].filter(Boolean).join(' ').trim();
 
   return (
     <motion.div
@@ -53,13 +75,12 @@ const ProfileInfo = () => {
             <Avatar className="w-24 h-24 border-4 border-[#9d4edd]/30">
               <AvatarImage src="/placeholder-user.jpg" alt="@user" />
               <AvatarFallback className="text-2xl text-purple-900 text-white">
-                {userLogged?.fullName?.charAt(0) || ''}
+                {fullName ? fullName.charAt(0) : user.username.charAt(0)}
               </AvatarFallback>
             </Avatar>
-
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                <h1 className="text-2xl font-bold text-[#3c096c]">{username}</h1>
+                <h1 className="text-2xl font-bold text-[#3c096c]">{user.username}</h1>
                 <Badge
                   variant="outline"
                   className="bg-[#9d4edd]/10 text-[#5a189a] border-[#9d4edd]/30 self-center"
@@ -67,21 +88,17 @@ const ProfileInfo = () => {
                   Quiz Master
                 </Badge>
               </div>
-              {userLogged && (
-                <h2 className="text-lg font-medium text-[#5a189a] mb-1">{userLogged.fullName}</h2>
-              )}
-              {userLogged && <p className="text-muted-foreground">{userLogged.email}</p>}
+              {fullName && <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>}
+              <p className="text-muted-foreground">{user.email}</p>
               <p className="text-sm text-muted-foreground text-gray-600 mt-2">
-                Miembro desde {joinDate}
+                Miembro desde {formatDateToMonthYear(user.joinDate)}
               </p>
-
               <div className="flex gap-2 mt-4 justify-center sm:justify-start">
                 <Button
                   size="sm"
                   variant="outline"
                   className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
-                  //TODO: Ajustar la ruta de edición de perfil (currentPath + '/edit')
-                  onClick={() => router.push(`/${username}/profile/edit`)}
+                  onClick={() => router.push(`/${user.username}/profile/edit`)}
                 >
                   <Edit className="h-4 w-4" />
                   Editar Perfil

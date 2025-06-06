@@ -30,8 +30,9 @@ import { countryCodes } from '@/app/utils/countryCodes';
 import { userService } from '@/app/services/userService';
 import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
-import type { IUserData } from '@/app/services/userService';
+import type { IUserData, IUpdateUserData } from '@/app/services/userService';
 import ProfileEditSkeleton from './ProfileEditSkeleton';
+import { toast } from 'react-toastify';
 
 export default function EditProfile() {
   const [userData, setUserData] = useState<IUserData | null>(null); // <-- null al inicio
@@ -51,48 +52,22 @@ export default function EditProfile() {
     const fetchUserData = async () => {
       const userData = await userService.getUserById(loginService.getUserId());
       setUserData(userData);
+      console.log('User Data:', userData);
+      if (userData) {
+        setFormData({
+          username: userData.username || '',
+          firstName: userData.name || '',
+          lastName: userData.lastName || '',
+          email: userData.email || '',
+          countryCode: userData.countryCode || '',
+          phoneNumber: userData.phoneNumber || '',
+          birthDate: userData.birthDate || '',
+          currentPassword: '',
+        });
+      }
     };
     fetchUserData();
   }, []);
-
-  useEffect(() => {
-    if (userData) {
-      // 1. Split fullName
-      const [firstName, ...rest] = userData.fullName.split(' ');
-      const lastName = rest.join(' ');
-
-      // 2. Extract country code and phone number (ej: "+54 91123456789" o "+5491123456789")
-      let countryCode = '';
-      let phoneNumber = '';
-      const phoneMatch = userData.phoneNumber.match(/^(\+\d+)[\s-]?(.+)$/);
-      if (phoneMatch) {
-        countryCode = phoneMatch[1];
-        phoneNumber = phoneMatch[2].replace(/\D/g, '');
-      } else {
-        phoneNumber = userData.phoneNumber.replace(/\D/g, '');
-      }
-
-      // 3. Calculate birthDate from age
-      const today = new Date();
-      const birthYear = today.getFullYear() - userData.age;
-      const birthDate = `${birthYear}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(
-        today.getDate(),
-      ).padStart(2, '0')}`;
-
-      const username = loginService.getUsuarioActual()?.username;
-
-      setFormData({
-        username: username || '',
-        firstName: firstName || '',
-        lastName: lastName || '',
-        email: userData.email || '',
-        countryCode,
-        phoneNumber,
-        birthDate,
-        currentPassword: '',
-      });
-    }
-  }, [userData]);
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -188,7 +163,7 @@ export default function EditProfile() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -197,15 +172,29 @@ export default function EditProfile() {
 
     setIsSubmitting(true);
 
-    try {
-      const updatedUser = {
-        ...formData,
-      };
+    if (!userData) {
+      setIsSubmitting(false);
+      setErrors({ general: 'No se pudo obtener el usuario.' });
+      return;
+    }
 
-      userService.editUserById(loginService.getUserId(), updatedUser).then(() => {
-        setIsSubmitting(false);
-        router.push('/profile');
-      });
+    const updatedUser: IUpdateUserData = {
+      id: userData.id,
+      name: formData.firstName,
+      lastName: formData.lastName,
+      username: formData.username,
+      email: formData.email,
+      birthDate: formData.birthDate,
+      phoneNumber: formData.phoneNumber,
+      countryCode: formData.countryCode,
+      currentPassword: formData.currentPassword,
+    };
+
+    try {
+      await userService.editUserById(updatedUser);
+      setIsSubmitting(false);
+      toast.success('Perfil actualizado correctamente');
+      router.push(`/${formData.username}/profile`);
     } catch (error) {
       setIsSubmitting(false);
       handleError(error);
@@ -216,7 +205,7 @@ export default function EditProfile() {
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
       <header className="p-4">
         <Link
-          href="/profile"
+          href={`/${formData.username}/profile`}
           className="inline-flex items-center text-white hover:text-white/80 transition-colors"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -252,7 +241,7 @@ export default function EditProfile() {
                           <>
                             <AvatarImage src="/placeholder-user.jpg" alt="@user" />
                             <AvatarFallback className="text-2xl bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
-                              {userData?.fullName}
+                              {userData?.name} {userData?.lastName}
                             </AvatarFallback>
                           </>
                         )}
