@@ -2,8 +2,8 @@ import { LetterType } from '../(pages)/quiz/[topic]/types';
 import { BaseService } from './baseService';
 
 interface IAnswerRequestDTO {
+  user: { id: number };
   questionId: string;
-  userId: number;
   optionSelected: LetterType;
   millisecondsSpent: number;
 }

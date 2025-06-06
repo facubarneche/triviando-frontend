@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from '@/app/components/ui/dialog';
 import { Loader2 } from 'lucide-react';
-import { IQuiz } from '../types';
+import { IQuiz, LetterType } from '../types';
 
 interface LearnTogetherProps {
   showExplanation: boolean;
@@ -15,6 +15,7 @@ interface LearnTogetherProps {
   isLoadingExplanation: boolean;
   currentQuestion: IQuiz;
   explanation: string;
+  correctOption: { text: string; letter: LetterType };
 }
 
 const LearnTogether = ({
@@ -23,10 +24,10 @@ const LearnTogether = ({
   isLoadingExplanation,
   currentQuestion,
   explanation,
+  correctOption,
 }: LearnTogetherProps) => {
-  const { id, question, options } = currentQuestion;
-  //TODO: Obtener la verdadera respuesta desde el back (actualmente no trae la opcion correcta)
-  const correctAnswer = options[0].text;
+  const { id, question } = currentQuestion;
+  const { text, letter } = correctOption;
   return (
     <Dialog open={showExplanation} onOpenChange={setShowExplanation}>
       <DialogContent className="max-w-xl m-0 bg-white">
@@ -46,7 +47,14 @@ const LearnTogether = ({
               <p className="font-medium text-cyan-800">Pregunta:</p>
               <p className="mt-1">{question}</p>
               <p className="font-medium text-cyan-800 mt-3">Respuesta correcta:</p>
-              <p className="mt-1">{correctAnswer}</p>
+              <p className="mt-1">
+                <span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded bg-cyan-200 text-cyan-900 font-semibold text-xs mr-2 shadow-sm border border-cyan-300 border-2">
+                    {letter}{' '}
+                  </span>
+                  {text}
+                </span>
+              </p>
             </div>
 
             <div className="space-y-2">

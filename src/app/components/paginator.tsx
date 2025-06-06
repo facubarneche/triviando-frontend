@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-interface PaginatorProps {
+export interface PaginatorProps {
   totalPages: number;
   number: number;
 }
@@ -58,7 +58,7 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 pb-2 rounded-xl shadow-md">
+    <div className="flex items-center justify-center gap-1 pt-2 rounded-xl">
       <Button
         variant="ghost"
         size="icon"
