@@ -31,18 +31,7 @@ import { userService } from '@/app/services/userService';
 import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
 import type { IUserData } from '@/app/services/userService';
-
-// Mock data - en una aplicación real, esto vendría de una API o contexto
-// const userData = {
-//   username: 'QuizChampion',
-//   firstName: 'Carlos',
-//   lastName: 'Rodríguez',
-//   email: 'champion@example.com',
-//   countryCode: '+52',
-//   phoneNumber: '5551234567',
-//   birthDate: '1990-05-15',
-//   joinDate: 'Marzo 2023',
-// };
+import ProfileEditSkeleton from './ProfileEditSkeleton';
 
 export default function EditProfile() {
   const [userData, setUserData] = useState<IUserData | null>(null); // <-- null al inicio
@@ -236,273 +225,277 @@ export default function EditProfile() {
       </header>
 
       <main className="p-4 max-w-md mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-2xl text-cyan-700">Editar Perfil</CardTitle>
-              <CardDescription>
-                Actualiza tu información personal. Necesitarás tu contraseña actual para confirmar
-                los cambios.
-              </CardDescription>
-            </CardHeader>
-            <form onSubmit={handleSubmit}>
-              <CardContent className="space-y-6">
-                <div className="flex flex-col items-center gap-2 mb-2">
-                  <div className="relative">
-                    <Avatar className="w-24 h-24 border-4 border-cyan-200">
-                      {avatarPreview ? (
-                        <AvatarImage src={avatarPreview || '/placeholder.svg'} alt="Preview" />
-                      ) : (
-                        <>
-                          <AvatarImage src="/placeholder-user.jpg" alt="@user" />
-                          <AvatarFallback className="text-2xl bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
-                            {userData?.fullName}
-                          </AvatarFallback>
-                        </>
-                      )}
-                    </Avatar>
-                    <div className="absolute bottom-0 right-0">
-                      <Label
-                        htmlFor="avatar-upload"
-                        className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white cursor-pointer hover:from-teal-500 hover:to-cyan-600 transition-colors"
-                      >
-                        <Camera className="h-4 w-4" />
-                        <span className="sr-only">Cambiar avatar</span>
+        {userData === null ? (
+          <ProfileEditSkeleton />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-2xl text-cyan-700">Editar Perfil</CardTitle>
+                <CardDescription>
+                  Actualiza tu información personal. Necesitarás tu contraseña actual para confirmar
+                  los cambios.
+                </CardDescription>
+              </CardHeader>
+              <form onSubmit={handleSubmit}>
+                <CardContent className="space-y-6">
+                  <div className="flex flex-col items-center gap-2 mb-2">
+                    <div className="relative">
+                      <Avatar className="w-24 h-24 border-4 border-cyan-200">
+                        {avatarPreview ? (
+                          <AvatarImage src={avatarPreview || '/placeholder.svg'} alt="Preview" />
+                        ) : (
+                          <>
+                            <AvatarImage src="/placeholder-user.jpg" alt="@user" />
+                            <AvatarFallback className="text-2xl bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
+                              {userData?.fullName}
+                            </AvatarFallback>
+                          </>
+                        )}
+                      </Avatar>
+                      <div className="absolute bottom-0 right-0">
+                        <Label
+                          htmlFor="avatar-upload"
+                          className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white cursor-pointer hover:from-teal-500 hover:to-cyan-600 transition-colors"
+                        >
+                          <Camera className="h-4 w-4" />
+                          <span className="sr-only">Cambiar avatar</span>
+                        </Label>
+                        <Input
+                          id="avatar-upload"
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={handleAvatarChange}
+                        />
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Haz clic en el ícono para cambiar tu foto
+                    </p>
+                  </div>
+
+                  {/* Nombre y Apellido en la misma fila */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName" className="text-cyan-700">
+                        Nombre
                       </Label>
                       <Input
-                        id="avatar-upload"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleAvatarChange}
+                        id="firstName"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        className={`border-cyan-200 focus:border-cyan-400 ${
+                          errors.firstName ? 'border-red-500' : ''
+                        }`}
                       />
+                      {errors.firstName && (
+                        <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName" className="text-cyan-700">
+                        Apellido
+                      </Label>
+                      <Input
+                        id="lastName"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        className={`border-cyan-200 focus:border-cyan-400 ${
+                          errors.lastName ? 'border-red-500' : ''
+                        }`}
+                      />
+                      {errors.lastName && (
+                        <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+                      )}
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Haz clic en el ícono para cambiar tu foto
-                  </p>
-                </div>
 
-                {/* Nombre y Apellido en la misma fila */}
-                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName" className="text-cyan-700">
-                      Nombre
+                    <Label htmlFor="username" className="text-cyan-700 flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Nombre de usuario
                     </Label>
                     <Input
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
+                      id="username"
+                      name="username"
+                      value={formData.username}
                       onChange={handleInputChange}
                       className={`border-cyan-200 focus:border-cyan-400 ${
-                        errors.firstName ? 'border-red-500' : ''
+                        errors.username ? 'border-red-500' : ''
                       }`}
                     />
-                    {errors.firstName && (
-                      <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+                    {errors.username && (
+                      <p className="text-red-500 text-xs mt-1">{errors.username}</p>
                     )}
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="lastName" className="text-cyan-700">
-                      Apellido
+                    <Label htmlFor="email" className="text-cyan-700 flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      Email
                     </Label>
                     <Input
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
                       onChange={handleInputChange}
                       className={`border-cyan-200 focus:border-cyan-400 ${
-                        errors.lastName ? 'border-red-500' : ''
+                        errors.email ? 'border-red-500' : ''
                       }`}
                     />
-                    {errors.lastName && (
-                      <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
-                    )}
+                    {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="username" className="text-cyan-700 flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Nombre de usuario
-                  </Label>
-                  <Input
-                    id="username"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleInputChange}
-                    className={`border-cyan-200 focus:border-cyan-400 ${
-                      errors.username ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.username && (
-                    <p className="text-red-500 text-xs mt-1">{errors.username}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-cyan-700 flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={`border-cyan-200 focus:border-cyan-400 ${
-                      errors.email ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-                </div>
-
-                {/* Teléfono con código de país */}
-                <div className="space-y-2">
-                  <Label className="text-cyan-700 flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    Número de teléfono
-                  </Label>
-                  <div className="flex gap-2">
-                    <Select
-                      value={formData.countryCode}
-                      onValueChange={(value) => handleSelectChange('countryCode', value)}
-                    >
-                      <SelectTrigger
-                        className={`w-[120px] border-cyan-200 focus:border-cyan-400 ${
-                          errors.countryCode ? 'border-red-500' : ''
-                        }`}
+                  {/* Teléfono con código de país */}
+                  <div className="space-y-2">
+                    <Label className="text-cyan-700 flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      Número de teléfono
+                    </Label>
+                    <div className="flex gap-2">
+                      <Select
+                        value={formData.countryCode}
+                        onValueChange={(value) => handleSelectChange('countryCode', value)}
                       >
-                        <SelectValue placeholder="Código" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {countryCodes.map((country) => (
-                          <SelectItem key={country.code} value={country.code}>
-                            <span className="flex items-center gap-2">
-                              <span>{country.flag}</span>
-                              <span>{country.code}</span>
-                            </span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      type="tel"
-                      placeholder="1234567890"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      className={`flex-1 border-cyan-200 focus:border-cyan-400 ${
-                        errors.phoneNumber ? 'border-red-500' : ''
-                      }`}
-                    />
-                  </div>
-                  {(errors.countryCode || errors.phoneNumber) && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.countryCode || errors.phoneNumber}
-                    </p>
-                  )}
-                </div>
-
-                {/* Fecha de nacimiento */}
-                <div className="space-y-2">
-                  <Label htmlFor="birthDate" className="text-cyan-700 flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Fecha de nacimiento
-                  </Label>
-                  <Input
-                    id="birthDate"
-                    name="birthDate"
-                    type="date"
-                    value={formData.birthDate}
-                    onChange={handleInputChange}
-                    max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
-                    className={`border-cyan-200 focus:border-cyan-400 ${
-                      errors.birthDate ? 'border-red-500' : ''
-                    }`}
-                  />
-                  {errors.birthDate && (
-                    <p className="text-red-500 text-xs mt-1">{errors.birthDate}</p>
-                  )}
-                </div>
-
-                <div className="pt-4 border-t border-cyan-200">
-                  <h3 className="text-cyan-700 font-medium mb-2">Confirmación de seguridad</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Por tu seguridad, necesitamos que confirmes tu contraseña actual antes de
-                    guardar los cambios.
-                  </p>
-
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="currentPassword"
-                      className="text-cyan-700 flex items-center gap-2"
-                    >
-                      <Lock className="h-4 w-4" />
-                      Contraseña actual
-                    </Label>
-                    <Input
-                      id="currentPassword"
-                      name="currentPassword"
-                      type="password"
-                      placeholder="Ingresa tu contraseña actual"
-                      value={formData.currentPassword}
-                      onChange={handleInputChange}
-                      className={`border-cyan-200 focus:border-cyan-400 ${
-                        errors.currentPassword ? 'border-red-500' : ''
-                      }`}
-                    />
-                    {errors.currentPassword && (
-                      <p className="text-red-500 text-xs mt-1">{errors.currentPassword}</p>
+                        <SelectTrigger
+                          className={`w-[120px] border-cyan-200 focus:border-cyan-400 ${
+                            errors.countryCode ? 'border-red-500' : ''
+                          }`}
+                        >
+                          <SelectValue placeholder="Código" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countryCodes.map((country) => (
+                            <SelectItem key={country.code} value={country.code}>
+                              <span className="flex items-center gap-2">
+                                <span>{country.flag}</span>
+                                <span>{country.code}</span>
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        type="tel"
+                        placeholder="1234567890"
+                        value={formData.phoneNumber}
+                        onChange={handleInputChange}
+                        className={`flex-1 border-cyan-200 focus:border-cyan-400 ${
+                          errors.phoneNumber ? 'border-red-500' : ''
+                        }`}
+                      />
+                    </div>
+                    {(errors.countryCode || errors.phoneNumber) && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.countryCode || errors.phoneNumber}
+                      </p>
                     )}
                   </div>
-                </div>
-              </CardContent>
 
-              <CardFooter className="flex justify-between">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.push('/profile')}
-                  className="border-cyan-200 hover:bg-cyan-50 text-cyan-700"
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  className="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <motion.div
-                        className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-                        animate={{ rotate: 360 }}
-                        transition={{
-                          duration: 1,
-                          repeat: Number.POSITIVE_INFINITY,
-                          ease: 'linear',
-                        }}
+                  {/* Fecha de nacimiento */}
+                  <div className="space-y-2">
+                    <Label htmlFor="birthDate" className="text-cyan-700 flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Fecha de nacimiento
+                    </Label>
+                    <Input
+                      id="birthDate"
+                      name="birthDate"
+                      type="date"
+                      value={formData.birthDate}
+                      onChange={handleInputChange}
+                      max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
+                      className={`border-cyan-200 focus:border-cyan-400 ${
+                        errors.birthDate ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {errors.birthDate && (
+                      <p className="text-red-500 text-xs mt-1">{errors.birthDate}</p>
+                    )}
+                  </div>
+
+                  <div className="pt-4 border-t border-cyan-200">
+                    <h3 className="text-cyan-700 font-medium mb-2">Confirmación de seguridad</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Por tu seguridad, necesitamos que confirmes tu contraseña actual antes de
+                      guardar los cambios.
+                    </p>
+
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="currentPassword"
+                        className="text-cyan-700 flex items-center gap-2"
+                      >
+                        <Lock className="h-4 w-4" />
+                        Contraseña actual
+                      </Label>
+                      <Input
+                        id="currentPassword"
+                        name="currentPassword"
+                        type="password"
+                        placeholder="Ingresa tu contraseña actual"
+                        value={formData.currentPassword}
+                        onChange={handleInputChange}
+                        className={`border-cyan-200 focus:border-cyan-400 ${
+                          errors.currentPassword ? 'border-red-500' : ''
+                        }`}
                       />
-                      Guardando...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Guardar Cambios
-                    </>
-                  )}
-                </Button>
-              </CardFooter>
-            </form>
-          </Card>
-        </motion.div>
+                      {errors.currentPassword && (
+                        <p className="text-red-500 text-xs mt-1">{errors.currentPassword}</p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+
+                <CardFooter className="flex justify-between">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.push(`/${formData.username}/profile`)}
+                    className="border-cyan-200 hover:bg-cyan-50 text-cyan-700"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <motion.div
+                          className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
+                          animate={{ rotate: 360 }}
+                          transition={{
+                            duration: 1,
+                            repeat: Number.POSITIVE_INFINITY,
+                            ease: 'linear',
+                          }}
+                        />
+                        Guardando...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        Guardar Cambios
+                      </>
+                    )}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Card>
+          </motion.div>
+        )}
       </main>
     </div>
   );
