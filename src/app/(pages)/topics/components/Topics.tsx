@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ITopic } from "../types";
 import { topicService } from "@/app/services/topicService";
 import { handleError } from "@/app/utils/errorHandler";
+import { toast } from "react-toastify";
 
 interface TopicsProps {
   topics: ITopic[];
@@ -37,6 +38,7 @@ const Topics = ({ topics }: TopicsProps) => {
     sessionStorage.setItem('creatingTopic', name);
     try {
       await topicService.createTopic(name, context);
+      toast.success(`Tópico "${name}" creado exitosamente.`);
       router.refresh();
     } catch (error) {
       handleError(error);
