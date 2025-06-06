@@ -125,13 +125,13 @@ const FormRegister = () => {
         >
           <Button
             type="submit"
-            className="w-full bg-teal-400 shadow-md hover:shadow-lg text-white font-bold"
+            className="w-full bg-teal-400 shadow-md hover:shadow-lg text-white font-bold cursor-pointer"
           >
             Crear Cuenta
           </Button>
         </motion.div>
 
-        <div className="relative w-full flex items-center gap-2 my-2">
+        <div className="relative w-full flex items-center gap-2 my-2 cursor-default">
           <div className="flex-1 border-t border-gray-300"></div>
           <span className="text-xs text-gray-500">o continúa con</span>
           <div className="flex-1 border-t border-gray-300"></div>
@@ -146,8 +146,9 @@ const FormRegister = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300"
+            className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300 cursor-pointer"
             onClick={handleGoogleRegister}
+            disabled
           >
             <FaGoogle className="mr-2 h-4 w-4 text-red-500" />
             Continuar con Google
@@ -158,9 +159,9 @@ const FormRegister = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center text-sm"
+          className="text-center text-sm cursor-default"
         >
-          ¿Ya tienes una cuenta?
+          ¿Ya tienes una cuenta?{' '}
           <Link
             href="/login"
             className="text-cyan-600 hover:text-cyan-800 font-medium transition-colors"

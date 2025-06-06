@@ -3,15 +3,16 @@ import { IQuiz } from '@/app/(pages)/quiz/[topic]/types';
 import { render, screen } from '@testing-library/react';
 
 const mockQuestion: IQuiz = {
-  id: 'asdasdasdasd123123123',
+  id: 'idquestion1',
   question: '¿Cuál es la capital de Francia?',
   options: [
-    { option: 'Berlín', correctAnswer: false },
-    { option: 'Madrid', correctAnswer: false },
-    { option: 'París', correctAnswer: true },
-    { option: 'Londres', correctAnswer: false },
+    { id: 'id1', letter: 'A', text: 'Berlín' },
+    { id: 'id2', letter: 'B', text: 'Madrid' },
+    { id: 'id3', letter: 'C', text: 'París' },
+    { id: 'id4', letter: 'D', text: 'Londres' },
   ],
   explanation: 'París es la capital porque...',
+  difficulty: 'MEDIUM',
 };
 
 describe('LearnTogether component', () => {
@@ -23,14 +24,14 @@ describe('LearnTogether component', () => {
         isLoadingExplanation={false}
         currentQuestion={mockQuestion}
         explanation={mockQuestion.explanation}
+        correctOption={{ text: 'París', letter: 'C' }}
       />,
     );
 
     expect(screen.getByText('Pregunta:')).toBeInTheDocument();
     expect(screen.getByText(mockQuestion.question)).toBeInTheDocument();
     expect(screen.getByText('Respuesta correcta:')).toBeInTheDocument();
-    //TODO: Agregar nuevamente al obtener la respuesta correcta
-    // expect(screen.getByText(mockQuestion.options[2].option)).toBeInTheDocument();
+    expect(screen.getByText(mockQuestion.options[2].text)).toBeInTheDocument();
     expect(screen.getByText('Explicación:')).toBeInTheDocument();
     expect(screen.getByText('París es la capital porque...')).toBeInTheDocument();
   });

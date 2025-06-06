@@ -11,7 +11,7 @@ export default function Profile() {
       <header className="p-4">
         <Link
           href="/topics"
-          className="inline-flex items-center text-white hover:text-[#9d4edd] transition-colors"
+          className="inline-flex items-center text-white hover:text-[#9d4edd] transition-colors cursor-pointer"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Volver a Temas

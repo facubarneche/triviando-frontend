@@ -19,7 +19,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
         whileTap={{ scale: 0.98 }}
         transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
-        <Card className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+        <Card className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer">
           <CardContent className="p-6 flex flex-col items-center text-center">
             <motion.div
               whileHover={{ rotate: [0, -10, 10, -10, 0] }}

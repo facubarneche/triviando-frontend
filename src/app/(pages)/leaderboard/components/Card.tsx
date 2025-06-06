@@ -1,6 +1,6 @@
 'use server';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
-import { leaderboardDataMock } from '../utils/mocks';
 import {
   Card as UICard,
   CardContent,
@@ -14,12 +14,17 @@ import { parseLeaderboardData } from '../utils/helpers';
 import ButtonPosition from './ButtonPosition';
 
 interface CardProps {
-  leaderBoardData: ILeaderBoardDTO;
+  weekly: ILeaderBoardDTO;
+  historical: ILeaderBoardDTO;
 }
 
-const Card = ({ leaderBoardData }: CardProps) => {
-  const { content, ...paginatorData } = leaderBoardData;
-  const historicalData = parseLeaderboardData(content);
+const Card = ({ weekly, historical }: CardProps) => {
+  const { content: historicalContent, ...historicalPagination } = historical;
+  const { content: weeklyContent, ...weeklyPagination } = weekly;
+
+  const historicalData = parseLeaderboardData(historicalContent);
+  const weeklyData = parseLeaderboardData(weeklyContent);
+
   return (
     <UICard className="bg-white">
       <CardHeader>
@@ -31,22 +36,25 @@ const Card = ({ leaderBoardData }: CardProps) => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="allTime">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="weekly" disabled>
+          <TabsList className="grid w-full grid-cols-2 cursor-pointer">
+            <TabsTrigger value="weekly" className="cursor-pointer">
               Esta Semana
             </TabsTrigger>
-            <TabsTrigger value="allTime">Historico</TabsTrigger>
+            <TabsTrigger value="allTime" className="cursor-pointer">
+              Historico
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="weekly">
-            <Table data={leaderboardDataMock.weekly} />
+            <Table data={weeklyData} />
+            <Paginator {...weeklyPagination} />
           </TabsContent>
           <TabsContent value="allTime">
             <Table data={historicalData} />
+            <Paginator {...historicalPagination} />
           </TabsContent>
         </Tabs>
       </CardContent>
-      <Paginator {...paginatorData} />
     </UICard>
   );
 };

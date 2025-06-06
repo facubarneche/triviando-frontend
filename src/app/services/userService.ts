@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { BaseService } from './baseService';
+import Cookies from 'js-cookie';
 
 interface IUser {
   username: string;
@@ -35,15 +36,13 @@ class UserService extends BaseService {
   createUser = async ({ username, email, password }: IUser) => {
     try {
       const { data } = await this.axiosService.post('/users', {
-        //! Deberiamos Definir contrato, actualmente se pide username, email y pass (a futuro estaria bueno pedir el resto de datos, hoy van hardcodeados)
-        // TODO: Agregar campos para satisfacer al back o el back baja requerimientos
-        fullName: username, // Lo usaremos como username
+        username: username,
         email: email,
         password: password,
-        age: 30,
-        phoneNumber: '+54 11 1234 5678',
-        birthDate: '1995-07-15',
       });
+
+      //Esta cookie expira en 1 día
+      Cookies.set('usuario', JSON.stringify(data), { expires: 1 });
 
       return data;
     } catch (error: unknown) {

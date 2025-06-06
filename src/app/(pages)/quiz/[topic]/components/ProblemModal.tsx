@@ -15,7 +15,7 @@ const ProblemModal = () => {
             Hubo un problema al generar el quiz. Por favor, intenta de nuevo.
           </p>
           <Button
-            className="mt-6 bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700"
+            className="mt-6 bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 cursor-pointer"
             onClick={() => router.push('/topics')}
           >
             Volver a Temas

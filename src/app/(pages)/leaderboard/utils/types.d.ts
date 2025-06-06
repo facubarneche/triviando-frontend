@@ -1,6 +1,6 @@
 interface ILeaderBoardContentDTO {
   id: number;
-  fullName: string;
+  username: string;
   score: number;
   position: number;
 }

@@ -59,17 +59,18 @@ describe('FormRegister', () => {
     });
   });
 
-  it('debería redirigir al hacer click en "Continuar con Google"', () => {
-    render(<FormRegister />);
+  //TODO: Agregar nuevamente al implementar la funcionalidad
+  // it('debería redirigir al hacer click en "Continuar con Google"', () => {
+  //   render(<FormRegister />);
 
-    const googleButton = screen.getByRole('button', {
-      name: /continuar con google/i,
-    });
+  //   const googleButton = screen.getByRole('button', {
+  //     name: /continuar con google/i,
+  //   });
 
-    fireEvent.click(googleButton);
+  //   fireEvent.click(googleButton);
 
-    expect(pushMock).toHaveBeenCalledWith('/topics');
-  });
+  //   expect(pushMock).toHaveBeenCalledWith('/topics');
+  // });
 
   it('debería mostrar un error si las contraseñas no coinciden', async () => {
     render(<FormRegister />);

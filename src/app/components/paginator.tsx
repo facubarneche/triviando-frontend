@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-interface PaginatorProps {
+export interface PaginatorProps {
   totalPages: number;
   number: number;
 }
@@ -13,7 +13,7 @@ interface PaginatorProps {
 const Paginator = ({ totalPages, number }: PaginatorProps) => {
   const { push } = useRouter();
   const FIRST_PAGE = 1;
-  const [currentPage, setCurrentPage] = useState(number);
+  const [currentPage, setCurrentPage] = useState(number + 1);
 
   useEffect(() => {
     setCurrentPage(number + 1);
@@ -29,16 +29,12 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
   const renderPageButtons = () => {
     const pages = [];
 
-    let start = currentPage - 1;
-    let end = currentPage;
+    let start = Math.max(currentPage - 1, 1);
+    const end = Math.min(start + 2, totalPages);
 
     // Asegurar que siempre se muestran 3 botones si es posible
-    if (currentPage === FIRST_PAGE) {
-      start = FIRST_PAGE;
-      end = Math.min(3, totalPages);
-    } else if (currentPage === totalPages) {
-      end = totalPages;
-      start = Math.max(1, totalPages - 2);
+    if (end - start < 2) {
+      start = Math.max(end - 2, 1);
     }
 
     for (let i = start; i <= end; i++) {
@@ -62,7 +58,7 @@ const Paginator = ({ totalPages, number }: PaginatorProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 pb-2 rounded-xl shadow-md">
+    <div className="flex items-center justify-center gap-1 pt-2 rounded-xl">
       <Button
         variant="ghost"
         size="icon"

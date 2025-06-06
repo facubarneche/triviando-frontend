@@ -13,12 +13,12 @@ export const styledRank = (rank: number) => {
 export const parseLeaderboardData = (users: ILeaderBoardContentDTO[]): ILeaderContentBoard[] => {
   return users.map((user) => ({
     rank: user.position,
-    username: user.fullName,
+    username: user.username,
     score: user.score,
     avatar: '/placeholder-user.jpg',
   }));
 };
 
 export const getProp = async (page: number) => {
-  return page ? { page } : { page, userId: await getUserId() };
+  return page ? { page: page - 1 } : { page, userId: await getUserId() };
 };

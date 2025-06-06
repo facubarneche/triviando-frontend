@@ -3,7 +3,7 @@ import React from 'react';
 
 const Header = () => {
   return (
-    <CardHeader className="space-y-1">
+    <CardHeader className="space-y-1 cursor-default">
       <CardTitle className="text-2xl font-bold text-center">Crear una cuenta</CardTitle>
       <CardDescription className="text-center">
         Únete a Flashcards y pon a prueba tus conocimientos

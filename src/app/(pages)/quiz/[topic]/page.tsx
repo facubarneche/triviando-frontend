@@ -33,6 +33,10 @@ const QuizPage = () => {
   const [questions, setQuestions] = useState<IQuiz[]>([]);
   const [score, setScore] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
+  const [correctOption, setCorrectOption] = useState<{ text: string; letter: LetterType }>({
+    text: '',
+    letter: 'A',
+  });
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
   const confettiRef = useRef<HTMLDivElement>(null);
@@ -69,11 +73,12 @@ const QuizPage = () => {
     const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
     const { score, correctOption } = await quizService.getQuizAnswer({
       questionId: quizId,
-      userId: userId,
+      user: { id: userId },
       optionSelected: option,
       millisecondsSpent,
     });
     setSelectedOption(option);
+    setCorrectOption({ text: correctOption.text, letter: correctOption.letter });
 
     // Update answers array
     const newAnswers = [...answers];
@@ -156,7 +161,7 @@ const QuizPage = () => {
       <div className="max-w-2xl mx-auto">
         <Button
           variant="ghost"
-          className="text-white mb-4 hover:bg-white/20"
+          className="text-white mb-4 hover:bg-white/20 cursor-pointer"
           onClick={() => {
             router.push('/topics');
           }}
@@ -165,7 +170,10 @@ const QuizPage = () => {
           Volver a Temas
         </Button>
 
-        <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm" ref={confettiRef}>
+        <Card
+          className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm cursor-default"
+          ref={confettiRef}
+        >
           <CardHeader>
             <Timer ref={timerRef} />
             <div className="flex justify-between items-center mb-2">
@@ -211,7 +219,7 @@ const QuizPage = () => {
                       />
                       <Label
                         htmlFor={`option-${index}`}
-                        className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${getAnswerStyles(
+                        className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 cursor-pointer ${getAnswerStyles(
                           isCorrect,
                           letter,
                         )}`}
@@ -220,7 +228,6 @@ const QuizPage = () => {
                         {isCorrect && letter === selectedOption && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
-                        {/* {isCorrect === false && text === selectedOption && ( */}
                         {isCorrect === false && letter === selectedOption && (
                           <X className="h-5 w-5 text-red-500 ml-2" />
                         )}
@@ -254,7 +261,7 @@ const QuizPage = () => {
               <Button
                 onClick={handleNext}
                 disabled={!selectedOption}
-                className="bg-teal-400 w-full md:w-auto"
+                className="bg-teal-400 w-full md:w-auto  "
               >
                 Siguiente
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -263,7 +270,7 @@ const QuizPage = () => {
               <Button
                 onClick={handleFinish}
                 disabled={!selectedOption}
-                className="bg-teal-400 w-full md:w-auto"
+                className="bg-teal-400 w-full md:w-auto  "
               >
                 Finalizar
                 <CheckCircle2 className="ml-2 h-4 w-4" />
@@ -279,6 +286,7 @@ const QuizPage = () => {
         currentQuestion={currentQuestion}
         explanation={explanation}
         isLoadingExplanation={isLoadingExplanation}
+        correctOption={correctOption}
       />
     </div>
   );
