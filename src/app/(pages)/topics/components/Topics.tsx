@@ -5,7 +5,6 @@ import NewTopicCard from './NewTopicCard';
 import TopicCardLoader from './TopicCardLoader';
 import TopicCard from '@/app/components/topic-card';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ITopic } from '../types';
 import { topicService } from '@/app/services/topicService';
 import { handleError } from '@/app/utils/errorHandler';
@@ -43,20 +42,18 @@ const Topics = ({ topics }: TopicsProps) => {
     sessionStorage.setItem('creatingTopic', name);
     try {
       // Crear el tópico vía servicio
-      // Si tu API devuelve el tópico, usalo directamente:
-      // const newTopic = await topicService.createTopic(name, context);
       await topicService.createTopic(name, context);
 
       toast.success(`Tópico "${name}" creado exitosamente.`);
 
-      // Construir tópico manualmente (si el API no lo devuelve)
+      // Construir tópico solo con los campos de ITopic
       const newTopic: ITopic = {
         name,
-        context,
-        // Agregá otros campos requeridos si los hay (como id, fecha, etc.)
+        icon: '📚', // valor por defecto
+        color: '#06b6d4', // valor por defecto (cyan-400)
+        questionsCount: 0, // nuevo tópico, sin preguntas aún
       };
 
-      // Agregar al estado local
       setLocalTopics((prev) => [...prev, newTopic]);
     } catch (error) {
       handleError(error);
