@@ -68,6 +68,19 @@ class UserService extends BaseService {
   editUserById = async (userData: Partial<IUpdateUserData>) => {
     try {
       const { data } = await this.axiosService.put(`/users`, userData);
+      //Actualizamos la cookie del usuario (TODO: usar el response del backend)
+      if (userData && userData.id && userData.name && userData.username) {
+        Cookies.set(
+          'usuario',
+          JSON.stringify({
+            id: userData.id,
+            name: userData.name || '',
+            lastName: userData.lastName || '',
+            username: userData.username,
+          }),
+          { expires: 1 },
+        );
+      }
       return data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {
