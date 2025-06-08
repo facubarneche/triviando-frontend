@@ -1,5 +1,6 @@
 import { LetterType } from '../(pages)/quiz/[topic]/types';
 import { BaseService } from './baseService';
+import { loginService } from './loginService';
 
 interface IAnswerRequestDTO {
   user: { id: number };
@@ -10,8 +11,9 @@ interface IAnswerRequestDTO {
 
 class QuizService extends BaseService {
   getQuiz = async (topic: string) => {
+    const userId = loginService.getUserId();
     const { data } = await this.axiosService.get('/preguntas', {
-      params: { topico: topic },
+      params: { topico: topic, userId: userId },
     });
 
     return data;
