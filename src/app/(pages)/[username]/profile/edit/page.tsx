@@ -46,12 +46,14 @@ export default function EditProfile() {
     birthDate: '',
     currentPassword: '',
   });
+  const [originalUsername, setOriginalUsername] = useState('');
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       const userData = await userService.getUserById(loginService.getUserId());
       setUserData(userData);
+      setOriginalUsername(userData.username || '');
       console.log('User Data:', userData);
       if (userData) {
         setFormData({
@@ -450,7 +452,7 @@ export default function EditProfile() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => router.push(`/${formData.username}/profile`)}
+                    onClick={() => router.push(`/${originalUsername}/profile`)}
                     className="border-cyan-200 hover:bg-cyan-50 text-cyan-700"
                   >
                     Cancelar
