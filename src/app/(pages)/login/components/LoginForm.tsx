@@ -89,7 +89,9 @@ export default function LoginPage() {
             >
               <span className="text-3xl text-white">🧠</span>
             </motion.div>
-            <CardTitle className="text-2xl font-bold text-center">QuizMaster</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              Pregunt<span className="text-yellow-500">IA</span>dos
+            </CardTitle>
             <CardDescription className="text-center">
               Inicia sesión para comenzar a jugar
             </CardDescription>
