@@ -1,11 +1,11 @@
 import { ITopic, ITopicDTO } from '../types';
-import { TOPIC_COLORS, TOPIC_ICONS } from './constants';
+import { TOPIC_COLORS } from './constants';
 
 export const parserTopics = (topics: ITopicDTO[]): ITopic[] => {
-  return Object.entries(topics).map(([key, value]) => ({
-    name: key,
-    icon: TOPIC_ICONS[key.toLowerCase()] || '❓',
-    color: TOPIC_COLORS[Object.keys(topics).indexOf(key) % TOPIC_COLORS.length],
-    questionsCount: Number(value),
+  return topics.map((topic, index) => ({
+    name: topic.topic,
+    icon: topic.emoji,
+    color: TOPIC_COLORS[index % TOPIC_COLORS.length],
+    questionsCount: topic.size,
   }));
 };

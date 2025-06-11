@@ -1,5 +1,7 @@
 export interface ITopicDTO {
-  [key: string]: number;
+  emoji: string;
+  size: number;
+  topic: string;
 }
 
 export interface ITopic {
