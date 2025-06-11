@@ -148,6 +148,7 @@ const QuizPage = () => {
   };
 
   const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
+    if (isCorrect === null) return;
     if (isCorrect && option === selectedOption) return 'border-green-500 bg-green-100';
     if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
   };
