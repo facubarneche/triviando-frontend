@@ -90,9 +90,6 @@ export default function LoginPage() {
             >
               <Logo size="lg" animated={true} showTagline={true} />
             </motion.div>
-            <CardTitle className="text-2xl font-bold text-center">
-              Triv<span className="text-yellow-500">IA</span>ando
-            </CardTitle>
             <CardDescription className="text-center">
               Inicia sesión para comenzar a jugar
             </CardDescription>
