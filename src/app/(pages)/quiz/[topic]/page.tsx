@@ -127,7 +127,7 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
-    //quizService.generateQuiz(topic);
+    quizService.generateQuiz(topic);
     router.push(`/results?score=${score}&total=${questions.length}`);
   };
 

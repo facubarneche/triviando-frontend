@@ -1,4 +1,3 @@
-//TODO: Ver si iba null o no
 export type LetterType = 'A' | 'B' | 'C' | 'D';
 type DifficultyType = 'LOEW' | 'MEDIUM' | 'HIGH';
 
