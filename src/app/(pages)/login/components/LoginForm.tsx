@@ -10,7 +10,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/app/components/ui/card';
 import { Label } from '@/app/components/ui/label';
 import { Input } from '@/app/components/ui/input';
