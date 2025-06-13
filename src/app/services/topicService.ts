@@ -1,8 +1,8 @@
 import { BaseService } from './baseService';
 
 class TopicService extends BaseService {
-  getTopics = async () => {
-    const { data } = await this.axiosService.get('/preguntas/topicos');
+  getTopics = async ({ id }: { id: number }) => {
+    const { data } = await this.axiosService.get(`/preguntas/topicos/${id}`);
     return data;
   };
 
