@@ -10,6 +10,7 @@ import { ITopic } from './types';
 import TopicsSkeleton from './components/TopicsSkeleton';
 import { StreakModal } from '@/app/components/modals/StreakModal';
 import { handleError } from '@/app/utils/errorHandler';
+import { getUserIdCSR } from '@/app/lib/getUserIdCSR';
 
 export default function TopicsPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -19,7 +20,8 @@ export default function TopicsPage() {
   useEffect(() => {
     const getTopics = async () => {
       try {
-        const topics = await topicService.getTopics();
+        const id = getUserIdCSR();
+        const topics = await topicService.getTopics({ id });
         const parsedTopics = parserTopics(topics);
         setTopics(parsedTopics);
       } catch (error) {
