@@ -76,7 +76,7 @@ export default function Logo({ size = 'md', animated = true }: LogoProps) {
       animate="animate"
       variants={logoVariants}
     >
-      <div className="flex items-center gap-2 mb-10 mt-10">
+      <div className="flex items-center gap-2 mb-5 mt-10">
         {/* Icono del cerebro con IA */}
         <motion.div
           className="relative"

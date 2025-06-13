@@ -85,11 +85,11 @@ export default function LoginPage() {
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring', stiffness: 150 }}
-              className="mx-auto mb-4"
+              className="mx-auto"
             >
               <Logo size="lg" animated={true} showTagline={true} />
             </motion.div>
-            <CardDescription className="text-center">
+            <CardDescription className="text-center text-md font-bold text-cyan-700">
               Inicia sesión para comenzar a jugar
             </CardDescription>
           </CardHeader>
