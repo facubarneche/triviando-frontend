@@ -18,6 +18,7 @@ import { Button } from '@/app/components/ui/button';
 import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
 import { toast } from 'react-toastify';
+import Logo from '@/app/components/logo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -85,11 +86,10 @@ export default function LoginPage() {
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: 'spring', stiffness: 150 }}
-              className="mx-auto mb-4 w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-blue-600 flex items-center justify-center"
+              className="mx-auto mb-4"
             >
-              <span className="text-3xl text-white">🧠</span>
+              <Logo size="lg" animated={true} showTagline={true} />
             </motion.div>
-            <CardTitle className="text-2xl font-bold text-center">QuizMaster</CardTitle>
             <CardDescription className="text-center">
               Inicia sesión para comenzar a jugar
             </CardDescription>
