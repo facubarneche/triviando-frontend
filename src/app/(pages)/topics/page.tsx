@@ -10,7 +10,7 @@ import { ITopic } from './types';
 import TopicsSkeleton from './components/TopicsSkeleton';
 import { StreakModal } from '@/app/components/modals/StreakModal';
 import { handleError } from '@/app/utils/errorHandler';
-import { getUserIdCSR } from '@/app/lib/getUserIdCSR';
+import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
 
 export default function TopicsPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
