@@ -7,6 +7,31 @@ interface IUser {
   email: string;
   password: string;
 }
+
+export interface IUserData {
+  id: number;
+  name: string;
+  lastName: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  countryCode: string;
+  birthDate: string; 
+  joinDate: string; 
+}
+
+export interface IUpdateUserData {
+  id: number;
+  name: string;
+  lastName: string;
+  username: string;
+  email: string;
+  birthDate: string; // ISO: YYYY-MM-DD
+  phoneNumber: string;
+  countryCode: string;
+  currentPassword: string;
+}
+
 class UserService extends BaseService {
   createUser = async ({ username, email, password }: IUser) => {
     try {
@@ -28,7 +53,7 @@ class UserService extends BaseService {
     }
   };
 
-  getUserById = async (userId: number) => {
+  getUserById = async (userId: number): Promise<IUserData> => {
     try {
       const { data } = await this.axiosService.get(`/users/${userId}`);
       return data;
@@ -37,6 +62,31 @@ class UserService extends BaseService {
         throw new Error(error.response.data.error);
       }
       throw new Error('Error al obtener el usuario');
+    }
+  };
+
+  editUserById = async (userData: Partial<IUpdateUserData>) => {
+    try {
+      const { data } = await this.axiosService.put(`/users`, userData);
+      //Actualizamos la cookie del usuario (TODO: usar el response del backend)
+      if (userData && userData.id && userData.name && userData.username) {
+        Cookies.set(
+          'usuario',
+          JSON.stringify({
+            id: userData.id,
+            name: userData.name || '',
+            lastName: userData.lastName || '',
+            username: userData.username,
+          }),
+          { expires: 1 },
+        );
+      }
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error('Error al editar el usuario');
     }
   };
 

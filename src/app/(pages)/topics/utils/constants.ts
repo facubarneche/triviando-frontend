@@ -1,18 +1,3 @@
-export const TOPIC_ICONS: Record<string, string> = {
-  'fundamentos de programación': '💻',
-  'programación orientada a objetos': '🧑‍💻',
-  'estructuras de datos': '📊',
-  algoritmos: '⚙️',
-  'desarrollo web': '🌐',
-  'bases de datos': '💾',
-  'inteligencia artificial': '🤖',
-  'machine learning': '📈',
-  'desarrollo móvil': '📱',
-  'testing de software': '🧪',
-  historia: '📜',
-  astronomía: '🌌',
-};
-
 export const TOPIC_COLORS = [
   'bg-red-500',
   'bg-gray-500',
