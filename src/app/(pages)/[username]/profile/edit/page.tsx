@@ -56,14 +56,20 @@ export default function EditProfile() {
       setOriginalUsername(userData.username || '');
       console.log('User Data:', userData);
       if (userData) {
+        let birthDate = userData.birthDate || '';
+        if (!birthDate && userData.age) {
+          const today = new Date();
+          const birthYear = today.getFullYear() - userData.age;
+          birthDate = `${birthYear}-07-01`;
+        }
         setFormData({
           username: userData.username || '',
           firstName: userData.name || '',
           lastName: userData.lastName || '',
           email: userData.email || '',
-          countryCode: userData.countryCode || '',
-          phoneNumber: userData.phoneNumber || '',
-          birthDate: userData.birthDate || '',
+          countryCode: (userData.countryCode || '').trim(),
+          phoneNumber: (userData.phoneNumber || '').replace(/[^0-9]/g, ''), // Limpia guiones y otros caracteres
+          birthDate,
           currentPassword: '',
         });
       }
@@ -77,7 +83,18 @@ export default function EditProfile() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    let newValue = value;
+
+    // Solo letras y números para username
+    if (name === 'username') {
+      newValue = newValue.replace(/[^a-zA-Z0-9]/g, '');
+    }
+    // Solo números para phoneNumber
+    if (name === 'phoneNumber') {
+      newValue = newValue.replace(/[^0-9]/g, '');
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
 
     // Limpiar error cuando el usuario comienza a escribir
     if (errors[name]) {
