@@ -13,6 +13,8 @@ class TopicService extends BaseService {
       promptType: 'topicPrompter',
     });
 
+    console.log('generate', data);
+
     return data;
   };
 }
