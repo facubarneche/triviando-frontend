@@ -5,7 +5,7 @@ import NewTopicCard from './NewTopicCard';
 import TopicCardLoader from './TopicCardLoader';
 import TopicCard from '@/app/components/topic-card';
 import { useEffect, useState } from 'react';
-import { ITopic } from '../types';
+import { ITopic, ITopicDTO } from '../types';
 import { topicService } from '@/app/services/topicService';
 import { handleError } from '@/app/utils/errorHandler';
 import { toast } from 'react-toastify';
@@ -41,20 +41,23 @@ const Topics = ({ topics }: TopicsProps) => {
     setCreating(name);
     sessionStorage.setItem('creatingTopic', name);
     try {
-      // Crear el tópico vía servicio
-      await topicService.createTopic(name, context);
+      // Crear el tópico vía servicio y obtener el array de tópicos
+      const response = await topicService.createTopic(name, context);
 
-      toast.success(`Tópico "${name}" creado exitosamente.`);
-
-      // Construir tópico solo con los campos de ITopic
-      const newTopic: ITopic = {
-        name,
-        icon: '📚', // valor por defecto
-        color: '#06b6d4', // valor por defecto (cyan-400)
-        questionsCount: 0, // nuevo tópico, sin preguntas aún
-      };
-
-      setLocalTopics((prev) => [...prev, newTopic]);
+      // Buscar el tópico recién creado en la respuesta
+      const created = (response as ITopicDTO[]).find((t: ITopicDTO) => t.topic === name);
+      if (created) {
+        const newTopic: ITopic = {
+          name: created.topic,
+          icon: created.emoji,
+          color: '#06b6d4',
+          questionsCount: created.size,
+        };
+        setLocalTopics((prev) => [...prev, newTopic]);
+        toast.success(`Tópico "${created.topic}" creado exitosamente.`);
+      } else {
+        toast.error('Ocurrió un error al crear el tópico. Intenta nuevamente.');
+      }
     } catch (error) {
       handleError(error);
     } finally {
