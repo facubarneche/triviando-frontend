@@ -20,7 +20,7 @@ const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
     >
       <Card
-        className="h-[200px] border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
+        className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
           setOpen(true);
