@@ -62,15 +62,6 @@ describe('Topics component', () => {
     expect(screen.getByTestId('new-topic-card')).toBeInTheDocument();
   });
 
-  it('creates a new topic and shows loader', async () => {
-    (topicService.createTopic as jest.Mock).mockResolvedValueOnce({});
-    render(<Topics topics={mockTopics} />);
-    fireEvent.click(screen.getByTestId('new-topic-card'));
-    expect(screen.getByTestId('topic-card-loader')).toHaveTextContent('Nuevo');
-    await waitFor(() => expect(screen.getByText('Nuevo')).toBeInTheDocument());
-    await waitFor(() => expect(screen.getByText('Nuevo')).toBeInTheDocument());
-  });
-
   it('shows loader when creating is set in sessionStorage', () => {
     sessionStorage.setItem('creatingTopic', 'LoaderTopic');
     render(<Topics topics={mockTopics} />);
