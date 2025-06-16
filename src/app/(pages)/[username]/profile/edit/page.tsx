@@ -54,7 +54,7 @@ export default function EditProfile() {
       const userData = await userService.getUserById(loginService.getUserId());
       setUserData(userData);
       setOriginalUsername(userData.username || '');
-      console.log('User Data:', userData);
+
       if (userData) {
         let birthDate = userData.birthDate || '';
         if (!birthDate && userData.age) {

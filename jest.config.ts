@@ -15,10 +15,12 @@ const customJestConfig = {
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',
-    '!src/utils/*.ts',
+    '!src/**/domain/*.ts',
     '!src/**/layout.tsx',
     '!src/**/page.tsx',
     '!src/**/mocks.ts',
+    '!src/**/helpers.{ts,tsx}',
+    '!src/**/types/index.ts',
     '!src/**/types.ts',
     '!src/**/constants.ts',
     '!src/**/*Skeleton.{ts,tsx}',
