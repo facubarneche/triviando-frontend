@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Paginator, { PaginatorProps } from '@/app/components/paginator';
 import { render, fireEvent } from '@testing-library/react';
+import { useRouter } from 'next/navigation';
 
 // Create a shared pushMock
 const pushMock = jest.fn();
@@ -105,7 +107,6 @@ describe('Paginator', () => {
   it('does not call push if clicking disabled navigation', () => {
     const { getByLabelText } = setup({ number: 0 });
     fireEvent.click(getByLabelText('Primera página'));
-    // @ts-ignore
-    expect(require('next/navigation').useRouter().push).not.toHaveBeenCalled();
+    expect(useRouter().push).not.toHaveBeenCalled();
   });
 });

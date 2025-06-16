@@ -12,6 +12,7 @@ jest.mock('next/link', () => {
   return { __esModule: true, default: MockLink };
 });
 jest.mock('framer-motion', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const MockMotionDiv = React.forwardRef(({ whileHover, whileTap, ...props }: any, ref: any) => (
     <div ref={ref} {...props} />
   ));

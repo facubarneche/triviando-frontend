@@ -2,7 +2,7 @@ import { getColorAndMessage } from '@/app/(pages)/results/utils/percentage';
 
 // Mock the Audio API to prevent "Not implemented" errors during tests
 beforeAll(() => {
-  // @ts-ignore
+  // @ts-expect-error: Mocking play audio
   global.Audio = class {
     play = jest.fn();
   };

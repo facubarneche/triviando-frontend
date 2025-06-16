@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { loginService } from '@/app/services/loginService';
 import { toast } from 'react-toastify';
 import LoginPage from '@/app/(pages)/login/components/LoginForm';
+import { handleError } from '@/app/utils/errorHandler';
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({
@@ -18,7 +19,11 @@ jest.mock('react-toastify', () => ({
 jest.mock('@/app/utils/errorHandler', () => ({
   handleError: jest.fn(),
 }));
-jest.mock('@/app/components/logo', () => () => <div data-testid="logo" />);
+jest.mock('@/app/components/logo', () => {
+  const MockLogo = () => <div data-testid="logo" />;
+  MockLogo.displayName = 'MockLogo';
+  return MockLogo;
+});
 
 describe('LoginPage', () => {
   const push = jest.fn();
@@ -26,12 +31,11 @@ describe('LoginPage', () => {
   // Mock crypto.randomUUID for environments where it's not available (like jsdom)
   beforeAll(() => {
     if (!globalThis.crypto) {
-      // @ts-ignore
+      // @ts-expect-error: Mock crypto
       globalThis.crypto = {};
     }
-    // @ts-ignore
     let uuidCounter = 0;
-    // @ts-ignore
+    // @ts-expect-error: Mock UUID
     globalThis.crypto.randomUUID = jest.fn(() => `mocked-uuid-${uuidCounter++}`);
   });
 
@@ -79,7 +83,6 @@ describe('LoginPage', () => {
   it('calls handleError on login failure', async () => {
     const error = new Error('fail');
     (loginService.login as jest.Mock).mockRejectedValue(error);
-    const { handleError } = require('@/app/utils/errorHandler');
     render(<LoginPage />);
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'a@b.com' } });
     fireEvent.change(screen.getByLabelText(/contraseña/i), { target: { value: 'pass' } });

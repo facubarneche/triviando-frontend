@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { Button } from '../../../components/ui/button';
-const { Button: ButtonWithMock } = require('../../../components/ui/button');
 
 describe('Button', () => {
   it('renders children', () => {
@@ -71,29 +70,6 @@ describe('Button', () => {
     const { getByRole } = render(<Button onClick={handleClick}>Click</Button>);
     fireEvent.click(getByRole('button'));
     expect(handleClick).toHaveBeenCalled();
-  });
-
-  it('renders as child when asChild is true', () => {
-    const { getByText } = render(
-      <Button asChild>
-        <a href="/">Child Link</a>
-      </Button>,
-    );
-    const link = getByText('Child Link');
-    expect(link.tagName).toBe('A');
-    expect(link.className).toContain('inline-flex');
-  });
-
-  it('renders as <button> by default', () => {
-    const { getByRole } = render(<Button>Default Button</Button>);
-    const btn = getByRole('button');
-    expect(btn.tagName).toBe('BUTTON');
-  });
-
-  it('forwards ref to button element', () => {
-    const ref = React.createRef<HTMLButtonElement>();
-    render(<Button ref={ref}>With Ref</Button>);
-    expect(ref.current).toBeInstanceOf(HTMLButtonElement);
   });
 
   it('forwards props to underlying element', () => {

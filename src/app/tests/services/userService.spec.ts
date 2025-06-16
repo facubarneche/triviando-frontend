@@ -1,5 +1,6 @@
 import { userService } from '../../services/userService';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 describe('UserService', () => {
   afterEach(() => {
@@ -205,10 +206,10 @@ describe('UserService', () => {
       password: 'password123',
     };
     const mockResponse = { id: 10, username: 'testUser', email: 'test@email.com' };
+    const setCookieSpy = jest.spyOn(Cookies, 'set');
     const postMock = jest.fn().mockResolvedValue({ data: mockResponse });
-    // @ts-expect-error: Mocking axiosService.post
+    // @ts-expect-error: Mocking axiosService.post for test in createUser
     userService.axiosService.post = postMock;
-    const setCookieSpy = jest.spyOn(require('js-cookie'), 'set');
 
     await userService.createUser(userPayload);
 
@@ -234,7 +235,7 @@ describe('UserService', () => {
     const putMock = jest.fn().mockResolvedValue({ data: mockResponse });
     // @ts-expect-error: Mocking axiosService.put
     userService.axiosService.put = putMock;
-    const setCookieSpy = jest.spyOn(require('js-cookie'), 'set');
+    const setCookieSpy = jest.spyOn(Cookies, 'set');
 
     await userService.editUserById(userData);
 
@@ -257,7 +258,7 @@ describe('UserService', () => {
     const putMock = jest.fn().mockResolvedValue({ data: mockResponse });
     // @ts-expect-error: Mocking axiosService.put
     userService.axiosService.put = putMock;
-    const setCookieSpy = jest.spyOn(require('js-cookie'), 'set');
+    const setCookieSpy = jest.spyOn(Cookies, 'set');
 
     await userService.editUserById(userData);
 
