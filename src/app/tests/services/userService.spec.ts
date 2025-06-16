@@ -197,4 +197,113 @@ describe('UserService', () => {
     );
     await expect(userService.getStreak(1)).rejects.toThrow('Error al obtener la racha del usuario');
   });
+
+  it('should set cookie with correct data on createUser', async () => {
+    const userPayload = {
+      username: 'testUser',
+      email: 'test@email.com',
+      password: 'password123',
+    };
+    const mockResponse = { id: 10, username: 'testUser', email: 'test@email.com' };
+    const postMock = jest.fn().mockResolvedValue({ data: mockResponse });
+    // @ts-expect-error: Mocking axiosService.post
+    userService.axiosService.post = postMock;
+    const setCookieSpy = jest.spyOn(require('js-cookie'), 'set');
+
+    await userService.createUser(userPayload);
+
+    expect(setCookieSpy).toHaveBeenCalledWith('usuario', JSON.stringify(mockResponse), {
+      expires: 1,
+    });
+    setCookieSpy.mockRestore();
+  });
+
+  it('should update cookie with correct data on editUserById', async () => {
+    const userData = {
+      id: 3,
+      name: 'Test',
+      lastName: 'User',
+      username: 'testuser',
+      email: 'test@e.com',
+      birthDate: '1990-01-01',
+      phoneNumber: '555',
+      countryCode: 'US',
+      currentPassword: 'pass',
+    };
+    const mockResponse = { success: true };
+    const putMock = jest.fn().mockResolvedValue({ data: mockResponse });
+    // @ts-expect-error: Mocking axiosService.put
+    userService.axiosService.put = putMock;
+    const setCookieSpy = jest.spyOn(require('js-cookie'), 'set');
+
+    await userService.editUserById(userData);
+
+    expect(setCookieSpy).toHaveBeenCalledWith(
+      'usuario',
+      JSON.stringify({
+        id: userData.id,
+        name: userData.name,
+        lastName: userData.lastName,
+        username: userData.username,
+      }),
+      { expires: 1 },
+    );
+    setCookieSpy.mockRestore();
+  });
+
+  it('should not set cookie if required fields are missing in editUserById', async () => {
+    const userData = { id: 4 }; // missing name and username
+    const mockResponse = { success: true };
+    const putMock = jest.fn().mockResolvedValue({ data: mockResponse });
+    // @ts-expect-error: Mocking axiosService.put
+    userService.axiosService.put = putMock;
+    const setCookieSpy = jest.spyOn(require('js-cookie'), 'set');
+
+    await userService.editUserById(userData);
+
+    expect(setCookieSpy).not.toHaveBeenCalled();
+    setCookieSpy.mockRestore();
+  });
+
+  it('should throw error with backend message on getUserRegisterDate failure', async () => {
+    const errorMsg = 'Register date not found';
+    const error = {
+      response: { data: { error: errorMsg } },
+      isAxiosError: true,
+    };
+    jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+    const getMock = jest.fn().mockRejectedValue(error);
+    // @ts-expect-error: Mocking axiosService.get
+    userService.axiosService.get = getMock;
+
+    await expect(userService.getUserRegisterDate(1)).rejects.toThrow(errorMsg);
+  });
+
+  it('should throw error with backend message on getUserStatistics failure', async () => {
+    const errorMsg = 'Statistics not found';
+    const error = {
+      response: { data: { error: errorMsg } },
+      isAxiosError: true,
+    };
+    jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+    const getMock = jest.fn().mockRejectedValue(error);
+    // @ts-expect-error: Mocking axiosService.get
+    userService.axiosService.get = getMock;
+
+    await expect(userService.getUserStatistics(1)).rejects.toThrow(errorMsg);
+  });
+
+  it('should throw error with backend message on getStreak failure', async () => {
+    const errorMsg = 'Streak not found';
+    const error = {
+      response: { data: { error: errorMsg } },
+      isAxiosError: true,
+    };
+    jest.spyOn(axios, 'isAxiosError').mockReturnValue(true);
+    const getMock = jest.fn().mockRejectedValue(error);
+    // @ts-expect-error: Mocking axiosService.get
+    userService.axiosService.get = getMock;
+
+    await expect(userService.getStreak(1)).rejects.toThrow(errorMsg);
+  });
 });

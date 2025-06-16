@@ -39,11 +39,11 @@ const FormRegister = () => {
     }
   };
 
-  const handleGoogleRegister = () => {
-    console.log('Register with Google');
-    //TODO: Implementar validacion con google cuando corresponda
-    router.push('/topics');
-  };
+  // const handleGoogleRegister = () => {
+  //   console.log('Register with Google');
+  //   //TODO: Implementar validacion con google cuando corresponda
+  //   router.push('/topics');
+  // };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -147,7 +147,6 @@ const FormRegister = () => {
             type="button"
             variant="outline"
             className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-300 cursor-pointer"
-            onClick={handleGoogleRegister}
             disabled
           >
             <FaGoogle className="mr-2 h-4 w-4 text-red-500" />
