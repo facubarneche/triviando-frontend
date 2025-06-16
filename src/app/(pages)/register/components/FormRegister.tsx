@@ -57,7 +57,7 @@ const FormRegister = () => {
           <Label htmlFor="username">Nombre de usuario</Label>
           <Input
             id="username"
-            placeholder="flashcardsMaster"
+            placeholder="triviandoMaster"
             {...register('username')}
             className="border-cyan-200 focus:border-cyan-400"
           />
@@ -74,7 +74,7 @@ const FormRegister = () => {
           <Input
             id="email"
             type="email"
-            placeholder="flashcardsMaster@email.com"
+            placeholder="triviando@email.com"
             {...register('email')}
             className="border-cyan-200 focus:border-cyan-400"
           />
