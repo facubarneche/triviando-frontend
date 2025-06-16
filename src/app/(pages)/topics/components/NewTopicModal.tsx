@@ -63,7 +63,7 @@ export default function CreateTopicModal({
         if (!open) handleClose();
       }}
     >
-      <DialogContent className="sm:max-w-[500px] bg-white">
+      <DialogContent className="sm:max-w-[500px] w-full max-w-[95vw] bg-white p-4 sm:p-6">
         <DialogHeader>
           <DialogTitle className="text-cyan-700 text-xl">Crear Nuevo Tema</DialogTitle>
           <DialogDescription>
