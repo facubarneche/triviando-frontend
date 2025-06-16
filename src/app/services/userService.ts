@@ -57,7 +57,7 @@ class UserService extends BaseService {
   getUserById = async (userId: number): Promise<IUserData> => {
     try {
       const { data } = await this.axiosService.get(`/users/${userId}`);
-      console.log('getUserById', data);
+
       return data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {

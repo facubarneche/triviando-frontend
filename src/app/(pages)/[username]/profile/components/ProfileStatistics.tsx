@@ -2,11 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/ca
 import { Progress } from '@/app/components/ui/progress';
 import { loginService } from '@/app/services/loginService';
 import { userService } from '@/app/services/userService';
-import { UserStatistics } from '@/app/types/UserStatistics';
 import { handleError } from '@/app/utils/errorHandler';
 import { AxiosError } from 'axios';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
+import { UserStatistics } from '../types';
 
 const ProfileStatistics = () => {
   const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(null);

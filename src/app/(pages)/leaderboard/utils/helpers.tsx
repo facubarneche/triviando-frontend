@@ -1,4 +1,4 @@
-import { getUserId } from '@/app/lib/getUserId';
+import { getUserId } from '@/app/utils/getUserId';
 
 export const styledRank = (rank: number) => {
   const rankStyles: Record<number, string> = {

@@ -16,7 +16,7 @@ import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IQuiz, LetterType } from './types';
-import { getUserIdCSR } from '@/app/lib/getUserIdCSR';
+import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
 import Timer, { TimerHandle } from '../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
 

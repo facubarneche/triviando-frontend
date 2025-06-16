@@ -1,5 +1,5 @@
 export type LetterType = 'A' | 'B' | 'C' | 'D';
-type DifficultyType = 'LOEW' | 'MEDIUM' | 'HIGH';
+type DifficultyType = 'LOW' | 'MEDIUM' | 'HIGH';
 
 interface IOptionDTO {
   id: string;

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Flame } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { userService } from '@/app/services/userService';
 import { loginService } from '@/app/services/loginService';
@@ -64,6 +64,7 @@ export function StreakModal() {
           <DialogTitle className="text-center text-2xl font-bold">
             ¡Racha de días consecutivos!
           </DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center justify-center py-6 space-y-4">
           <div className="relative">
