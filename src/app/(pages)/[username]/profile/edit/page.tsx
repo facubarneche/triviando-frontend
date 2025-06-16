@@ -35,7 +35,7 @@ import ProfileEditSkeleton from './ProfileEditSkeleton';
 import { toast } from 'react-toastify';
 
 export default function EditProfile() {
-  const [userData, setUserData] = useState<IUserData | null>(null); // <-- null al inicio
+  const [userData, setUserData] = useState<IUserData | null>(null);
   const [formData, setFormData] = useState({
     username: '',
     firstName: '',
@@ -85,9 +85,9 @@ export default function EditProfile() {
     const { name, value } = e.target;
     let newValue = value;
 
-    // Solo letras y números para username
+    // Restringimos " y '
     if (name === 'username') {
-      newValue = newValue.replace(/[^a-zA-Z0-9]/g, '');
+      newValue = newValue.replace(/[^a-zA-Z0-9_]/g, '');
     }
     // Solo números para phoneNumber
     if (name === 'phoneNumber') {
