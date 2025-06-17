@@ -13,8 +13,6 @@ import type { IUserData } from '@/app/services/userService';
 import { loginService } from '@/app/services/loginService';
 import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
 
-
-
 const ProfileInfo = () => {
   const { username } = useParams();
   const [user, setUser] = useState<IUserData | null>(null);
@@ -46,6 +44,12 @@ const ProfileInfo = () => {
     };
     fetchUser();
   }, [username]);
+
+  const onLogOut = () => {
+    // Elimina la cookie 'usuario'
+    document.cookie = 'usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    router.push('/login');
+  };
 
   if (loading) {
     return <ProfileInfoSkeleton />;
@@ -107,6 +111,7 @@ const ProfileInfo = () => {
                   size="sm"
                   variant="outline"
                   className="gap-1 text-red-500 border-red-200 hover:bg-red-100 hover:text-red-600"
+                  onClick={onLogOut}
                 >
                   <LogOut className="h-4 w-4" />
                   Cerrar Sesión
