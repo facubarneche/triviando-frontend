@@ -1,9 +1,8 @@
 import FormRegister from '@/app/(pages)/register/components/FormRegister';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
-const loginService = require('@/app/services/loginService').loginService;
-const toast = require('react-toastify').toast;
-const { userService } = require('@/app/services/userService');
+import { toast } from 'react-toastify';
+import { userService } from '@/app/services/userService';
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),

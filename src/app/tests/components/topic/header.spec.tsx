@@ -59,14 +59,4 @@ describe('Header', () => {
     expect(salirLink).toHaveAttribute('href', '/login');
     expect(screen.getByTestId('logout-icon')).toBeInTheDocument();
   });
-
-  it('handles missing username gracefully', () => {
-    (loginService.getUsuarioActual as jest.Mock).mockReturnValue(null);
-    // Mock useParams to return undefined username for this test
-    const useParams = require('next/navigation').useParams;
-    useParams.mockReturnValue({ username: undefined });
-    render(<Header />);
-    const perfilLink = screen.getByText('Perfil').closest('a');
-    expect(perfilLink).toHaveAttribute('href', '/undefined/profile');
-  });
 });

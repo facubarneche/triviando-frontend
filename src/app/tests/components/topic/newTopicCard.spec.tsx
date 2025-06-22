@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import NewTopicCard from '@/app/(pages)/[username]/topics/components/NewTopicCard';
 import { render, fireEvent, screen } from '@testing-library/react';
 

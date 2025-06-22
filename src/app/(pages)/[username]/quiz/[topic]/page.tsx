@@ -63,7 +63,7 @@ const QuizPage = () => {
     };
 
     fetchQuestions();
-  }, [topic]);
+  }, [decodeURITopic]);
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
