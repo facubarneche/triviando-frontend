@@ -6,16 +6,18 @@ import Header from './components/Header';
 import Filter from './components/Filter';
 import Topics from './components/Topics';
 import { topicService } from '@/app/services/topicService';
-import { ITopic } from './types';
+import { ITopic, ITopicDTO } from './types';
 import TopicsSkeleton from './components/TopicsSkeleton';
 import { StreakModal } from '@/app/components/modals/StreakModal';
 import { handleError } from '@/app/utils/errorHandler';
 import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
+import { toast } from 'react-toastify';
 
 export default function TopicsPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [topics, setTopics] = useState<ITopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [creating, setCreating] = useState<string | null>(null);
 
   useEffect(() => {
     const getTopics = async () => {
@@ -33,6 +35,32 @@ export default function TopicsPage() {
     getTopics();
   }, []);
 
+  const handleCreateTopic = async (name: string, context: string) => {
+    setCreating(name);
+    try {
+      const response = await topicService.createTopic(name, context);
+      const created = (response as ITopicDTO[]).find((t: ITopicDTO) => t.topic === name);
+      if (created) {
+        const newTopic: ITopic = {
+          name: created.topic,
+          icon: created.emoji,
+          color: '#06b6d4',
+          questionsCount: created.size,
+        };
+        setTopics((prev) =>
+          prev.some((t) => t.name === newTopic.name) ? prev : [...prev, newTopic],
+        );
+        toast.success(`Tópico "${created.topic}" creado exitosamente.`);
+      } else {
+        toast.error('Ocurrió un error al crear el tópico. Intenta nuevamente.');
+      }
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setCreating(null);
+    }
+  };
+
   const filteredTopics = topics.filter((topic) =>
     topic.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
@@ -42,9 +70,12 @@ export default function TopicsPage() {
       <Header />
       <main className="p-4 max-w-4xl mx-auto">
         <StreakModal />
-        {/* TODO: Cambiar filter a use client y dejar todo SSR */}
         <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        {loading ? <TopicsSkeleton /> : <Topics topics={filteredTopics} />}
+        {loading ? (
+          <TopicsSkeleton />
+        ) : (
+          <Topics topics={filteredTopics} creating={creating} onCreateTopic={handleCreateTopic} />
+        )}
       </main>
     </div>
   );

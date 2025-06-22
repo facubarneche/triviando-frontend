@@ -4,68 +4,15 @@ import { motion } from 'framer-motion';
 import NewTopicCard from './NewTopicCard';
 import TopicCardLoader from './TopicCardLoader';
 import TopicCard from '@/app/components/topic-card';
-import { useEffect, useState } from 'react';
-import { ITopic, ITopicDTO } from '../types';
-import { topicService } from '@/app/services/topicService';
-import { handleError } from '@/app/utils/errorHandler';
-import { toast } from 'react-toastify';
+import { ITopic } from '../types';
 
 interface TopicsProps {
   topics: ITopic[];
+  creating: string | null;
+  onCreateTopic: (name: string, context: string) => Promise<void>;
 }
 
-const Topics = ({ topics }: TopicsProps) => {
-  const [creating, setCreating] = useState<null | string>(null); // nombre del tópico en creación
-  const [localTopics, setLocalTopics] = useState<ITopic[]>(topics); // estado local de tópicos
-
-  // Restaurar el estado desde sessionStorage al montar
-  useEffect(() => {
-    const stored = sessionStorage.getItem('creatingTopic');
-    if (stored) setCreating(stored);
-  }, []);
-
-  // Sincronizar con props iniciales (opcional si siempre se renderiza con los mismos topics)
-  useEffect(() => {
-    setLocalTopics(topics);
-  }, [topics]);
-
-  // Limpiar el loader si el tópico real ya existe
-  useEffect(() => {
-    if (creating && localTopics.some((t) => t.name === creating)) {
-      setCreating(null);
-      sessionStorage.removeItem('creatingTopic');
-    }
-  }, [localTopics, creating]);
-
-  const handleCreateTopic = async (name: string, context: string) => {
-    setCreating(name);
-    sessionStorage.setItem('creatingTopic', name);
-    try {
-      // Crear el tópico vía servicio y obtener el array de tópicos
-      const response = await topicService.createTopic(name, context);
-
-      // Buscar el tópico recién creado en la respuesta
-      const created = (response as ITopicDTO[]).find((t: ITopicDTO) => t.topic === name);
-      if (created) {
-        const newTopic: ITopic = {
-          name: created.topic,
-          icon: created.emoji,
-          color: '#06b6d4',
-          questionsCount: created.size,
-        };
-        setLocalTopics((prev) => [...prev, newTopic]);
-        toast.success(`Tópico "${created.topic}" creado exitosamente.`);
-      } else {
-        toast.error('Ocurrió un error al crear el tópico. Intenta nuevamente.');
-      }
-    } catch (error) {
-      handleError(error);
-    } finally {
-      setCreating(null);
-      sessionStorage.removeItem('creatingTopic');
-    }
-  };
-
+const Topics = ({ topics, creating, onCreateTopic }: TopicsProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       <motion.div
@@ -74,12 +21,12 @@ const Topics = ({ topics }: TopicsProps) => {
         animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <NewTopicCard onCreateTopic={handleCreateTopic} />
+        <NewTopicCard onCreateTopic={onCreateTopic} />
       </motion.div>
 
-      {creating && <TopicCardLoader name={creating} />}
+      {creating && !topics.some((t) => t.name === creating) && <TopicCardLoader name={creating} />}
 
-      {localTopics.map((topic, index) => (
+      {topics.map((topic, index) => (
         <motion.div
           key={topic.name}
           initial={{ opacity: 0, x: 70, y: 40 }}
