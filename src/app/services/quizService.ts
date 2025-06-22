@@ -1,4 +1,4 @@
-import { LetterType } from '../(pages)/quiz/[topic]/types';
+import { LetterType } from '../(pages)/[username]/quiz/[topic]/types';
 import { BaseService } from './baseService';
 import { loginService } from './loginService';
 

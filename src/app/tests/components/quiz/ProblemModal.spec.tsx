@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ProblemModal from '@/app/(pages)/quiz/[topic]/components/ProblemModal';
+import ProblemModal from '@/app/(pages)/[username]/quiz/[topic]/components/ProblemModal';
 import { useRouter } from 'next/navigation';
 
 // Mock del router

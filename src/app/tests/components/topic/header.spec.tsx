@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen } from '@testing-library/react';
 import { loginService } from '@/app/services/loginService';
-import Header from '@/app/(pages)/topics/components/Header';
+import Header from '@/app/(pages)/[username]/topics/components/Header';
 
 // Mock next/link
 jest.mock('next/link', () => {

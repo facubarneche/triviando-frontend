@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Filter from '@/app/(pages)/topics/components/Filter';
+import Filter from '@/app/(pages)/[username]/topics/components/Filter';
 
 describe('Filter component', () => {
   const setup = (searchTerm = '') => {

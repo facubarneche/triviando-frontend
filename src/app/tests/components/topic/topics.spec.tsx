@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ITopic } from '@/app/(pages)/topics/types';
-import Topics from '@/app/(pages)/topics/components/Topics';
+import { ITopic } from '@/app/(pages)/[username]/topics/types';
+import Topics from '@/app/(pages)/[username]/topics/components/Topics';
 import { topicService } from '@/app/services/topicService';
 import { handleError } from '@/app/utils/errorHandler';
 

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import Header from '@/app/(pages)/leaderboard/components/Header';
+import Header from '@/app/(pages)/[username]/leaderboard/components/Header';
 
 describe('Header', () => {
   it('renders the Back to Topics link', () => {
@@ -8,7 +8,7 @@ describe('Header', () => {
     const link = screen.getByRole('link', { name: /Volver a Topicos/i });
 
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute('href', '/topics');
+    expect(link).toHaveAttribute('href', expect.stringMatching(/.*\/topics$/));
   });
 
   it('displays the ArrowLeft icon', () => {

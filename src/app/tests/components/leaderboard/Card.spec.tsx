@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Card from '@/app/(pages)/leaderboard/components/Card';
+import Card from '@/app/(pages)/[username]/leaderboard/components/Card';
 import '@testing-library/jest-dom';
 
 const mockLeaderBoardHistoricalData = {

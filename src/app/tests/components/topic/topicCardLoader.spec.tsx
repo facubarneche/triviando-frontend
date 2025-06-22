@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import TopicCardLoader from '@/app/(pages)/topics/components/TopicCardLoader';
+import TopicCardLoader from '@/app/(pages)/[username]/topics/components/TopicCardLoader';
 
 describe('TopicCardLoader', () => {
   it('renders the loader with the provided name', () => {

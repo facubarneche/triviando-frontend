@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, fireEvent, screen } from '@testing-library/react';
-import NewTopicCard from '@/app/(pages)/topics/components/NewTopicCard';
+import NewTopicCard from '@/app/(pages)/[username]/topics/components/NewTopicCard';
 
 jest.mock('@/app/(pages)/topics/components/NewTopicModal', () => {
   const MockNewTopicModal = (props: any) =>

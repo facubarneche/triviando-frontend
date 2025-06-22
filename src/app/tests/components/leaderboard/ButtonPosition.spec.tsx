@@ -1,5 +1,5 @@
 // ButtonPosition.spec.tsx
-import ButtonPosition from '@/app/(pages)/leaderboard/components/ButtonPosition';
+import ButtonPosition from '@/app/(pages)/[username]/leaderboard/components/ButtonPosition';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 const pushMock = jest.fn();

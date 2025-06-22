@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Results from '@/app/(pages)/results/page';
+import Results from '@/app/(pages)/[username]/results/page';
 
 jest.mock('next/navigation', () => ({
   useSearchParams: () => ({ get: (key: string) => (key === 'score' ? '4' : '5') }),

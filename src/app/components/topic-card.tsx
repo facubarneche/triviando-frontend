@@ -3,16 +3,18 @@
 import Link from 'next/link';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
-import { ITopic } from '../(pages)/topics/types';
+import { ITopic } from '../(pages)/[username]/topics/types';
+import { useParams } from 'next/navigation';
 
 interface TopicCardProps {
   readonly topic: ITopic;
 }
 
 export default function TopicCard({ topic }: TopicCardProps) {
+  const { username } = useParams<{ username: string }>();
   const { name, questionsCount, color, icon } = topic;
   return (
-    <Link href={{ pathname: `/quiz/${name}` }}>
+    <Link href={{ pathname: `/${username}/quiz/${name}` }}>
       <motion.div
         style={{ height: '100%' }}
         whileHover={{ scale: 1.03 }}

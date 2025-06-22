@@ -1,10 +1,10 @@
 import { Button } from '@/app/components/ui/button';
-import { loginService } from '@/app/services/loginService';
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 const Header = () => {
-  const username = loginService.getUsuarioActual()?.username;
+  const { username } = useParams();
 
   return (
     <header className="p-4 flex flex-col md:flex-row-reverse gap-4 justify-between">
@@ -13,7 +13,7 @@ const Header = () => {
           <Link href={`/${username}/profile`}>Perfil</Link>
         </Button>
         <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
-          <Link href="/leaderboard">Ranking</Link>
+          <Link href={`/${username}/leaderboard`}>Ranking</Link>
         </Button>
         <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
           <Link href="/login" className="flex items-center">

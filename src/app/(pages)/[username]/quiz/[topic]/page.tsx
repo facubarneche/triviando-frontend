@@ -17,12 +17,12 @@ import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IQuiz, LetterType } from './types';
 import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
-import Timer, { TimerHandle } from '../../../components/Timer';
+import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
 
 const QuizPage = () => {
-  const params = useParams<{ topic: string }>();
-  const topic = decodeURIComponent(params.topic);
+  const { topic, username } = useParams<{ username: string; topic: string }>();
+  const decodeURITopic = decodeURIComponent(topic);
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -47,7 +47,7 @@ const QuizPage = () => {
     const fetchQuestions = async () => {
       setIsLoading(true);
       try {
-        const quiz = await quizService.getQuiz(topic);
+        const quiz = await quizService.getQuiz(decodeURITopic);
         const parsedQuiz = parserQuiz(quiz);
         setQuestions(parsedQuiz);
         setAnswers(Array(parsedQuiz.length).fill(null));
@@ -127,8 +127,8 @@ const QuizPage = () => {
   };
 
   const handleFinish = () => {
-    quizService.generateQuiz(topic);
-    router.push(`/results?score=${score}&total=${questions.length}`);
+    quizService.generateQuiz(decodeURITopic);
+    router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
 
   const handleLearnTogether = async () => {
@@ -164,7 +164,7 @@ const QuizPage = () => {
           variant="ghost"
           className="text-white mb-4 hover:bg-white/20 cursor-pointer"
           onClick={() => {
-            router.push('/topics');
+            router.push(`/${username}/topics`);
           }}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
