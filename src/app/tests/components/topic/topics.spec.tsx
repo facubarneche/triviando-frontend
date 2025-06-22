@@ -12,7 +12,7 @@ jest.mock('@/app/components/topic-card', () => {
   return MockTopicCard;
 });
 
-jest.mock('@/app/(pages)/topics/components/NewTopicCard', () => {
+jest.mock('@/app/(pages)/[username]/topics/components/NewTopicCard', () => {
   const MockNewTopicCard = (props: any) => (
     <button data-testid="new-topic-card" onClick={() => props.onCreateTopic('Nuevo', 'Contexto')}>
       Crear
@@ -22,7 +22,7 @@ jest.mock('@/app/(pages)/topics/components/NewTopicCard', () => {
   return MockNewTopicCard;
 });
 
-jest.mock('@/app/(pages)/topics/components/TopicCardLoader', () => {
+jest.mock('@/app/(pages)/[username]/topics/components/TopicCardLoader', () => {
   const MockTopicCardLoader = (props: any) => (
     <div data-testid="topic-card-loader">{props.name}</div>
   );

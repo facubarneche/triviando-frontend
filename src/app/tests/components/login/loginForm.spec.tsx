@@ -67,7 +67,7 @@ describe('LoginPage', () => {
   });
 
   it('calls loginService and redirects on successful login', async () => {
-    (loginService.login as jest.Mock).mockResolvedValue({});
+    (loginService.login as jest.Mock).mockResolvedValue({ username: 'facundo' });
     render(<LoginPage />);
     fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'a@b.com' } });
     fireEvent.change(screen.getByLabelText(/contraseña/i), { target: { value: 'pass' } });
@@ -76,7 +76,7 @@ describe('LoginPage', () => {
     await waitFor(() => {
       expect(loginService.login).toHaveBeenCalledWith({ email: 'a@b.com', password: 'pass' });
       expect(toast.success).toHaveBeenCalledWith('Inicio de sesión exitoso');
-      expect(push).toHaveBeenCalledWith('/topics');
+      expect(push).toHaveBeenCalledWith('/facundo/topics');
     });
   });
 

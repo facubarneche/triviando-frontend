@@ -1,6 +1,9 @@
 import FormRegister from '@/app/(pages)/register/components/FormRegister';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
+const loginService = require('@/app/services/loginService').loginService;
+const toast = require('react-toastify').toast;
+const { userService } = require('@/app/services/userService');
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
@@ -9,7 +12,9 @@ jest.mock('next/navigation', () => ({
 // Mock userService
 jest.mock('@/app/services/userService', () => ({
   userService: {
-    createUser: jest.fn().mockResolvedValue({ success: true }),
+    createUser: jest
+      .fn()
+      .mockImplementation(({ username }) => Promise.resolve({ success: true, username })),
   },
 }));
 
@@ -40,22 +45,35 @@ describe('FormRegister', () => {
     expect(confirmPassword).toHaveValue('12345678');
   });
 
-  it('debería enviar el formulario y redirigir a /topics', async () => {
-    const { getByLabelText, getByText } = render(<FormRegister />);
+  it('should call userService.createUser and redirect on successful registration', async () => {
+    jest.spyOn(toast, 'success').mockImplementation(jest.fn());
 
-    fireEvent.change(getByLabelText(/Nombre de usuario/i), { target: { value: 'facu' } });
-    fireEvent.change(getByLabelText(/Email/i), { target: { value: 'facu@mail.com' } });
-    fireEvent.change(screen.getByLabelText('Contraseña', { exact: true }), {
+    render(<FormRegister />);
+
+    fireEvent.change(screen.getByLabelText(/nombre de usuario/i), {
+      target: { value: 'facu' },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'facu@email.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/^contraseña$/i), {
       target: { value: '12345678' },
     });
-    fireEvent.change(screen.getByLabelText('Confirmar Contraseña'), {
+    fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
       target: { value: '12345678' },
     });
 
-    fireEvent.click(getByText(/Crear Cuenta/i));
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
 
     await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith('/topics');
+      expect(userService.createUser).toHaveBeenCalledWith({
+        username: 'facu',
+        email: 'facu@email.com',
+        password: '12345678',
+        confirmPassword: '12345678',
+      });
+      expect(toast.success).toHaveBeenCalledWith('Registro exitoso');
+      expect(pushMock).toHaveBeenCalledWith('/facu/topics');
     });
   });
 

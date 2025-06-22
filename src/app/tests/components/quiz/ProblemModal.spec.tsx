@@ -3,9 +3,10 @@ import userEvent from '@testing-library/user-event';
 import ProblemModal from '@/app/(pages)/[username]/quiz/[topic]/components/ProblemModal';
 import { useRouter } from 'next/navigation';
 
-// Mock del router
+// Mock del router y useParams
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
+  useParams: jest.fn(() => ({ username: 'usertest' })),
 }));
 
 describe('ProblemModal', () => {
@@ -24,6 +25,6 @@ describe('ProblemModal', () => {
     expect(button).toBeInTheDocument();
 
     await userEvent.click(button);
-    expect(pushMock).toHaveBeenCalledWith('/topics');
+    expect(pushMock).toHaveBeenCalledWith('/usertest/topics');
   });
 });
