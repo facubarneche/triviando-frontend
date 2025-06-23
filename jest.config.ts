@@ -18,6 +18,7 @@ const customJestConfig = {
     '!src/**/domain/*.ts',
     '!src/**/layout.tsx',
     '!src/**/page.tsx',
+    '!src/**/loading.tsx',
     '!src/**/mocks.ts',
     '!src/**/helpers.{ts,tsx}',
     '!src/**/types/index.ts',
