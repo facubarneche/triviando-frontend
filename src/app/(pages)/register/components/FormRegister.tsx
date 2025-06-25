@@ -30,9 +30,9 @@ const FormRegister = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await userService.createUser({ ...data });
+      const { username } = await userService.createUser({ ...data });
       toast.success('Registro exitoso');
-      router.push('/topics');
+      router.push(`/${username}/topics`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       toast.error(e.message ?? 'Falló el registro');
@@ -42,7 +42,7 @@ const FormRegister = () => {
   // const handleGoogleRegister = () => {
   //   console.log('Register with Google');
   //   //TODO: Implementar validacion con google cuando corresponda
-  //   router.push('/topics');
+  //   router.push(`/${username}/topics`);
   // };
 
   return (

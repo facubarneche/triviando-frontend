@@ -1,20 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import NewTopicCard from '@/app/(pages)/[username]/topics/components/NewTopicCard';
 import { render, fireEvent, screen } from '@testing-library/react';
-import NewTopicCard from '@/app/(pages)/topics/components/NewTopicCard';
-
-jest.mock('@/app/(pages)/topics/components/NewTopicModal', () => {
-  const MockNewTopicModal = (props: any) =>
-    props.isOpen ? (
-      <div data-testid="modal">
-        <button onClick={() => props.onClose()}>Close</button>
-        <button onClick={() => props.onCreateTopic({ name: 'Test', context: 'Context' })}>
-          Create
-        </button>
-      </div>
-    ) : null;
-  MockNewTopicModal.displayName = 'MockNewTopicModal';
-  return MockNewTopicModal;
-});
 
 describe('NewTopicCard', () => {
   const onCreateTopic = jest.fn().mockResolvedValue(undefined);
@@ -35,24 +20,34 @@ describe('NewTopicCard', () => {
     fireEvent.click(
       screen.getByText('Crear Nuevo Tema').closest('div[class*="rounded-lg"]') as HTMLElement,
     );
-    expect(screen.getByTestId('modal')).toBeInTheDocument();
+    // Busca el modal por su rol de diálogo
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('closes modal when onClose is called', () => {
     render(<NewTopicCard onCreateTopic={onCreateTopic} />);
+    // Open the modal first
     fireEvent.click(
       screen.getByText('Crear Nuevo Tema').closest('div[class*="rounded-lg"]') as HTMLElement,
     );
-    fireEvent.click(screen.getByText('Close'));
+    // Now try to close the modal by clicking the close button (adjust the name if needed)
+    fireEvent.click(screen.getByRole('button', { name: /cerrar|close/i }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
   });
 
   it('calls onCreateTopic when modal create is triggered', async () => {
     render(<NewTopicCard onCreateTopic={onCreateTopic} />);
+    // Open the modal first by clicking the card
     fireEvent.click(
       screen.getByText('Crear Nuevo Tema').closest('div[class*="rounded-lg"]') as HTMLElement,
     );
-    fireEvent.click(screen.getByText('Create'));
+    // Fill in required fields before clicking "crear"
+    fireEvent.change(screen.getByLabelText(/nombre del tema/i), { target: { value: 'Test' } });
+    fireEvent.change(screen.getByLabelText(/contexto/i), { target: { value: 'Context' } });
+    // Now click the "crear" button inside the modal
+    fireEvent.click(screen.getByRole('button', { name: /crear/i }));
+    // Ajusta los argumentos según lo que espera el componente
     expect(onCreateTopic).toHaveBeenCalledWith('Test', 'Context');
   });
 

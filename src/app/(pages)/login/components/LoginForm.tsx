@@ -27,9 +27,9 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await loginService.login({ email, password });
+      const { username } = await loginService.login({ email, password });
       toast.success('Inicio de sesión exitoso');
-      router.push('/topics');
+      router.push(`/${username}/topics`);
     } catch (error) {
       handleError(error);
     }
@@ -38,7 +38,7 @@ export default function LoginPage() {
   const handleGoogleLogin = () => {
     // Handle Google login logic here
     console.log('Login with Google');
-    router.push('/topics');
+    // router.push('/topics');
   };
 
   return (

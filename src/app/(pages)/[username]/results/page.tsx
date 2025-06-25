@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { Trophy, Home, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -11,8 +11,9 @@ import { Progress } from '@/app/components/ui/progress';
 import { Button } from '@/app/components/ui/button';
 
 function Results() {
+  const { username } = useParams<{ username: string }>();
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const { push } = useRouter();
 
   //Agarro el score y el total de url params TODO:Borrar la compuerta OR cuando se agreguen los parametros
   const score = Number.parseInt(searchParams.get('score') || '4');
@@ -130,15 +131,16 @@ function Results() {
           <CardFooter className="flex flex-col space-y-2">
             <Button
               className="w-full bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 transition-all duration-300"
-              onClick={() => router.push('/topics')}
+              onClick={() => push(`/${username}/topics`)}
             >
               <RotateCcw className="mr-2 h-4 w-4" />
               Intentar Otro Quiz
             </Button>
+            {/* TODO: Es lo mismo topicos e inicio (Eliminamos boton?) */}
             <Button
               variant="outline"
               className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-200"
-              onClick={() => router.push('/')}
+              onClick={() => push(`/${username}/topics`)}
             >
               <Home className="mr-2 h-4 w-4" />
               Volver al Inicio

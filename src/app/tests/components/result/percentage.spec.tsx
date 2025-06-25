@@ -1,4 +1,4 @@
-import { getColorAndMessage } from '@/app/(pages)/results/utils/percentage';
+import { getColorAndMessage } from '@/app/(pages)/[username]/results/utils/percentage';
 
 // Mock the Audio API to prevent "Not implemented" errors during tests
 beforeAll(() => {

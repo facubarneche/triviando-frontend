@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import CreateTopicModal from '@/app/(pages)/topics/components/NewTopicModal';
+import CreateTopicModal from '@/app/(pages)/[username]/topics/components/NewTopicModal';
 
 describe('CreateTopicModal', () => {
   const onClose = jest.fn();

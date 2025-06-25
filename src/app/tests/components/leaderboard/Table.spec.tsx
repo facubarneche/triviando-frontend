@@ -1,4 +1,4 @@
-import Table from '@/app/(pages)/leaderboard/components/Table';
+import Table from '@/app/(pages)/[username]/leaderboard/components/Table';
 import { render, screen } from '@testing-library/react';
 
 const mockData = [

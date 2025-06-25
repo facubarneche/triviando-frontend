@@ -25,6 +25,11 @@ jest.mock('framer-motion', () => {
   };
 });
 
+// Mock useParams from next/navigation
+jest.mock('next/navigation', () => ({
+  useParams: () => ({ username: 'testuser' }),
+}));
+
 jest.mock('@/app/components/ui/card', () => ({
   Card: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   CardContent: ({ children, ...props }: any) => <div {...props}>{children}</div>,
@@ -62,7 +67,7 @@ describe('TopicCard', () => {
   it('links to the correct quiz page', () => {
     render(<TopicCard topic={mockTopic} />);
     const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', '/quiz/Matemáticas');
+    expect(link).toHaveAttribute('href', '/testuser/quiz/Matemáticas');
   });
 
   it('renders with correct structure', () => {

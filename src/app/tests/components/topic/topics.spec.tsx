@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ITopic } from '@/app/(pages)/topics/types';
-import Topics from '@/app/(pages)/topics/components/Topics';
+import { ITopic } from '@/app/(pages)/[username]/topics/types';
+import Topics from '@/app/(pages)/[username]/topics/components/Topics';
 import { topicService } from '@/app/services/topicService';
 import { handleError } from '@/app/utils/errorHandler';
 
@@ -12,7 +12,7 @@ jest.mock('@/app/components/topic-card', () => {
   return MockTopicCard;
 });
 
-jest.mock('@/app/(pages)/topics/components/NewTopicCard', () => {
+jest.mock('@/app/(pages)/[username]/topics/components/NewTopicCard', () => {
   const MockNewTopicCard = (props: any) => (
     <button data-testid="new-topic-card" onClick={() => props.onCreateTopic('Nuevo', 'Contexto')}>
       Crear
@@ -22,7 +22,7 @@ jest.mock('@/app/(pages)/topics/components/NewTopicCard', () => {
   return MockNewTopicCard;
 });
 
-jest.mock('@/app/(pages)/topics/components/TopicCardLoader', () => {
+jest.mock('@/app/(pages)/[username]/topics/components/TopicCardLoader', () => {
   const MockTopicCardLoader = (props: any) => (
     <div data-testid="topic-card-loader">{props.name}</div>
   );

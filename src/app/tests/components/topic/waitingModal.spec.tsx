@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import WaitingModal from '@/app/(pages)/quiz/[topic]/components/WaitingModal';
+import WaitingModal from '@/app/(pages)/[username]/quiz/[topic]/components/WaitingModal';
 
 describe('WaitingModal', () => {
   it('renders without crashing', () => {
