@@ -52,40 +52,54 @@ describe('Topics component', () => {
   });
 
   it('renders initial topics', () => {
-    render(<Topics topics={mockTopics} />);
+    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />);
     expect(screen.getByText('Math')).toBeInTheDocument();
     expect(screen.getByText('Science')).toBeInTheDocument();
   });
 
   it('renders NewTopicCard', () => {
-    render(<Topics topics={mockTopics} />);
+    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />);
     expect(screen.getByTestId('new-topic-card')).toBeInTheDocument();
   });
 
-  it('shows loader when creating is set in sessionStorage', () => {
-    sessionStorage.setItem('creatingTopic', 'LoaderTopic');
-    render(<Topics topics={mockTopics} />);
+  it('shows loader when creating is passed and topic does not exist', () => {
+    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />);
     expect(screen.getByTestId('topic-card-loader')).toHaveTextContent('LoaderTopic');
   });
 
-  it('removes loader when topic with same name exists', async () => {
-    sessionStorage.setItem('creatingTopic', 'Math');
-    render(<Topics topics={mockTopics} />);
+  it('removes loader when topic with same name exists', () => {
+    render(<Topics topics={mockTopics} creating="Math" onCreateTopic={jest.fn()} />);
     expect(screen.queryByTestId('topic-card-loader')).not.toBeInTheDocument();
   });
 
   it('handles error when topic creation fails', async () => {
     (topicService.createTopic as jest.Mock).mockRejectedValueOnce(new Error('fail'));
-    render(<Topics topics={mockTopics} />);
+
+    const onCreateTopic = async (name: string, context: string) => {
+      try {
+        await topicService.createTopic(name, context);
+      } catch (error) {
+        handleError(error);
+      }
+    };
+
+    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={onCreateTopic} />);
     fireEvent.click(screen.getByTestId('new-topic-card'));
+
     await waitFor(() => expect(handleError).toHaveBeenCalled());
   });
 
   it('syncs localTopics when props change', () => {
-    const { rerender } = render(<Topics topics={mockTopics} />);
+    const { rerender } = render(
+      <Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />,
+    );
     expect(screen.getByText('Math')).toBeInTheDocument();
     rerender(
-      <Topics topics={[{ name: 'History', icon: '📜', color: '#ccc', questionsCount: 1 }]} />,
+      <Topics
+        topics={[{ name: 'History', icon: '📜', color: '#ccc', questionsCount: 1 }]}
+        creating="LoaderTopic"
+        onCreateTopic={jest.fn()}
+      />,
     );
     expect(screen.getByText('History')).toBeInTheDocument();
   });
