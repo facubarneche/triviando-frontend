@@ -13,7 +13,9 @@ const Header = () => {
           <Link href={`/${username}/profile`}>Perfil</Link>
         </Button>
         <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
-          <Link href={`/${username}/leaderboard`}>Ranking</Link>
+          <Link href={`/${username}/leaderboard`} prefetch>
+            Ranking
+          </Link>
         </Button>
         <Button variant="ghost" className="text-white hover:bg-white/20" asChild>
           <Link href="/login" className="flex items-center">
