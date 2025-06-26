@@ -88,7 +88,6 @@ export default function FeedbackModal({
                 <motion.div
                   key={option.id}
                   className="flex items-start space-x-3"
-                  whileHover={{ scale: 1.02 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 >
                   <RadioGroupItem value={option.id} id={option.id} className="mt-1" />
