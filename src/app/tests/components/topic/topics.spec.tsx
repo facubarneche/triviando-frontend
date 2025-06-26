@@ -45,6 +45,10 @@ const mockTopics: ITopic[] = [
   { name: 'Science', icon: '🔬', color: '#eee', questionsCount: 3 },
 ];
 
+const mockCreatingTopics = [
+  { name: 'LoaderTopic', context: 'Test context', timestamp: Date.now() },
+];
+
 describe('Topics component', () => {
   beforeEach(() => {
     sessionStorage.clear();
@@ -52,24 +56,57 @@ describe('Topics component', () => {
   });
 
   it('renders initial topics', () => {
-    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />);
+    render(<Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={jest.fn()} />);
     expect(screen.getByText('Math')).toBeInTheDocument();
     expect(screen.getByText('Science')).toBeInTheDocument();
   });
 
   it('renders NewTopicCard', () => {
-    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />);
+    render(<Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={jest.fn()} />);
     expect(screen.getByTestId('new-topic-card')).toBeInTheDocument();
   });
 
-  it('shows loader when creating is passed and topic does not exist', () => {
-    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />);
+  it('shows loader when creatingTopics contains a topic that does not exist', () => {
+    render(<Topics topics={mockTopics} creatingTopics={mockCreatingTopics} onCreateTopic={jest.fn()} />);
     expect(screen.getByTestId('topic-card-loader')).toHaveTextContent('LoaderTopic');
+  });  it('does not show loader when topic with same name already exists', () => {
+    const creatingExistingTopic = [
+      { name: 'Math', context: 'Test context', timestamp: Date.now() },
+    ];
+    
+    // Filtrar tópicos que están creándose pero ya existen (simular la lógica de page.tsx)
+    const filteredCreatingTopics = creatingExistingTopic.filter(creatingTopic =>
+      !mockTopics.some(t => t.name.toLowerCase() === creatingTopic.name.toLowerCase())
+    );
+    
+    render(<Topics topics={mockTopics} creatingTopics={filteredCreatingTopics} onCreateTopic={jest.fn()} />);
+    expect(screen.queryByTestId('topic-card-loader')).not.toBeInTheDocument();
   });
 
-  it('removes loader when topic with same name exists', () => {
-    render(<Topics topics={mockTopics} creating="Math" onCreateTopic={jest.fn()} />);
-    expect(screen.queryByTestId('topic-card-loader')).not.toBeInTheDocument();
+  it('correctly filters out existing topics from creating topics (logic test)', () => {
+    const creatingTopics = [
+      { name: 'Math', context: 'Existing topic', timestamp: Date.now() },
+      { name: 'NewTopic', context: 'New topic', timestamp: Date.now() },
+    ];
+    
+    // Esta es la lógica que se usa en page.tsx
+    const filteredCreatingTopics = creatingTopics.filter(creatingTopic =>
+      !mockTopics.some(t => t.name.toLowerCase() === creatingTopic.name.toLowerCase())
+    );
+    
+    // Solo debe quedar 'NewTopic' ya que 'Math' ya existe en mockTopics
+    expect(filteredCreatingTopics).toHaveLength(1);
+    expect(filteredCreatingTopics[0].name).toBe('NewTopic');
+  });
+
+  it('shows multiple creating topics', () => {
+    const multipleCreatingTopics = [
+      { name: 'LoaderTopic1', context: 'Test context 1', timestamp: Date.now() },
+      { name: 'LoaderTopic2', context: 'Test context 2', timestamp: Date.now() },
+    ];
+    render(<Topics topics={mockTopics} creatingTopics={multipleCreatingTopics} onCreateTopic={jest.fn()} />);
+    expect(screen.getByText('LoaderTopic1')).toBeInTheDocument();
+    expect(screen.getByText('LoaderTopic2')).toBeInTheDocument();
   });
 
   it('handles error when topic creation fails', async () => {
@@ -83,21 +120,21 @@ describe('Topics component', () => {
       }
     };
 
-    render(<Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={onCreateTopic} />);
+    render(<Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={onCreateTopic} />);
     fireEvent.click(screen.getByTestId('new-topic-card'));
 
     await waitFor(() => expect(handleError).toHaveBeenCalled());
   });
 
-  it('syncs localTopics when props change', () => {
+  it('syncs topics when props change', () => {
     const { rerender } = render(
-      <Topics topics={mockTopics} creating="LoaderTopic" onCreateTopic={jest.fn()} />,
+      <Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={jest.fn()} />,
     );
     expect(screen.getByText('Math')).toBeInTheDocument();
     rerender(
       <Topics
         topics={[{ name: 'History', icon: '📜', color: '#ccc', questionsCount: 1 }]}
-        creating="LoaderTopic"
+        creatingTopics={[]}
         onCreateTopic={jest.fn()}
       />,
     );

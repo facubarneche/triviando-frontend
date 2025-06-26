@@ -6,13 +6,19 @@ import TopicCardLoader from './TopicCardLoader';
 import TopicCard from '@/app/components/topic-card';
 import { ITopic } from '../types';
 
+interface CreatingTopic {
+  name: string;
+  context: string;
+  timestamp: number;
+}
+
 interface TopicsProps {
   topics: ITopic[];
-  creating: string | null;
+  creatingTopics: CreatingTopic[];
   onCreateTopic: (name: string, context: string) => Promise<void>;
 }
 
-const Topics = ({ topics, creating, onCreateTopic }: TopicsProps) => {
+const Topics = ({ topics, creatingTopics, onCreateTopic }: TopicsProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       <motion.div
@@ -24,7 +30,10 @@ const Topics = ({ topics, creating, onCreateTopic }: TopicsProps) => {
         <NewTopicCard onCreateTopic={onCreateTopic} />
       </motion.div>
 
-      {creating && !topics.some((t) => t.name === creating) && <TopicCardLoader name={creating} />}
+      {/* Render creating topics */}
+      {creatingTopics.map((creatingTopic) => (
+        <TopicCardLoader key={`creating-${creatingTopic.name}`} name={creatingTopic.name} />
+      ))}
 
       {topics.map((topic, index) => (
         <motion.div
