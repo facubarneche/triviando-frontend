@@ -19,6 +19,7 @@ import { IQuiz, LetterType } from './types';
 import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
 import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
+import QuestionFeedback from './components/QuestionFeedback';
 
 const QuizPage = () => {
   const { topic, username } = useParams<{ username: string; topic: string }>();
@@ -147,6 +148,30 @@ const QuizPage = () => {
     }
   };
 
+  const handleFeedbackSubmit = async (feedbackType: string, description?: string) => {
+    try {
+      const feedbackData = {
+        userId: 1, // En una app real, esto vendría del contexto de usuario
+        questionId: currentQuestion.id,
+        feedbackType,
+        ...(description && { description }),
+      };
+
+      // Simular llamada al backend
+      console.log('Sending feedback:', feedbackData);
+
+      //Aca llamar al servicio de feedback
+
+      // Simular delay de red
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      console.log('Feedback sent successfully');
+    } catch (error) {
+      console.error('Error sending feedback:', error);
+      throw error;
+    }
+  };
+
   const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
     if (isCorrect === null) return;
     if (isCorrect && option === selectedOption) return 'border-green-500 bg-green-100';
@@ -237,20 +262,35 @@ const QuizPage = () => {
                   ))}
                 </RadioGroup>
 
-                {isCorrect === false && (
+                {/* Botones que aparecen después de responder */}
+                {isCorrect !== null && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-6"
+                    transition={{ delay: 0.3 }}
+                    className="mt-6 flex flex-col gap-3"
                   >
-                    <Button
-                      variant="outline"
-                      className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-200 flex items-center justify-center"
-                      onClick={handleLearnTogether}
-                    >
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Aprendamos juntos
-                    </Button>
+                    {/* Botón Aprendamos juntos - solo para respuestas incorrectas */}
+                    {isCorrect === false && (
+                      <Button
+                        variant="outline"
+                        className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-200 flex items-center justify-center"
+                        onClick={handleLearnTogether}
+                      >
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        Aprendamos juntos
+                      </Button>
+                    )}
+
+                    {/* Componente de feedback - aparece para todas las respuestas */}
+                    <div className="flex items-center justify-between mt-4 mb-4 md:mt-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">
+                          ¿Qué te pareció esta pregunta?
+                        </span>
+                        <QuestionFeedback onFeedbackSubmit={handleFeedbackSubmit} />
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </motion.div>

@@ -33,3 +33,31 @@ export const variants = {
     };
   },
 };
+
+export const feedbackOptions = [
+  {
+    id: 'incorrect-answer',
+    label: 'La respuesta correcta no es correcta',
+    description: 'La respuesta marcada como correcta está equivocada',
+  },
+  {
+    id: 'wrong-topic',
+    label: 'La pregunta no corresponde al tema',
+    description: 'Esta pregunta no está relacionada con el tema seleccionado',
+  },
+  {
+    id: 'unclear-question',
+    label: 'La pregunta no está clara',
+    description: 'La pregunta es confusa o está mal redactada',
+  },
+  {
+    id: 'multiple-correct',
+    label: 'Hay múltiples respuestas correctas',
+    description: 'Más de una opción podría ser considerada correcta',
+  },
+  {
+    id: 'other',
+    label: 'Otro problema',
+    description: 'Describe el problema específico que encontraste',
+  },
+];

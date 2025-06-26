@@ -29,3 +29,9 @@ export interface IQuiz {
   explanation: string;
   difficulty: DifficultyType;
 }
+
+
+export interface QuestionFeedbackProps {
+  onFeedbackSubmit: (feedbackType: string, description?: string) => Promise<void>;
+  disabled?: boolean;
+}
