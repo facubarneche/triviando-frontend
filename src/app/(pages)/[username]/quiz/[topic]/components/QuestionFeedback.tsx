@@ -83,6 +83,7 @@ export default function QuestionFeedback({
             size="sm"
             onClick={handlePositiveFeedback}
             disabled={disabled}
+            data-testid="thumbs-up-button"
             className={`p-2 h-auto transition-all duration-200 ${
               positiveFeedback
                 ? 'text-green-600 bg-green-50 hover:bg-green-100'
@@ -103,6 +104,7 @@ export default function QuestionFeedback({
             size="sm"
             onClick={handleNegativeFeedback}
             disabled={disabled}
+            data-testid="thumbs-down-button"
             className={`p-2 h-auto transition-all duration-200 ${
               negativeFeedback
                 ? 'text-red-600 bg-red-50 hover:bg-red-100'
