@@ -12,31 +12,87 @@ import { StreakModal } from '@/app/components/modals/StreakModal';
 import { handleError } from '@/app/utils/errorHandler';
 import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
 import { toast } from 'react-toastify';
+import { useTopicCreationStore } from '@/app/stores/topicCreationStore';
 
 export default function TopicsPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [topics, setTopics] = useState<ITopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [creating, setCreating] = useState<string | null>(null);
-
+  const { creatingTopics, setCreating, removeCreating, clearOldCreations, setRefreshCallback } =
+    useTopicCreationStore();
+  // Función para refrescar los tópicos
+  const refreshTopics = async (): Promise<void> => {
+    try {
+      const id = getUserIdCSR();
+      const topics = await topicService.getTopics({ id });
+      const parsedTopics = parserTopics(topics);
+      setTopics(parsedTopics);
+    } catch (error) {
+      handleError(error);
+    }
+  };
   useEffect(() => {
     const getTopics = async () => {
       try {
+        // Limpiar creaciones antiguas
+        clearOldCreations();
+
         const id = getUserIdCSR();
         const topics = await topicService.getTopics({ id });
         const parsedTopics = parserTopics(topics);
         setTopics(parsedTopics);
+
+        // Verificar si algún tópico que se estaba creando ya existe
+        creatingTopics.forEach((creatingTopic) => {
+          const exists = parsedTopics.some(
+            (t) => t.name.toLowerCase() === creatingTopic.name.toLowerCase(),
+          );
+          if (exists) {
+            removeCreating(creatingTopic.name);
+          }
+        });
       } catch (error) {
         handleError(error);
       } finally {
         setLoading(false);
       }
     };
+
+    // Registrar la función de refresco en el store
+    setRefreshCallback(refreshTopics);
+
     getTopics();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Efecto para refrescar cuando hay tópicos creándose y regresamos a la página
+  useEffect(() => {
+    const checkForCompletedTopics = async () => {
+      if (creatingTopics.length > 0 && !loading) {
+        // Refrescar la lista para ver si algún tópico se completó
+        await refreshTopics();
+
+        // Verificar si algún tópico que se estaba creando ya existe
+        creatingTopics.forEach((creatingTopic) => {
+          const exists = topics.some(
+            (t) => t.name.toLowerCase() === creatingTopic.name.toLowerCase(),
+          );
+          if (exists) {
+            removeCreating(creatingTopic.name);
+          }
+        });
+      }
+    };
+
+    // Solo ejecutar si no estamos cargando y hay tópicos creándose
+    if (!loading && creatingTopics.length > 0) {
+      checkForCompletedTopics();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [creatingTopics.length, loading]); // Usar solo length para evitar loops
 
   const handleCreateTopic = async (name: string, context: string) => {
-    setCreating(name);
+    // Usar el store de Zustand para manejar el estado de creación
+    setCreating(name, context);
+
     try {
       const response = await topicService.createTopic(name, context);
       const created = (response as ITopicDTO[]).find((t: ITopicDTO) => t.topic === name);
@@ -47,22 +103,36 @@ export default function TopicsPage() {
           color: '#06b6d4',
           questionsCount: created.size,
         };
+
+        // Actualizar la lista local
         setTopics((prev) =>
           prev.some((t) => t.name === newTopic.name) ? prev : [...prev, newTopic],
         );
+
+        // Remover del estado de creación
+        removeCreating(name);
+
         toast.success(`Tópico "${created.topic}" creado exitosamente.`);
+
+        // Refrescar la lista para asegurar consistencia
+        await refreshTopics();
       } else {
         toast.error('Ocurrió un error al crear el tópico. Intenta nuevamente.');
+        removeCreating(name);
       }
     } catch (error) {
       handleError(error);
-    } finally {
-      setCreating(null);
+      removeCreating(name);
     }
   };
-
   const filteredTopics = topics.filter((topic) =>
     topic.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  // Obtener tópicos que se están creando y no existen aún
+  const currentlyCreating = creatingTopics.filter(
+    (creatingTopic) =>
+      !topics.some((t) => t.name.toLowerCase() === creatingTopic.name.toLowerCase()),
   );
 
   return (
@@ -74,7 +144,11 @@ export default function TopicsPage() {
         {loading ? (
           <TopicsSkeleton />
         ) : (
-          <Topics topics={filteredTopics} creating={creating} onCreateTopic={handleCreateTopic} />
+          <Topics
+            topics={filteredTopics}
+            creatingTopics={currentlyCreating}
+            onCreateTopic={handleCreateTopic}
+          />
         )}
       </main>
     </div>
