@@ -30,8 +30,8 @@ export interface IQuiz {
   difficulty: DifficultyType;
 }
 
-
 export interface QuestionFeedbackProps {
-  onFeedbackSubmit: (feedbackType: string, description?: string) => Promise<void>;
+  onFeedbackSubmit: (feedbackType: string, description?: string) => void;
   disabled?: boolean;
+  resetKey?: number | string; // Nuevo prop para resetear el estado
 }

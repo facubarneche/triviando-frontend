@@ -40,6 +40,10 @@ const QuizPage = () => {
   });
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
+  const [currentQuestionFeedback, setCurrentQuestionFeedback] = useState<{
+    type: string;
+    description?: string;
+  } | null>(null);
   const confettiRef = useRef<HTMLDivElement>(null);
   const userId = getUserIdCSR();
   const timerRef = useRef<TimerHandle>(null);
@@ -111,11 +115,25 @@ const QuizPage = () => {
     playSound('/sounds/incorrect.mp3');
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    // Enviar feedback de la pregunta actual antes de avanzar
+    if (currentQuestionFeedback) {
+      try {
+        await handleFeedbackSubmit(
+          currentQuestionFeedback.type,
+          currentQuestionFeedback.description,
+        );
+      } catch (error) {
+        console.error('Error sending feedback:', error);
+        // Continuar aunque falle el envío del feedback
+      }
+    }
+
     if (currentQuestionIndex < questions.length - 1) {
       timerRef.current?.start();
       setDirection(1);
       setIsCorrect(null);
+      setCurrentQuestionFeedback(null); // Limpiar feedback para la siguiente pregunta
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption(null);
@@ -145,6 +163,18 @@ const QuizPage = () => {
       console.error('Error generating explanation:', error);
     } finally {
       setIsLoadingExplanation(false);
+    }
+  };
+
+  const handleFeedbackSelect = (feedbackType: string, description?: string) => {
+    // Solo almacenar el feedback, no enviarlo todavía
+    if (feedbackType === 'none') {
+      setCurrentQuestionFeedback(null);
+    } else {
+      setCurrentQuestionFeedback({
+        type: feedbackType,
+        description,
+      });
     }
   };
 
@@ -230,7 +260,7 @@ const QuizPage = () => {
                 <RadioGroup value={selectedOption ?? ''} className="space-y-3">
                   {currentQuestion.options.map(({ text, letter }, index: number) => (
                     <motion.div
-                      key={crypto.randomUUID()}
+                      key={`${currentQuestionIndex}-${letter}`}
                       className="flex items-center"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -288,7 +318,10 @@ const QuizPage = () => {
                         <span className="text-sm text-muted-foreground">
                           ¿Qué te pareció esta pregunta?
                         </span>
-                        <QuestionFeedback onFeedbackSubmit={handleFeedbackSubmit} />
+                        <QuestionFeedback
+                          onFeedbackSubmit={handleFeedbackSelect}
+                          resetKey={currentQuestionIndex}
+                        />
                       </div>
                     </div>
                   </motion.div>

@@ -7,7 +7,14 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Send } from 'lucide-react';
 import { feedbackOptions } from '../helpers';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/app/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/app/components/ui/dialog';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { Label } from '@/app/components/ui/label';
 import { Textarea } from '@/app/components/ui/textarea';
@@ -17,17 +24,9 @@ interface FeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (feedbackType: string, description?: string) => void;
-  isSubmitting?: boolean;
 }
 
-
-
-export default function FeedbackModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  isSubmitting = false,
-}: FeedbackModalProps) {
+export default function FeedbackModal({ isOpen, onClose, onSubmit }: FeedbackModalProps) {
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [customDescription, setCustomDescription] = useState('');
   const [error, setError] = useState('');
@@ -116,7 +115,7 @@ export default function FeedbackModal({
                   id="custom-description"
                   placeholder="Explica detalladamente cuál es el problema con esta pregunta..."
                   value={customDescription}
-                  onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => {
+                  onChange={(e: { target: { value: React.SetStateAction<string> } }) => {
                     setCustomDescription(e.target.value);
                     setError('');
                   }}
@@ -142,30 +141,12 @@ export default function FeedbackModal({
               variant="outline"
               onClick={handleClose}
               className="border-gray-200 hover:bg-gray-50"
-              disabled={isSubmitting}
             >
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              className="bg-red-500 hover:bg-red-600 text-white"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <motion.div
-                    className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-t-transparent"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
-                  />
-                  Enviando...
-                </>
-              ) : (
-                <>
-                  <Send className="mr-2 h-4 w-4" />
-                  Enviar Reporte
-                </>
-              )}
+            <Button type="submit" className="bg-red-500 hover:bg-red-600 text-white">
+              <Send className="mr-2 h-4 w-4" />
+              Enviar Reporte
             </Button>
           </DialogFooter>
         </form>

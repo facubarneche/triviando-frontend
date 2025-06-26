@@ -1,55 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { QuestionFeedbackProps } from '../types';
 import FeedbackModal from './FeedbackModal';
 import { Button } from '@/app/components/ui/button';
 
-
-
 export default function QuestionFeedback({
   onFeedbackSubmit,
   disabled = false,
+  resetKey, // Nuevo prop para resetear el estado
 }: QuestionFeedbackProps) {
   const [positiveFeedback, setPositiveFeedback] = useState(false);
   const [negativeFeedback, setNegativeFeedback] = useState(false);
   const [showNegativeModal, setShowNegativeModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const lastResetKey = useRef(resetKey);
 
-  const handlePositiveFeedback = async () => {
-    if (disabled || isSubmitting) return;
-
-    setIsSubmitting(true);
-    try {
-      await onFeedbackSubmit('positive');
-      setPositiveFeedback(true);
+  // Reset del estado cuando cambie la pregunta
+  useEffect(() => {
+    if (resetKey !== lastResetKey.current) {
+      setPositiveFeedback(false);
       setNegativeFeedback(false);
-    } catch (error) {
-      console.error('Error sending positive feedback:', error);
-    } finally {
-      setIsSubmitting(false);
+      setShowNegativeModal(false);
+      lastResetKey.current = resetKey;
     }
+  }, [resetKey]);
+
+  const handlePositiveFeedback = () => {
+    if (disabled) return;
+
+    // Si ya está seleccionado positivo, desactivarlo
+    if (positiveFeedback) {
+      setPositiveFeedback(false);
+      // Notificar que se removió el feedback
+      onFeedbackSubmit('none');
+      return;
+    }
+
+    // Actualizar el estado visual inmediatamente para una mejor UX
+    setPositiveFeedback(true);
+    setNegativeFeedback(false);
+
+    // Notificar al componente padre del feedback seleccionado
+    onFeedbackSubmit('positive');
   };
 
   const handleNegativeFeedback = () => {
-    if (disabled || isSubmitting) return;
+    if (disabled) return;
+
+    // Si ya está seleccionado negativo, desactivarlo
+    if (negativeFeedback) {
+      setNegativeFeedback(false);
+      // Notificar que se removió el feedback
+      onFeedbackSubmit('none');
+      return;
+    }
+
     setShowNegativeModal(true);
   };
 
-  const handleNegativeFeedbackSubmit = async (feedbackType: string, description?: string) => {
-    setIsSubmitting(true);
-    try {
-      await onFeedbackSubmit(feedbackType, description);
-      setNegativeFeedback(true);
-      setPositiveFeedback(false);
-      setShowNegativeModal(false);
-    } catch (error) {
-      console.error('Error sending negative feedback:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleNegativeFeedbackSubmit = (feedbackType: string, description?: string) => {
+    // Actualizar el estado visual inmediatamente para una mejor UX
+    setNegativeFeedback(true);
+    setPositiveFeedback(false);
+    setShowNegativeModal(false);
+
+    // Notificar al componente padre del feedback seleccionado
+    onFeedbackSubmit(feedbackType, description);
   };
 
   return (
@@ -64,7 +82,7 @@ export default function QuestionFeedback({
             variant="ghost"
             size="sm"
             onClick={handlePositiveFeedback}
-            disabled={disabled || isSubmitting}
+            disabled={disabled}
             className={`p-2 h-auto transition-all duration-200 ${
               positiveFeedback
                 ? 'text-green-600 bg-green-50 hover:bg-green-100'
@@ -84,7 +102,7 @@ export default function QuestionFeedback({
             variant="ghost"
             size="sm"
             onClick={handleNegativeFeedback}
-            disabled={disabled || isSubmitting}
+            disabled={disabled}
             className={`p-2 h-auto transition-all duration-200 ${
               negativeFeedback
                 ? 'text-red-600 bg-red-50 hover:bg-red-100'
@@ -101,7 +119,6 @@ export default function QuestionFeedback({
         isOpen={showNegativeModal}
         onClose={() => setShowNegativeModal(false)}
         onSubmit={handleNegativeFeedbackSubmit}
-        isSubmitting={isSubmitting}
       />
     </>
   );
