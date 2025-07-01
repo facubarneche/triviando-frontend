@@ -15,10 +15,12 @@ import WaitingModal from './components/WaitingModal';
 import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
-import { IQuiz, LetterType } from './types';
+import { IFeedbackDTO, IQuiz, LetterType } from './types';
 import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
 import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
+import QuestionFeedback from './components/QuestionFeedback';
+import { toast } from 'react-toastify';
 
 const QuizPage = () => {
   const { topic, username } = useParams<{ username: string; topic: string }>();
@@ -39,6 +41,10 @@ const QuizPage = () => {
   });
   const [explanation, setExplanation] = useState('');
   const [isLoadingExplanation, setIsLoadingExplanation] = useState(false);
+  const [currentQuestionFeedback, setCurrentQuestionFeedback] = useState<{
+    type: string;
+    description?: string;
+  } | null>(null);
   const confettiRef = useRef<HTMLDivElement>(null);
   const userId = getUserIdCSR();
   const timerRef = useRef<TimerHandle>(null);
@@ -110,23 +116,57 @@ const QuizPage = () => {
     playSound('/sounds/incorrect.mp3');
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    // Enviar feedback de la pregunta actual antes de avanzar
+    if (currentQuestionFeedback) {
+      try {
+        await handleFeedbackSubmit(
+          currentQuestionFeedback.type,
+          currentQuestionFeedback.description,
+        );
+        toast.success('Gracias por tu feedback');
+      } catch (error) {
+        console.error('Error sending feedback:', error);
+        toast.error('Error al enviar el feedback. Por favor, inténtalo de nuevo más tarde.');
+        // Continuar aunque falle el envío del feedback
+      }
+    }
+
     if (currentQuestionIndex < questions.length - 1) {
       timerRef.current?.start();
       setDirection(1);
       setIsCorrect(null);
+      setCurrentQuestionFeedback(null); // Limpiar feedback para la siguiente pregunta
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption(null);
       }, 300);
     } else {
+      const finishQuiz = async () => {
+        await handleFinish();
+      };
       setTimeout(() => {
-        handleFinish();
+        finishQuiz();
       }, 500);
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
+    // Enviar feedback de la pregunta actual antes de finalizar
+    if (currentQuestionFeedback) {
+      try {
+        await handleFeedbackSubmit(
+          currentQuestionFeedback.type,
+          currentQuestionFeedback.description,
+        );
+        toast.success('Gracias por tu feedback');
+      } catch (error) {
+        console.error('Error sending feedback:', error);
+        toast.error('Error al enviar el feedback. Por favor, inténtalo de nuevo más tarde.');
+        // Continuar aunque falle el envío del feedback
+      }
+    }
+
     quizService.generateQuiz(decodeURITopic);
     router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
@@ -144,6 +184,32 @@ const QuizPage = () => {
       console.error('Error generating explanation:', error);
     } finally {
       setIsLoadingExplanation(false);
+    }
+  };
+
+  const handleFeedbackSelect = (feedbackType: string, description?: string) => {
+    // Solo almacenar el feedback, no enviarlo todavía
+    if (feedbackType === 'none') {
+      setCurrentQuestionFeedback(null);
+    } else {
+      setCurrentQuestionFeedback({
+        type: feedbackType,
+        description,
+      });
+    }
+  };
+
+  const handleFeedbackSubmit = async (feedbackType: string, description?: string) => {
+    try {
+      const feedbackData: IFeedbackDTO = {
+        questionId: currentQuestion.id,
+        feedbackType,
+        ...(description && { description }),
+      };
+      await quizService.sendFeedback(feedbackData);
+    } catch (error) {
+      console.error('Error sending feedback:', error);
+      throw error;
     }
   };
 
@@ -205,7 +271,7 @@ const QuizPage = () => {
                 <RadioGroup value={selectedOption ?? ''} className="space-y-3">
                   {currentQuestion.options.map(({ text, letter }, index: number) => (
                     <motion.div
-                      key={crypto.randomUUID()}
+                      key={`${currentQuestionIndex}-${letter}`}
                       className="flex items-center"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -237,20 +303,38 @@ const QuizPage = () => {
                   ))}
                 </RadioGroup>
 
-                {isCorrect === false && (
+                {/* Botones que aparecen después de responder */}
+                {isCorrect !== null && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-6"
+                    transition={{ delay: 0.3 }}
+                    className="mt-6 flex flex-col gap-3"
                   >
-                    <Button
-                      variant="outline"
-                      className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-200 flex items-center justify-center"
-                      onClick={handleLearnTogether}
-                    >
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Aprendamos juntos
-                    </Button>
+                    {/* Botón Aprendamos juntos - solo para respuestas incorrectas */}
+                    {isCorrect === false && (
+                      <Button
+                        variant="outline"
+                        className="w-full border-cyan-200 hover:bg-cyan-50 transition-all duration-200 flex items-center justify-center"
+                        onClick={handleLearnTogether}
+                      >
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        Aprendamos juntos
+                      </Button>
+                    )}
+
+                    {/* Componente de feedback - aparece para todas las respuestas */}
+                    <div className="flex items-center justify-between mt-4 mb-4 md:mt-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">
+                          ¿Qué te pareció esta pregunta?
+                        </span>
+                        <QuestionFeedback
+                          onFeedbackSubmit={handleFeedbackSelect}
+                          resetKey={currentQuestionIndex}
+                        />
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </motion.div>

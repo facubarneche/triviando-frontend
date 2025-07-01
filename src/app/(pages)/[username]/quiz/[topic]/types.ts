@@ -29,3 +29,15 @@ export interface IQuiz {
   explanation: string;
   difficulty: DifficultyType;
 }
+
+export interface QuestionFeedbackProps {
+  onFeedbackSubmit: (feedbackType: string, description?: string) => void;
+  disabled?: boolean;
+  resetKey?: number | string; // Nuevo prop para resetear el estado
+}
+
+export interface IFeedbackDTO {
+  questionId: string;
+  feedbackType: string;
+  description?: string;
+}

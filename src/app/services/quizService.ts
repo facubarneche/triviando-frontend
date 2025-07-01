@@ -1,4 +1,4 @@
-import { LetterType } from '../(pages)/[username]/quiz/[topic]/types';
+import { IFeedbackDTO, LetterType } from '../(pages)/[username]/quiz/[topic]/types';
 import { BaseService } from './baseService';
 import { loginService } from './loginService';
 
@@ -30,6 +30,14 @@ class QuizService extends BaseService {
       promptContext: '',
       promptType: 'questionPrompter',
     });
+
+  sendFeedback = async (feedbackData: IFeedbackDTO) => {
+    const userId = loginService.getUserId();
+    this.axiosService.post('/send-feedback', {
+      ...feedbackData,
+      userId,
+    });
+  };
 }
 
 export const quizService = new QuizService();
