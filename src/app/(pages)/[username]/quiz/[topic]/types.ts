@@ -35,3 +35,9 @@ export interface QuestionFeedbackProps {
   disabled?: boolean;
   resetKey?: number | string; // Nuevo prop para resetear el estado
 }
+
+export interface IFeedbackDTO {
+  questionId: string;
+  feedbackType: string;
+  description?: string;
+}

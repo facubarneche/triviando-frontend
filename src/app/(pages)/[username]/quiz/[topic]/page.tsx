@@ -15,11 +15,12 @@ import WaitingModal from './components/WaitingModal';
 import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
-import { IQuiz, LetterType } from './types';
+import { IFeedbackDTO, IQuiz, LetterType } from './types';
 import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
 import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
 import QuestionFeedback from './components/QuestionFeedback';
+import { toast } from 'react-toastify';
 
 const QuizPage = () => {
   const { topic, username } = useParams<{ username: string; topic: string }>();
@@ -123,8 +124,10 @@ const QuizPage = () => {
           currentQuestionFeedback.type,
           currentQuestionFeedback.description,
         );
+        toast.success('Gracias por tu feedback');
       } catch (error) {
         console.error('Error sending feedback:', error);
+        toast.error('Error al enviar el feedback. Por favor, inténtalo de nuevo más tarde.');
         // Continuar aunque falle el envío del feedback
       }
     }
@@ -139,13 +142,31 @@ const QuizPage = () => {
         setSelectedOption(null);
       }, 300);
     } else {
+      const finishQuiz = async () => {
+        await handleFinish();
+      };
       setTimeout(() => {
-        handleFinish();
+        finishQuiz();
       }, 500);
     }
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
+    // Enviar feedback de la pregunta actual antes de finalizar
+    if (currentQuestionFeedback) {
+      try {
+        await handleFeedbackSubmit(
+          currentQuestionFeedback.type,
+          currentQuestionFeedback.description,
+        );
+        toast.success('Gracias por tu feedback');
+      } catch (error) {
+        console.error('Error sending feedback:', error);
+        toast.error('Error al enviar el feedback. Por favor, inténtalo de nuevo más tarde.');
+        // Continuar aunque falle el envío del feedback
+      }
+    }
+
     quizService.generateQuiz(decodeURITopic);
     router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
@@ -180,22 +201,12 @@ const QuizPage = () => {
 
   const handleFeedbackSubmit = async (feedbackType: string, description?: string) => {
     try {
-      const feedbackData = {
-        userId: 1, // En una app real, esto vendría del contexto de usuario
+      const feedbackData: IFeedbackDTO = {
         questionId: currentQuestion.id,
         feedbackType,
         ...(description && { description }),
       };
-
-      // Simular llamada al backend
-      console.log('Sending feedback:', feedbackData);
-
-      //Aca llamar al servicio de feedback
-
-      // Simular delay de red
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      console.log('Feedback sent successfully');
+      await quizService.sendFeedback(feedbackData);
     } catch (error) {
       console.error('Error sending feedback:', error);
       throw error;
