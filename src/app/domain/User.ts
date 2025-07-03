@@ -7,6 +7,7 @@ export interface LoginCredentials {
 //Respuesta del servidor al iniciar sesión
 export interface Usuario {
   id: number;
+  lastName: string;
   name: string;
   username: string;
 }
