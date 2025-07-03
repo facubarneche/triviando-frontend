@@ -151,9 +151,13 @@ const Header = () => {
           </AnimatePresence>
         </div>
       </div>
-      <h1 className="text-2xl font-bold text-white whitespace-nowrap text-center md:justify-start cursor-default">
-        Elige un Tema
-      </h1>
+      <div className="flex justify-center md:justify-start">
+        <img
+          src="/logo-triviando.png"
+          alt="trivIAndo"
+          className="h-8 md:h-10 filter brightness-0 invert"
+        />
+      </div>
     </header>
   );
 };
