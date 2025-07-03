@@ -15,21 +15,21 @@ const Header = () => {
   const { username } = useParams<{ username: string }>();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   // Inicializar usuario desde cookies si es necesario
   useInitializeUser();
-  
+
   // Obtener datos del usuario desde Zustand
   const { user } = useUserStore();
-  
+
   // Usar datos del store o fallback a datos por defecto
   const userData = user || {
     name: 'Usuario',
     lastName: 'Invitado',
     username: username || 'guest',
-    id: 0
+    id: 0,
   };
-  
+
   const fullName = `${userData.name} ${userData.lastName}`;
 
   // Cerrar dropdown al hacer clic fuera
@@ -108,16 +108,17 @@ const Header = () => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50"
+                className="absolute right-0 mt-2 w-56 sm:w-56 xs:w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 
+                         sm:max-w-none max-w-[280px] min-w-[260px]"
               >
                 {/* Header del usuario */}
                 <div className="px-4 py-3 border-b border-gray-200">
-                  <p className="text-sm font-medium text-gray-900">{fullName}</p>
-                  <p className="text-xs text-gray-500">@{userData.username}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">{fullName}</p>
+                  <p className="text-xs text-gray-500 truncate">@{userData.username}</p>
                 </div>
 
                 {/* Opciones del menú */}
-                <div className="py-1">
+                <div className="py-2">
                   <button
                     onClick={handleProfile}
                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
