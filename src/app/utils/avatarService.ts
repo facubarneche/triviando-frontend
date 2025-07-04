@@ -26,7 +26,7 @@ export function getCurrentUserAvatarPublicId(): string | null {
  * @param userId - ID del usuario
  * @returns boolean indicando si existe el avatar
  */
-export function hasUserAvatar(userId: number): boolean {
+export function hasUserAvatar(): boolean {
   // Por ahora, asumimos que si tenemos el ID, podemos intentar cargar el avatar
   // CldImage manejará el caso de que no exista
   return true;
