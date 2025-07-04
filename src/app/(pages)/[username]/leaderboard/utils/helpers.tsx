@@ -11,13 +11,15 @@ export const styledRank = (rank: number) => {
   return rankStyles[rank] || 'bg-purple-400';
 };
 
-export const parseLeaderboardData = async (users: ILeaderBoardContentDTO[]): Promise<ILeaderContentBoard[]> => {
+export const parseLeaderboardData = async (
+  users: ILeaderBoardContentDTO[],
+): Promise<ILeaderContentBoard[]> => {
   // Extraer IDs de usuarios
-  const userIds = users.map(user => user.id);
-  
+  const userIds = users.map((user) => user.id);
+
   // Obtener avatares de Cloudinary
   const avatars = await CloudinaryServerService.getUsersAvatars(userIds);
-  
+
   return users.map((user) => ({
     rank: user.position,
     username: user.username,

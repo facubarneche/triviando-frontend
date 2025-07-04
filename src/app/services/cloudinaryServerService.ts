@@ -16,7 +16,7 @@ export class CloudinaryServerService {
    */
   static async getUsersAvatars(userIds: number[]): Promise<Record<number, string | null>> {
     const avatars: Record<number, string | null> = {};
-    
+
     try {
       // Buscar avatares en paralelo para todos los usuarios
       const promises = userIds.map(async (userId) => {
@@ -38,7 +38,7 @@ export class CloudinaryServerService {
       });
 
       const results = await Promise.all(promises);
-      
+
       // Convertir array de resultados a objeto
       results.forEach(({ userId, avatar }) => {
         avatars[userId] = avatar;

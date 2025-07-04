@@ -25,9 +25,9 @@ const Leaderboard = async ({ searchParams }: LeaderBoardProps) => {
     <div className="min-h-screen bg-gradient-to-b from-purple-500 to-indigo-700">
       <div className="mx-2 md:mx-15">
         <Header />
-        <Card 
-          historical={{ ...historical, content: historicalData }} 
-          weekly={{ ...weekly, content: weeklyData }} 
+        <Card
+          historical={{ ...historical, content: historicalData }}
+          weekly={{ ...weekly, content: weeklyData }}
         />
       </div>
     </div>

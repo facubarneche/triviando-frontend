@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BaseService } from './baseService';
 import Cookies from 'js-cookie';
-import { useUserStore } from '../stores/userStore';
+
 
 interface IUser {
   username: string;

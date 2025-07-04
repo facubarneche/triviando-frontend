@@ -76,9 +76,9 @@ const ProfileInfo = () => {
   const getDisplayName = () => {
     const name = user.name?.trim();
     const lastName = user.lastName?.trim();
-    
+
     if (!name && !lastName) return 'Usuario Anónimo';
-    
+
     return [name, lastName].filter(Boolean).join(' ').trim();
   };
 
@@ -95,7 +95,7 @@ const ProfileInfo = () => {
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <CloudinaryAvatar
               publicId={storeUser?.avatar || avatarPublicId || user.avatar}
-              fallbackText={fullName ? (fullName.charAt(0) || '') : (user.username?.charAt(0) || 'U')}
+              fallbackText={fullName ? fullName.charAt(0) || '' : user.username?.charAt(0) || 'U'}
               className="w-24 h-24 border-4 border-[#9d4edd]/30"
               size={96}
               alt="Avatar del usuario"

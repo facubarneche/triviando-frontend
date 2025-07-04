@@ -263,7 +263,11 @@ export default function EditProfile() {
                     <div className="relative">
                       <CloudinaryAvatar
                         publicId={avatarPublicId || undefined}
-                        fallbackText={((userData?.name || '') + ' ' + (userData?.lastName || '')).trim() || userData?.username?.charAt(0) || 'U'}
+                        fallbackText={
+                          ((userData?.name || '') + ' ' + (userData?.lastName || '')).trim() ||
+                          userData?.username?.charAt(0) ||
+                          'U'
+                        }
                         className="w-24 h-24"
                         size={96}
                         alt="Avatar del usuario"

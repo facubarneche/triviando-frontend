@@ -13,6 +13,19 @@ jest.mock('next/navigation', () => ({
 jest.mock('@/app/services/loginService', () => ({
   loginService: { login: jest.fn() },
 }));
+jest.mock('@/app/services/cloudinaryAvatarService', () => ({
+  cloudinaryAvatarService: {
+    getCurrentUserAvatar: jest.fn().mockResolvedValue(null),
+  },
+}));
+jest.mock('@/app/stores/userStore', () => ({
+  useUserStore: {
+    getState: jest.fn(() => ({
+      setUser: jest.fn(),
+      setAvatar: jest.fn(),
+    })),
+  },
+}));
 jest.mock('react-toastify', () => ({
   toast: { success: jest.fn() },
 }));

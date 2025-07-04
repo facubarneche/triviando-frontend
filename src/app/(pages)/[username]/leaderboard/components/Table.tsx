@@ -32,7 +32,9 @@ const Table = ({ data }: { data: ILeaderContentBoard[] }) => {
                 />
               ) : (
                 <Avatar>
-                  <AvatarFallback>{(user.username?.substring(0, 2) || 'US').toUpperCase()}</AvatarFallback>
+                  <AvatarFallback>
+                    {(user.username?.substring(0, 2) || 'US').toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
               )}
 

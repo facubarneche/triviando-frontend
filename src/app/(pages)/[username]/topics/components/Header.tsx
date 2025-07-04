@@ -37,14 +37,14 @@ const Header = () => {
   // Crear nombre completo con lógica mejorada
   const getDisplayName = () => {
     if (!user) return 'Usuario Anónimo';
-    
+
     const name = user.name?.trim();
     const lastName = user.lastName?.trim();
-    
+
     if (!name && !lastName) return 'Usuario Anónimo';
     if (!name) return lastName;
     if (!lastName) return name;
-    
+
     return `${name} ${lastName}`;
   };
 
@@ -108,7 +108,11 @@ const Header = () => {
           >
             <CloudinaryAvatar
               publicId={user?.avatar || avatarPublicId || undefined}
-              fallbackText={(userData.name?.charAt(0) || '') + (userData.lastName?.charAt(0) || '') || userData.username?.charAt(0) || 'U'}
+              fallbackText={
+                (userData.name?.charAt(0) || '') + (userData.lastName?.charAt(0) || '') ||
+                userData.username?.charAt(0) ||
+                'U'
+              }
               className="h-8 w-8 border-2 border-white/30"
               size={32}
               alt={username}
