@@ -10,10 +10,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (cookieUsuario && url.pathname === '/') {
-    return NextResponse.redirect(new URL('/topics', request.url));
-  }
-
   const profileMatch = url.pathname.match(/^\/([^\/]+)\/profile$/);
 
   if (cookieUsuario && profileMatch) {
