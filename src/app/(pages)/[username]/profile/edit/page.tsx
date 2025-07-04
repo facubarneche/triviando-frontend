@@ -7,7 +7,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Camera, User, Mail, Lock, Save, Phone, Calendar } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
+import { CldUploadWidget } from 'next-cloudinary';
+import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
 import {
   Card,
   CardContent,
@@ -30,6 +31,9 @@ import { countryCodes } from '@/app/utils/countryCodes';
 import { userService } from '@/app/services/userService';
 import { loginService } from '@/app/services/loginService';
 import { handleError } from '@/app/utils/errorHandler';
+import { useUserStore } from '@/app/stores/userStore';
+import { cloudinaryAvatarService } from '@/app/services/cloudinaryAvatarService';
+import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import type { IUserData, IUpdateUserData } from '@/app/services/userService';
 import ProfileEditSkeleton from './ProfileEditSkeleton';
 import { toast } from 'react-toastify';
@@ -48,6 +52,12 @@ export default function EditProfile() {
   });
   const [originalUsername, setOriginalUsername] = useState('');
   const router = useRouter();
+
+  // Hook para manejar el avatar del usuario
+  const { avatarPublicId, updateAvatar } = useUserAvatar();
+
+  // Zustand store
+  const { user, updateUser } = useUserStore();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -75,9 +85,8 @@ export default function EditProfile() {
       }
     };
     fetchUserData();
-  }, []);
+  }, [user?.avatar]);
 
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -116,17 +125,6 @@ export default function EditProfile() {
         delete newErrors[name];
         return newErrors;
       });
-    }
-  };
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvatarPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
     }
   };
 
@@ -207,10 +205,20 @@ export default function EditProfile() {
       phoneNumber: formData.phoneNumber,
       countryCode: formData.countryCode,
       currentPassword: formData.currentPassword,
+      avatar: avatarPublicId || userData.avatar,
     };
 
     try {
       await userService.editUserById(updatedUser);
+
+      // Actualizar el store de Zustand con los nuevos datos
+      updateUser({
+        name: formData.firstName,
+        lastName: formData.lastName,
+        username: formData.username,
+        avatar: avatarPublicId || userData.avatar,
+      });
+
       setIsSubmitting(false);
       toast.success('Perfil actualizado correctamente');
       router.push(`/${formData.username}/profile`);
@@ -253,34 +261,38 @@ export default function EditProfile() {
                 <CardContent className="space-y-6">
                   <div className="flex flex-col items-center gap-2 mb-2">
                     <div className="relative">
-                      <Avatar className="w-24 h-24 border-4 border-cyan-200">
-                        {avatarPreview ? (
-                          <AvatarImage src={avatarPreview || '/placeholder.svg'} alt="Preview" />
-                        ) : (
-                          <>
-                            <AvatarImage src="/placeholder-user.jpg" alt="@user" />
-                            <AvatarFallback className="text-2xl bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
-                              {userData?.name} {userData?.lastName}
-                            </AvatarFallback>
-                          </>
+                      <CloudinaryAvatar
+                        publicId={avatarPublicId || undefined}
+                        fallbackText={((userData?.name || '') + ' ' + (userData?.lastName || '')).trim() || userData?.username?.charAt(0) || 'U'}
+                        className="w-24 h-24"
+                        size={96}
+                        alt="Avatar del usuario"
+                      />
+                      <CldUploadWidget
+                        uploadPreset="avatar_preset"
+                        options={cloudinaryAvatarService.getUploadOptions()}
+                        onSuccess={(result) => {
+                          if (typeof result.info === 'object' && result.info.public_id) {
+                            const publicId = result.info.public_id;
+                            // Usar el hook para actualizar el avatar
+                            updateAvatar(publicId);
+                            toast.success('Avatar actualizado correctamente');
+                          }
+                        }}
+                      >
+                        {({ open }) => (
+                          <div className="absolute bottom-0 right-0">
+                            <Button
+                              type="button"
+                              onClick={() => open()}
+                              className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white hover:from-teal-500 hover:to-cyan-600 transition-colors p-0"
+                            >
+                              <Camera className="h-4 w-4" />
+                              <span className="sr-only">Cambiar avatar</span>
+                            </Button>
+                          </div>
                         )}
-                      </Avatar>
-                      <div className="absolute bottom-0 right-0">
-                        <Label
-                          htmlFor="avatar-upload"
-                          className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 text-white cursor-pointer hover:from-teal-500 hover:to-cyan-600 transition-colors"
-                        >
-                          <Camera className="h-4 w-4" />
-                          <span className="sr-only">Cambiar avatar</span>
-                        </Label>
-                        <Input
-                          id="avatar-upload"
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={handleAvatarChange}
-                        />
-                      </div>
+                      </CldUploadWidget>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Haz clic en el ícono para cambiar tu foto

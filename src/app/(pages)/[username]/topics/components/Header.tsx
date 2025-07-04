@@ -2,13 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
 import { Button } from '@/app/components/ui/button';
+import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
 import { Trophy, LogOut, User, ChevronDown, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { loginService } from '@/app/services/loginService';
 import { useUserStore } from '@/app/stores/userStore';
 import { useInitializeUser } from '@/app/hooks/useInitializeUser';
+import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 
 const Header = () => {
   const router = useRouter();
@@ -22,15 +23,32 @@ const Header = () => {
   // Obtener datos del usuario desde Zustand
   const { user } = useUserStore();
 
+  // Obtener avatar del usuario usando el hook personalizado
+  const { avatarPublicId } = useUserAvatar();
+
   // Usar datos del store o fallback a datos por defecto
   const userData = user || {
     name: 'Usuario',
-    lastName: 'Invitado',
+    lastName: 'Anónimo',
     username: username || 'guest',
     id: 0,
   };
 
-  const fullName = `${userData.name} ${userData.lastName}`;
+  // Crear nombre completo con lógica mejorada
+  const getDisplayName = () => {
+    if (!user) return 'Usuario Anónimo';
+    
+    const name = user.name?.trim();
+    const lastName = user.lastName?.trim();
+    
+    if (!name && !lastName) return 'Usuario Anónimo';
+    if (!name) return lastName;
+    if (!lastName) return name;
+    
+    return `${name} ${lastName}`;
+  };
+
+  const fullName = getDisplayName();
 
   // Cerrar dropdown al hacer clic fuera
   useEffect(() => {
@@ -88,12 +106,13 @@ const Header = () => {
             className="relative h-10 w-auto pl-2 pr-3 flex items-center gap-2 text-white hover:bg-white/20 rounded-full"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <Avatar className="h-8 w-8 border-2 border-white/30">
-              <AvatarImage src={'/placeholder-user.jpg'} alt={username} />
-              <AvatarFallback className="bg-gradient-to-r from-teal-400 to-cyan-500 text-white text-sm">
-                {userData.name.charAt(0) + userData.lastName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            <CloudinaryAvatar
+              publicId={user?.avatar || avatarPublicId || undefined}
+              fallbackText={(userData.name?.charAt(0) || '') + (userData.lastName?.charAt(0) || '') || userData.username?.charAt(0) || 'U'}
+              className="h-8 w-8 border-2 border-white/30"
+              size={32}
+              alt={username}
+            />
             <span className="hidden sm:inline-block font-medium text-sm">{userData.username}</span>
             <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
               <ChevronDown className="h-4 w-4 opacity-70" />

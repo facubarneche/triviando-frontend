@@ -1,7 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
 import { Badge } from '@/app/components/ui/badge';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
+import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
 import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { formatDateToMonthYear } from '@/app/utils/formatDateToMonthYear';
@@ -11,6 +11,8 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import type { IUserData } from '@/app/services/userService';
 import { loginService } from '@/app/services/loginService';
+import { useUserStore } from '@/app/stores/userStore';
+import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
 
 const ProfileInfo = () => {
@@ -18,6 +20,12 @@ const ProfileInfo = () => {
   const [user, setUser] = useState<IUserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  // Zustand store para el avatar
+  const { user: storeUser } = useUserStore();
+
+  // Avatar del usuario usando el hook personalizado
+  const { avatarPublicId } = useUserAvatar();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,7 +73,16 @@ const ProfileInfo = () => {
     );
   }
 
-  const fullName = [user.name, user.lastName].filter(Boolean).join(' ').trim();
+  const getDisplayName = () => {
+    const name = user.name?.trim();
+    const lastName = user.lastName?.trim();
+    
+    if (!name && !lastName) return 'Usuario Anónimo';
+    
+    return [name, lastName].filter(Boolean).join(' ').trim();
+  };
+
+  const fullName = getDisplayName();
 
   return (
     <motion.div
@@ -76,12 +93,13 @@ const ProfileInfo = () => {
       <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <Avatar className="w-24 h-24 border-4 border-[#9d4edd]/30">
-              <AvatarImage src="/placeholder-user.jpg" alt="@user" />
-              <AvatarFallback className="text-2xl text-purple-900 text-white">
-                {fullName ? fullName.charAt(0) : user.username.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+            <CloudinaryAvatar
+              publicId={storeUser?.avatar || avatarPublicId || user.avatar}
+              fallbackText={fullName ? (fullName.charAt(0) || '') : (user.username?.charAt(0) || 'U')}
+              className="w-24 h-24 border-4 border-[#9d4edd]/30"
+              size={96}
+              alt="Avatar del usuario"
+            />
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
                 <h1 className="text-2xl font-bold text-[#3c096c]">{user.username}</h1>

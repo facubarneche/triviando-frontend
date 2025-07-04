@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import { LoginCredentials, Usuario } from '../domain/User';
 import { BaseService } from './baseService';
 import { useUserStore } from '../stores/userStore';
+import { cloudinaryAvatarService } from './cloudinaryAvatarService';
 
 class LoginService extends BaseService {
   async login(credentials: LoginCredentials): Promise<Usuario> {
@@ -14,6 +15,16 @@ class LoginService extends BaseService {
 
     // Guardar en Zustand store
     useUserStore.getState().setUser(user);
+
+    // Buscar avatar del usuario en Cloudinary después del login
+    try {
+      const avatar = await cloudinaryAvatarService.getCurrentUserAvatar();
+      if (avatar) {
+        useUserStore.getState().setAvatar(avatar);
+      }
+    } catch (error) {
+      console.error('Error fetching user avatar after login:', error);
+    }
 
     return user;
   }

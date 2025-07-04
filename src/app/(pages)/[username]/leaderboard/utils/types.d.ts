@@ -21,5 +21,6 @@ interface ILeaderContentBoard {
   rank: number;
   username: string;
   score: number;
-  avatar: string;
+  avatar: string | null;
+  userId: number;
 }

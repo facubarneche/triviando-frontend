@@ -10,4 +10,5 @@ export interface Usuario {
   lastName: string;
   name: string;
   username: string;
+  avatar?: string; // Cloudinary public_id for the avatar image
 }

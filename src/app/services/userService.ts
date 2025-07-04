@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { BaseService } from './baseService';
 import Cookies from 'js-cookie';
+import { useUserStore } from '../stores/userStore';
 
 interface IUser {
   username: string;
@@ -19,6 +20,7 @@ export interface IUserData {
   birthDate: string;
   joinDate: string;
   age: number;
+  avatar?: string; // Cloudinary public_id for the avatar image
 }
 
 export interface IUpdateUserData {
@@ -31,6 +33,7 @@ export interface IUpdateUserData {
   phoneNumber: string;
   countryCode: string;
   currentPassword: string;
+  avatar?: string; // Cloudinary public_id for the avatar image
 }
 
 class UserService extends BaseService {
@@ -79,6 +82,7 @@ class UserService extends BaseService {
             name: userData.name || '',
             lastName: userData.lastName || '',
             username: userData.username,
+            avatar: userData.avatar, // Incluir avatar en la cookie
           }),
           { expires: 1 },
         );
@@ -125,6 +129,20 @@ class UserService extends BaseService {
         throw new Error(error.response.data.error);
       }
       throw new Error('Error al obtener la racha del usuario');
+    }
+  };
+
+  uploadAvatar = async (userId: number, publicId: string) => {
+    try {
+      const { data } = await this.axiosService.put(`/users/${userId}/avatar`, {
+        avatar: publicId,
+      });
+      return data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        throw new Error(error.response.data.error);
+      }
+      throw new Error('Error al actualizar el avatar');
     }
   };
 }
