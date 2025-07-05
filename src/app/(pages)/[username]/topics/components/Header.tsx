@@ -10,6 +10,7 @@ import { loginService } from '@/app/services/loginService';
 import { useUserStore } from '@/app/stores/userStore';
 import { useInitializeUser } from '@/app/hooks/useInitializeUser';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
+import Image from 'next/image';
 
 const Header = () => {
   const router = useRouter();
@@ -175,7 +176,7 @@ const Header = () => {
         </div>
       </div>
       <div className="flex justify-center md:justify-start">
-        <img
+        <Image
           src="/logo-triviando.png"
           alt="trivIAndo"
           className="h-8 md:h-10 filter brightness-0 invert"

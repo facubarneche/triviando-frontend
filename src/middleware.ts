@@ -22,8 +22,7 @@ export function middleware(request: NextRequest) {
         // Redirigir a /unauthorized si no coinciden
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
-    } catch (err) {
-      console.error('Error al parsear la cookie del usuario', err);
+    } catch {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }

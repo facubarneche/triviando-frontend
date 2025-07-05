@@ -19,30 +19,24 @@ export class CloudinaryAvatarService {
    */
   async getCurrentUserAvatar(): Promise<string | null> {
     const userId = getUserIdCSR();
-    console.log('Getting avatar for userId:', userId);
 
     if (!userId) {
-      console.log('No userId found');
       return null;
     }
 
     try {
       // Usar nuestro endpoint de API interno para buscar el avatar
       const response = await fetch(`/api/user/avatar?userId=${userId}`);
-      console.log('API response status:', response.status);
 
       if (!response.ok) {
-        console.log('API response not ok');
         return null;
       }
 
       const data = await response.json();
-      console.log('API response data:', data);
 
       // Devolver el public_id si existe
       return data.public_id || null;
-    } catch (error) {
-      console.error('Error fetching user avatar from Cloudinary:', error);
+    } catch {
       return null;
     }
   }

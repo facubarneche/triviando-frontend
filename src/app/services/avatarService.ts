@@ -20,8 +20,7 @@ class AvatarService {
 
       const avatars: UserAvatarData = JSON.parse(avatarsData);
       return avatars[userId] || null;
-    } catch (error) {
-      console.error('Error getting user avatar:', error);
+    } catch {
       return null;
     }
   }
@@ -36,8 +35,8 @@ class AvatarService {
 
       avatars[userId] = publicId;
       localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(avatars));
-    } catch (error) {
-      console.error('Error saving user avatar:', error);
+    } catch {
+      // Failed to save avatar, continue silently
     }
   }
 
@@ -52,8 +51,8 @@ class AvatarService {
       const avatars: UserAvatarData = JSON.parse(avatarsData);
       delete avatars[userId];
       localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(avatars));
-    } catch (error) {
-      console.error('Error removing user avatar:', error);
+    } catch {
+      // Failed to remove avatar, continue silently
     }
   }
 
@@ -63,8 +62,8 @@ class AvatarService {
   clearAllAvatars(): void {
     try {
       localStorage.removeItem(AVATAR_STORAGE_KEY);
-    } catch (error) {
-      console.error('Error clearing avatars:', error);
+    } catch {
+      // Failed to clear avatars, continue silently
     }
   }
 }

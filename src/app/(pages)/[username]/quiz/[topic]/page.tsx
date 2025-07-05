@@ -57,8 +57,8 @@ const QuizPage = () => {
         const parsedQuiz = parserQuiz(quiz);
         setQuestions(parsedQuiz);
         setAnswers(Array(parsedQuiz.length).fill(null));
-      } catch (error) {
-        console.error('Error fetching questions:', error);
+      } catch {
+        // Error fetching questions, continue with empty array
       } finally {
         setIsLoading(false);
         setTimeout(() => {
@@ -125,8 +125,7 @@ const QuizPage = () => {
           currentQuestionFeedback.description,
         );
         toast.success('Gracias por tu feedback');
-      } catch (error) {
-        console.error('Error sending feedback:', error);
+      } catch {
         toast.error('Error al enviar el feedback. Por favor, inténtalo de nuevo más tarde.');
         // Continuar aunque falle el envío del feedback
       }
@@ -160,8 +159,7 @@ const QuizPage = () => {
           currentQuestionFeedback.description,
         );
         toast.success('Gracias por tu feedback');
-      } catch (error) {
-        console.error('Error sending feedback:', error);
+      } catch {
         toast.error('Error al enviar el feedback. Por favor, inténtalo de nuevo más tarde.');
         // Continuar aunque falle el envío del feedback
       }
@@ -180,8 +178,8 @@ const QuizPage = () => {
     try {
       const result = currentQuestion.explanation || explicationBackUp;
       setExplanation(result);
-    } catch (error) {
-      console.error('Error generating explanation:', error);
+    } catch {
+      // Error generating explanation, use backup
     } finally {
       setIsLoadingExplanation(false);
     }
@@ -207,9 +205,8 @@ const QuizPage = () => {
         ...(description && { description }),
       };
       await quizService.sendFeedback(feedbackData);
-    } catch (error) {
-      console.error('Error sending feedback:', error);
-      throw error;
+    } catch {
+      throw new Error('Failed to send feedback');
     }
   };
 

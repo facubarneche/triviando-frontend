@@ -31,8 +31,7 @@ export class CloudinaryServerService {
             return { userId, avatar: result.resources[0].public_id };
           }
           return { userId, avatar: null };
-        } catch (error) {
-          console.error(`Error fetching avatar for user ${userId}:`, error);
+        } catch {
           return { userId, avatar: null };
         }
       });
@@ -45,8 +44,7 @@ export class CloudinaryServerService {
       });
 
       return avatars;
-    } catch (error) {
-      console.error('Error fetching users avatars:', error);
+    } catch {
       // Devolver objeto vacío si hay error
       return userIds.reduce((acc, userId) => {
         acc[userId] = null;

@@ -25,8 +25,8 @@ export const useInitializeUser = () => {
               setAvatar(avatar);
             }
           }
-        } catch (error) {
-          console.error('Error initializing user:', error);
+        } catch {
+          // Error initializing user, continue silently
         }
       }
     };

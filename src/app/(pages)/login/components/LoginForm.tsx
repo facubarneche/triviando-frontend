@@ -37,7 +37,6 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     // Handle Google login logic here
-    console.log('Login with Google');
     // router.push('/topics');
   };
 

@@ -13,8 +13,7 @@ export const getUserWithAvatar = async (): Promise<IUserData | null> => {
 
     const userData = await userService.getUserById(userId);
     return userData;
-  } catch (error) {
-    console.error('Error getting user with avatar:', error);
+  } catch {
     return null;
   }
 };

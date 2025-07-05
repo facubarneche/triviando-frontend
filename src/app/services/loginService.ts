@@ -8,7 +8,6 @@ class LoginService extends BaseService {
   async login(credentials: LoginCredentials): Promise<Usuario> {
     const response = await this.axiosService.post<Usuario>(`/users/login`, credentials);
     const user = response.data;
-    console.log('Usuario autenticado:', user);
 
     // Guardar en cookie (mantener compatibilidad)
     Cookies.set('usuario', JSON.stringify(user), { expires: 1 });
@@ -22,8 +21,8 @@ class LoginService extends BaseService {
       if (avatar) {
         useUserStore.getState().setAvatar(avatar);
       }
-    } catch (error) {
-      console.error('Error fetching user avatar after login:', error);
+    } catch {
+      // Avatar fetch failed, continue without avatar
     }
 
     return user;

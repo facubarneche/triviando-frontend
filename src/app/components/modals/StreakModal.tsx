@@ -41,9 +41,8 @@ export function StreakModal() {
         if (lastShownDate !== today) {
           setOpen(true);
         }
-      } catch (error) {
-        console.error('Error al verificar la racha:', error);
-        //handleError(error);
+      } catch {
+        //Error al verificar la racha, continuar silenciosamente
       }
     };
 
