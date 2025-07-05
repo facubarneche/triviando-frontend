@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { loginService } from '@/app/services/loginService';
 import Header from '@/app/(pages)/[username]/topics/components/Header';
 
@@ -13,11 +13,26 @@ jest.mock('next/link', () => {
 // Mock lucide-react
 jest.mock('lucide-react', () => ({
   LogOut: (props: any) => <svg data-testid="logout-icon" {...props} />,
+  Trophy: (props: any) => <svg data-testid="trophy-icon" {...props} />,
+  User: (props: any) => <svg data-testid="user-icon" {...props} />,
+  ChevronDown: (props: any) => <svg data-testid="chevron-down-icon" {...props} />,
+  Crown: (props: any) => <svg data-testid="crown-icon" {...props} />,
+}));
+
+// Mock framer-motion
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  },
+  AnimatePresence: ({ children }: any) => children,
 }));
 
 // Mock next/navigation useParams
 jest.mock('next/navigation', () => ({
   useParams: jest.fn(() => ({ username: 'testuser' })),
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+  })),
 }));
 
 // Mock loginService
@@ -27,36 +42,84 @@ jest.mock('@/app/services/loginService', () => ({
   },
 }));
 
+// Mock Zustand store
+jest.mock('@/app/stores/userStore', () => ({
+  useUserStore: jest.fn(() => ({
+    user: null,
+  })),
+}));
+
+// Mock CloudinaryAvatar
+jest.mock('@/app/components/CloudinaryAvatar', () => ({
+  CloudinaryAvatar: ({ fallbackText, alt }: any) => (
+    <div data-testid="cloudinary-avatar" title={alt}>
+      {fallbackText}
+    </div>
+  ),
+}));
+
+// Mock cloudinary avatar service
+jest.mock('@/app/services/cloudinaryAvatarService', () => ({
+  cloudinaryAvatarService: {
+    getCurrentUserAvatar: jest.fn().mockResolvedValue(null),
+  },
+}));
+
+// Mock hooks
+jest.mock('@/app/hooks/useInitializeUser', () => ({
+  useInitializeUser: jest.fn(),
+}));
+
+jest.mock('@/app/hooks/useUserAvatar', () => ({
+  useUserAvatar: jest.fn(() => ({
+    avatarPublicId: null,
+  })),
+}));
+
 describe('Header', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders the header title', () => {
+  it('renders the header logo', () => {
     (loginService.getUsuarioActual as jest.Mock).mockReturnValue({ username: 'testuser' });
     render(<Header />);
-    expect(screen.getByText('Elige un Tema')).toBeInTheDocument();
+    expect(screen.getByAltText('trivIAndo')).toBeInTheDocument();
   });
 
-  it('renders the Perfil button with correct link', () => {
+  it('renders the Perfil option in dropdown when clicked', async () => {
     (loginService.getUsuarioActual as jest.Mock).mockReturnValue({ username: 'testuser' });
     render(<Header />);
-    const perfilLink = screen.getByText('Perfil').closest('a');
-    expect(perfilLink).toHaveAttribute('href', '/testuser/profile');
+
+    // Click to open dropdown
+    const userButton = screen.getByRole('button', { name: /testuser/i });
+    fireEvent.click(userButton);
+
+    // Wait for dropdown to appear and check for Perfil option
+    await waitFor(() => {
+      expect(screen.getByText('Perfil')).toBeInTheDocument();
+    });
   });
 
-  it('renders the Ranking button with correct link', () => {
+  it('renders the Trophy button for leaderboard', () => {
     (loginService.getUsuarioActual as jest.Mock).mockReturnValue({ username: 'testuser' });
     render(<Header />);
-    const rankingLink = screen.getByText('Ranking').closest('a');
-    expect(rankingLink).toHaveAttribute('href', '/testuser/leaderboard');
+    const trophyButton = screen.getByRole('button', { name: '' }); // Trophy button has no aria-label
+    expect(trophyButton).toBeInTheDocument();
   });
 
-  it('renders the Salir button with logout icon and correct link', () => {
+  it('renders the Cerrar Sesión option in dropdown when clicked', async () => {
     (loginService.getUsuarioActual as jest.Mock).mockReturnValue({ username: 'testuser' });
     render(<Header />);
-    const salirLink = screen.getByText('Salir').closest('a');
-    expect(salirLink).toHaveAttribute('href', '/login');
-    expect(screen.getByTestId('logout-icon')).toBeInTheDocument();
+
+    // Click to open dropdown
+    const userButton = screen.getByRole('button', { name: /testuser/i });
+    fireEvent.click(userButton);
+
+    // Wait for dropdown to appear and check for logout option
+    await waitFor(() => {
+      expect(screen.getByText('Cerrar Sesión')).toBeInTheDocument();
+      expect(screen.getByTestId('logout-icon')).toBeInTheDocument();
+    });
   });
 });

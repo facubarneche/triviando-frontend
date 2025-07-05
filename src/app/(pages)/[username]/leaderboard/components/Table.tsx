@@ -1,4 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/app/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/app/components/ui/avatar';
+import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
 import { styledRank } from '../utils/helpers';
 
 const Table = ({ data }: { data: ILeaderContentBoard[] }) => {
@@ -21,10 +22,21 @@ const Table = ({ data }: { data: ILeaderContentBoard[] }) => {
                 {user.rank}
               </div>
 
-              <Avatar>
-                <AvatarImage src={user.avatar} alt={user.username} />
-                <AvatarFallback>{user.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-              </Avatar>
+              {user.avatar ? (
+                <CloudinaryAvatar
+                  publicId={user.avatar}
+                  fallbackText={(user.username?.substring(0, 2) || 'US').toUpperCase()}
+                  className="h-10 w-10"
+                  size={40}
+                  alt={user.username || 'User'}
+                />
+              ) : (
+                <Avatar>
+                  <AvatarFallback>
+                    {(user.username?.substring(0, 2) || 'US').toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              )}
 
               <div className="flex flex-col flex-1 text-end md:flex-row md:justify-between text-gray-700">
                 <p className="font-medium">{user.username}</p>

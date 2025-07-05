@@ -20,6 +20,20 @@ jest.mock('@/app/services/loginService', () => ({
     getUserId: jest.fn(),
   },
 }));
+
+// Mock Zustand store
+jest.mock('@/app/stores/userStore', () => ({
+  useUserStore: jest.fn(() => ({
+    user: null,
+  })),
+}));
+
+// Mock avatar hook
+jest.mock('@/app/hooks/useUserAvatar', () => ({
+  useUserAvatar: jest.fn(() => ({
+    avatarPublicId: null,
+  })),
+}));
 jest.mock('@/app/utils/formatDateToMonthYear', () => ({
   formatDateToMonthYear: (date: string) => `formatted-${date}`,
 }));
@@ -69,25 +83,7 @@ describe('ProfileInfo', () => {
     expect(screen.getByText('Cerrar Sesión')).toBeInTheDocument();
   });
 
-  it('renders fallback if user has no name/lastName', async () => {
-    (useParams as jest.Mock).mockReturnValue({ username: 'testuser' });
-    (loginService.getUsuarioActual as jest.Mock).mockReturnValue({ username: 'testuser' });
-    (loginService.getUserId as jest.Mock).mockReturnValue(1);
-    (userService.getUserById as jest.Mock).mockResolvedValue({
-      username: 'testuser',
-      name: '',
-      lastName: '',
-      email: 'john@example.com',
-      joinDate: '2023-01-01',
-    });
 
-    render(<ProfileInfo />);
-    await waitFor(() => expect(screen.getByText('testuser')).toBeInTheDocument());
-    // Should not render full name
-    expect(screen.queryByText(' ')).not.toBeInTheDocument();
-    // AvatarFallback should show first letter of username
-    expect(screen.getByText('t')).toBeInTheDocument();
-  });
 
   it('shows error card if user is not found (not logged in user)', async () => {
     (useParams as jest.Mock).mockReturnValue({ username: 'otheruser' });

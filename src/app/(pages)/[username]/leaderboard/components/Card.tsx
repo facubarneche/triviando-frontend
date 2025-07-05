@@ -10,20 +10,16 @@ import {
 } from '@/app/components/ui/card';
 import Table from './Table';
 import Paginator from '@/app/components/paginator';
-import { parseLeaderboardData } from '../utils/helpers';
 import ButtonPosition from './ButtonPosition';
 
 interface CardProps {
-  weekly: ILeaderBoardDTO;
-  historical: ILeaderBoardDTO;
+  weekly: Omit<ILeaderBoardDTO, 'content'> & { content: ILeaderContentBoard[] };
+  historical: Omit<ILeaderBoardDTO, 'content'> & { content: ILeaderContentBoard[] };
 }
 
 const Card = ({ weekly, historical }: CardProps) => {
   const { content: historicalContent, ...historicalPagination } = historical;
   const { content: weeklyContent, ...weeklyPagination } = weekly;
-
-  const historicalData = parseLeaderboardData(historicalContent);
-  const weeklyData = parseLeaderboardData(weeklyContent);
 
   return (
     <UICard className="bg-white">
@@ -46,11 +42,11 @@ const Card = ({ weekly, historical }: CardProps) => {
           </TabsList>
 
           <TabsContent value="weekly">
-            <Table data={weeklyData} />
+            <Table data={weeklyContent} />
             <Paginator {...weeklyPagination} />
           </TabsContent>
           <TabsContent value="allTime">
-            <Table data={historicalData} />
+            <Table data={historicalContent} />
             <Paginator {...historicalPagination} />
           </TabsContent>
         </Tabs>

@@ -1,4 +1,5 @@
 import { getUserId } from '@/app/utils/getUserId';
+import { CloudinaryServerService } from '@/app/services/cloudinaryServerService';
 
 export const styledRank = (rank: number) => {
   const rankStyles: Record<number, string> = {
@@ -10,12 +11,21 @@ export const styledRank = (rank: number) => {
   return rankStyles[rank] || 'bg-purple-400';
 };
 
-export const parseLeaderboardData = (users: ILeaderBoardContentDTO[]): ILeaderContentBoard[] => {
+export const parseLeaderboardData = async (
+  users: ILeaderBoardContentDTO[],
+): Promise<ILeaderContentBoard[]> => {
+  // Extraer IDs de usuarios
+  const userIds = users.map((user) => user.id);
+
+  // Obtener avatares de Cloudinary
+  const avatars = await CloudinaryServerService.getUsersAvatars(userIds);
+
   return users.map((user) => ({
     rank: user.position,
     username: user.username,
     score: user.score,
-    avatar: '/placeholder-user.jpg',
+    avatar: avatars[user.id] || null,
+    userId: user.id,
   }));
 };
 

@@ -2,18 +2,28 @@ import Cookies from 'js-cookie';
 import { LoginCredentials, Usuario } from '../domain/User';
 import { BaseService } from './baseService';
 import { useUserStore } from '../stores/userStore';
+import { cloudinaryAvatarService } from './cloudinaryAvatarService';
 
 class LoginService extends BaseService {
   async login(credentials: LoginCredentials): Promise<Usuario> {
     const response = await this.axiosService.post<Usuario>(`/users/login`, credentials);
     const user = response.data;
-    console.log('Usuario autenticado:', user);
 
     // Guardar en cookie (mantener compatibilidad)
     Cookies.set('usuario', JSON.stringify(user), { expires: 1 });
 
     // Guardar en Zustand store
     useUserStore.getState().setUser(user);
+
+    // Buscar avatar del usuario en Cloudinary después del login
+    try {
+      const avatar = await cloudinaryAvatarService.getCurrentUserAvatar();
+      if (avatar) {
+        useUserStore.getState().setAvatar(avatar);
+      }
+    } catch {
+      // Avatar fetch failed, continue without avatar
+    }
 
     return user;
   }

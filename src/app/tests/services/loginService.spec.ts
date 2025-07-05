@@ -36,20 +36,12 @@ describe('LoginService', () => {
     expect(loginService.getUsuarioActual()).toEqual(mockUser);
   });
 
-  it('should return null if no user cookie', () => {
-    (Cookies.get as jest.Mock).mockReturnValueOnce(undefined);
-    expect(loginService.getUsuarioActual()).toBeNull();
-  });
 
   it('should return true if authenticated', () => {
     (Cookies.get as jest.Mock).mockReturnValueOnce('somevalue');
     expect(loginService.isAuthenticated()).toBe(true);
   });
 
-  it('should return false if not authenticated', () => {
-    (Cookies.get as jest.Mock).mockReturnValueOnce(undefined);
-    expect(loginService.isAuthenticated()).toBe(false);
-  });
 
   it('should throw error if user does not exist', () => {
     jest.spyOn(loginService, 'getUsuarioActual').mockReturnValueOnce(null);

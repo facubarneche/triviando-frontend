@@ -10,10 +10,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (cookieUsuario && url.pathname === '/') {
-    return NextResponse.redirect(new URL('/topics', request.url));
-  }
-
   const profileMatch = url.pathname.match(/^\/([^\/]+)\/profile$/);
 
   if (cookieUsuario && profileMatch) {
@@ -26,8 +22,7 @@ export function middleware(request: NextRequest) {
         // Redirigir a /unauthorized si no coinciden
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
-    } catch (err) {
-      console.error('Error al parsear la cookie del usuario', err);
+    } catch {
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }

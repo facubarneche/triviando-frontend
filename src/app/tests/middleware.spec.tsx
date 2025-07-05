@@ -29,12 +29,12 @@ describe('middleware', () => {
     expect(res).toEqual({ redirect: new URL('/login', req.url) });
   });
 
-  it('redirects to /topics if logged in and at root', () => {
+  it('allows logged in users to access root without redirect', () => {
     const user = encodeURIComponent(JSON.stringify({ username: 'john' }));
     const req = createRequest('/', user);
     const res = middleware(req as any);
-    expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/topics', req.url));
-    expect(res).toEqual({ redirect: new URL('/topics', req.url) });
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ next: true });
   });
 
   it('redirects to /unauthorized if profile username does not match cookie', () => {
