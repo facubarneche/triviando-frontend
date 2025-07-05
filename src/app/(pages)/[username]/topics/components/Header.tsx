@@ -179,7 +179,9 @@ const Header = () => {
         <Image
           src="/logo-triviando.png"
           alt="trivIAndo"
-          className="h-8 md:h-10 filter brightness-0 invert"
+          width={120}
+          height={40}
+          className="h-8 md:h-10 w-auto filter brightness-0 invert"
         />
       </div>
     </header>

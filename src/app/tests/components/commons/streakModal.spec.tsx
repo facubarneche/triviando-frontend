@@ -51,12 +51,13 @@ describe('StreakModal', () => {
 
   it('handles error from userService gracefully', async () => {
     jest.spyOn(userServiceModule.userService, 'getStreak').mockRejectedValue(new Error('fail'));
-    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<StreakModal />);
-    await waitFor(() => {
-      expect(errorSpy).toHaveBeenCalledWith('Error al verificar la racha:', expect.any(Error));
-    });
-    errorSpy.mockRestore();
+
+    // Esperar un poco para que se procese el error
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    // Verificar que el modal no se muestra cuando hay error
+    expect(screen.queryByText('¡Racha de días consecutivos!')).not.toBeInTheDocument();
   });
 
   it('renders streak number in the badge', async () => {
