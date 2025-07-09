@@ -1,6 +1,6 @@
 //Request para iniciar sesión
 export interface LoginCredentials {
-  email: string;
+  username: string;
   password: string;
 }
 

@@ -21,13 +21,13 @@ import Logo from '@/app/components/logo';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { username } = await loginService.login({ email, password });
+      const { username } = await loginService.login({ username: user, password });
       toast.success('Inicio de sesión exitoso');
       router.push(`/${username}/topics`);
     } catch (error) {
@@ -100,13 +100,13 @@ export default function LoginPage() {
                 transition={{ delay: 0.3 }}
                 className="space-y-2"
               >
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="user">Username</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="tu@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="user"
+                  type="text"
+                  placeholder="flashcards_master"
+                  value={user}
+                  onChange={(e) => setUser(e.target.value)}
                   required
                   className="border-cyan-200 focus:border-cyan-400"
                 />

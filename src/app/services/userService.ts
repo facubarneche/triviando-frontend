@@ -2,7 +2,6 @@ import axios from 'axios';
 import { BaseService } from './baseService';
 import Cookies from 'js-cookie';
 
-
 interface IUser {
   username: string;
   email: string;
@@ -39,11 +38,7 @@ export interface IUpdateUserData {
 class UserService extends BaseService {
   createUser = async ({ username, email, password }: IUser) => {
     try {
-      const { data } = await this.axiosService.post('/users', {
-        username: username,
-        email: email,
-        password: password,
-      });
+      const { data } = await this.axiosService.post('/users', { username, email, password });
 
       //Esta cookie expira en 1 día
       Cookies.set('usuario', JSON.stringify(data), { expires: 1 });
