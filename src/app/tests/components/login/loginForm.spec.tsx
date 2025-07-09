@@ -59,7 +59,7 @@ describe('LoginPage', () => {
 
   it('renders form fields and buttons', () => {
     render(<LoginPage />);
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /continuar con google/i })).toBeInTheDocument();
@@ -67,27 +67,27 @@ describe('LoginPage', () => {
     expect(screen.getByTestId('logo')).toBeInTheDocument();
   });
 
-  it('updates email and password fields', () => {
+  it('updates username and password fields', () => {
     render(<LoginPage />);
-    const emailInput = screen.getByLabelText(/email/i);
+    const usernameInput = screen.getByLabelText(/username/i);
     const passwordInput = screen.getByLabelText(/contraseña/i);
 
-    fireEvent.change(emailInput, { target: { value: 'test@email.com' } });
+    fireEvent.change(usernameInput, { target: { value: 'test@username.com' } });
     fireEvent.change(passwordInput, { target: { value: '123456' } });
 
-    expect((emailInput as HTMLInputElement).value).toBe('test@email.com');
+    expect((usernameInput as HTMLInputElement).value).toBe('test@username.com');
     expect((passwordInput as HTMLInputElement).value).toBe('123456');
   });
 
   it('calls loginService and redirects on successful login', async () => {
     (loginService.login as jest.Mock).mockResolvedValue({ username: 'facundo' });
     render(<LoginPage />);
-    fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'a@b.com' } });
+    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'a@b.com' } });
     fireEvent.change(screen.getByLabelText(/contraseña/i), { target: { value: 'pass' } });
     fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }));
 
     await waitFor(() => {
-      expect(loginService.login).toHaveBeenCalledWith({ email: 'a@b.com', password: 'pass' });
+      expect(loginService.login).toHaveBeenCalledWith({ username: 'a@b.com', password: 'pass' });
       expect(toast.success).toHaveBeenCalledWith('Inicio de sesión exitoso');
       expect(push).toHaveBeenCalledWith('/facundo/topics');
     });
@@ -97,7 +97,7 @@ describe('LoginPage', () => {
     const error = new Error('fail');
     (loginService.login as jest.Mock).mockRejectedValue(error);
     render(<LoginPage />);
-    fireEvent.change(screen.getByLabelText(/email/i), { target: { value: 'a@b.com' } });
+    fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'a@b.com' } });
     fireEvent.change(screen.getByLabelText(/contraseña/i), { target: { value: 'pass' } });
     fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }));
 
