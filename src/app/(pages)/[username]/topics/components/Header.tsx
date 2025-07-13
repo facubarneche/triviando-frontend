@@ -11,6 +11,8 @@ import { useUserStore } from '@/app/stores/userStore';
 import { useInitializeUser } from '@/app/hooks/useInitializeUser';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import Image from 'next/image';
+import { suscriptionService } from '@/app/services/suscriptionService';
+import { userService } from '@/app/services/userService';
 
 const Header = () => {
   const router = useRouter();
@@ -80,9 +82,16 @@ const Header = () => {
     router.push(`/${username}/leaderboard`);
   };
 
-  const handleSubscription = () => {
+  const handleSubscription = async () => {
     setIsOpen(false);
-    router.push(`/${username}/subscription`);
+    //TODO: Se podria obtener al logearse o registrarse el email del usuario y persistir en zustand
+    const { email } = await userService.getUserById(loginService.getUserId());
+
+    //TODO: Se podria agregar una pantalla para la suscripción y redirigir a mp desde ella
+    // router.push(`/${username}/subscription`);
+
+    const checkoutUrl = await suscriptionService.getCheckoutUrlForSubscription({ email });
+    router.push(checkoutUrl);
   };
 
   return (

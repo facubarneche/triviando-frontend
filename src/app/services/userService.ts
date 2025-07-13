@@ -2,7 +2,6 @@ import axios from 'axios';
 import { BaseService } from './baseService';
 import Cookies from 'js-cookie';
 
-
 interface IUser {
   username: string;
   email: string;
