@@ -27,7 +27,6 @@ describe('CreateTopicModal', () => {
     setup();
     fireEvent.click(screen.getByText('Crear Tema'));
     expect(screen.getByText('El nombre del tema es obligatorio')).toBeInTheDocument();
-    expect(screen.getByText('La descripción del tema es obligatoria')).toBeInTheDocument();
     expect(onCreateTopic).not.toHaveBeenCalled();
   });
 
@@ -42,14 +41,9 @@ describe('CreateTopicModal', () => {
   it('calls onCreateTopic and onClose with valid input', () => {
     setup();
     fireEvent.change(screen.getByLabelText('Nombre del tema'), { target: { value: 'Historia' } });
-    fireEvent.change(screen.getByLabelText(/Contexto para la IA/), {
-      target: { value: 'Preguntas sobre historia mundial.' },
-    });
+
     fireEvent.click(screen.getByText('Crear Tema'));
-    expect(onCreateTopic).toHaveBeenCalledWith({
-      name: 'Historia',
-      context: 'Preguntas sobre historia mundial.',
-    });
+    expect(onCreateTopic).toHaveBeenCalledWith({ name: 'Historia' });
     expect(onClose).toHaveBeenCalled();
   });
 

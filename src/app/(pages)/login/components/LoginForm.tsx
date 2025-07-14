@@ -120,7 +120,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Contraseña</Label>
                   <Link
-                    href="/forgot-password"
+                    href="/#"
                     className="text-xs text-cyan-600 hover:text-cyan-800 transition-colors"
                   >
                     ¿Olvidaste tu contraseña?

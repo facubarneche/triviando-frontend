@@ -8,7 +8,6 @@ import { ITopic } from '../types';
 
 interface CreatingTopic {
   name: string;
-  context: string;
   timestamp: number;
 }
 

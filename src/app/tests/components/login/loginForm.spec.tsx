@@ -112,10 +112,10 @@ describe('LoginPage', () => {
     expect(googleBtn).toBeDisabled();
   });
 
-  it('forgot password link navigates to /forgot-password', () => {
+  it('forgot password link navigates to /#', () => {
     render(<LoginPage />);
     const forgotLink = screen.getByText(/¿olvidaste tu contraseña/i);
-    expect(forgotLink).toHaveAttribute('href', '/forgot-password');
+    expect(forgotLink).toHaveAttribute('href', '/#');
   });
 
   it('register link navigates to /register', () => {
