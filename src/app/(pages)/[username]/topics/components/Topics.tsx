@@ -14,7 +14,7 @@ interface CreatingTopic {
 interface TopicsProps {
   topics: ITopic[];
   creatingTopics: CreatingTopic[];
-  onCreateTopic: (name: string, context: string) => Promise<void>;
+  onCreateTopic: (name: string) => Promise<void>;
 }
 
 const Topics = ({ topics, creatingTopics, onCreateTopic }: TopicsProps) => {
