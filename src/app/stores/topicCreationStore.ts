@@ -3,13 +3,12 @@ import { persist } from 'zustand/middleware';
 
 interface CreatingTopic {
   name: string;
-  context: string;
   timestamp: number;
 }
 
 interface TopicCreationStore {
   creatingTopics: CreatingTopic[];
-  setCreating: (name: string, context: string) => void;
+  setCreating: (name: string) => void;
   removeCreating: (name: string) => void;
   isCreating: (name: string) => boolean;
   clearOldCreations: () => void;
@@ -23,11 +22,11 @@ export const useTopicCreationStore = create<TopicCreationStore>()(
       creatingTopics: [],
       refreshCallback: null,
 
-      setCreating: (name: string, context: string) => {
+      setCreating: (name: string) => {
         set((state) => ({
           creatingTopics: [
             ...state.creatingTopics.filter((t) => t.name !== name),
-            { name, context, timestamp: Date.now() },
+            { name, timestamp: Date.now() },
           ],
         }));
       },

@@ -26,6 +26,8 @@ describe('BaseService', () => {
 
     expect(mockedAxios.create).toHaveBeenCalledWith({
       baseURL: 'http://client-url:4000/api/v1',
+      headers: {},
+      withCredentials: true,
     });
   });
 
@@ -37,6 +39,8 @@ describe('BaseService', () => {
 
     expect(mockedAxios.create).toHaveBeenCalledWith({
       baseURL: 'http://localhost:8080/api/v1',
+      headers: {},
+      withCredentials: true,
     });
   });
 
@@ -48,6 +52,8 @@ describe('BaseService', () => {
 
     expect(mockedAxios.create).toHaveBeenCalledWith({
       baseURL: 'http://localhost:8080/api/v1',
+      headers: {},
+      withCredentials: true,
     });
   });
 });

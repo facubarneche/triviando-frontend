@@ -24,16 +24,16 @@ class QuizService extends BaseService {
     return data;
   };
 
-  generateQuiz = (topic: string) =>
+  generateQuiz = (topic: string, userId: number) =>
     this.axiosService.post(`/preguntas/generate`, {
       topic,
-      promptContext: '',
+      userId,
       promptType: 'questionPrompter',
     });
 
   sendFeedback = async (feedbackData: IFeedbackDTO) => {
     const userId = loginService.getUserId();
-    this.axiosService.post('/send-feedback', {
+    this.axiosService.post('/preguntas/send-feedback', {
       ...feedbackData,
       userId,
     });

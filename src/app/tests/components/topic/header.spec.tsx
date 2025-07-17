@@ -20,12 +20,26 @@ jest.mock('lucide-react', () => ({
 }));
 
 // Mock framer-motion
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  },
-  AnimatePresence: ({ children }: any) => children,
-}));
+jest.mock('framer-motion', () => {
+  const validProps = ['className', 'style', 'onClick', 'children', 'id', 'role', 'title'];
+
+  const filterProps = (props: Record<string, any>) =>
+    Object.keys(props)
+      .filter((key) => validProps.includes(key))
+      .reduce((acc, key) => {
+        acc[key] = props[key];
+        return acc;
+      }, {} as Record<string, any>);
+
+  return {
+    motion: {
+      div: ({ children, ...props }: any) => <div {...filterProps(props)}>{children}</div>,
+      button: ({ children, ...props }: any) => <button {...filterProps(props)}>{children}</button>,
+      span: ({ children, ...props }: any) => <span {...filterProps(props)}>{children}</span>,
+    },
+    AnimatePresence: ({ children }: any) => children,
+  };
+});
 
 // Mock next/navigation useParams
 jest.mock('next/navigation', () => ({

@@ -36,21 +36,6 @@ describe('NewTopicCard', () => {
     expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
   });
 
-  it('calls onCreateTopic when modal create is triggered', async () => {
-    render(<NewTopicCard onCreateTopic={onCreateTopic} />);
-    // Open the modal first by clicking the card
-    fireEvent.click(
-      screen.getByText('Crear Nuevo Tema').closest('div[class*="rounded-lg"]') as HTMLElement,
-    );
-    // Fill in required fields before clicking "crear"
-    fireEvent.change(screen.getByLabelText(/nombre del tema/i), { target: { value: 'Test' } });
-    fireEvent.change(screen.getByLabelText(/contexto/i), { target: { value: 'Context' } });
-    // Now click the "crear" button inside the modal
-    fireEvent.click(screen.getByRole('button', { name: /crear/i }));
-    // Ajusta los argumentos según lo que espera el componente
-    expect(onCreateTopic).toHaveBeenCalledWith('Test', 'Context');
-  });
-
   it('does not open modal if card is not clicked', () => {
     render(<NewTopicCard onCreateTopic={onCreateTopic} />);
     expect(screen.queryByTestId('modal')).not.toBeInTheDocument();

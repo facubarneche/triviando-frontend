@@ -6,7 +6,7 @@ import NewTopicModal from './NewTopicModal';
 import { useState } from 'react';
 
 interface NewTopicCardProps {
-  onCreateTopic: (name: string, context: string) => Promise<void>;
+  onCreateTopic: (name: string) => Promise<void>;
 }
 
 const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
@@ -45,7 +45,7 @@ const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
       <NewTopicModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onCreateTopic={({ name, context }) => onCreateTopic(name, context)}
+        onCreateTopic={({ name }) => onCreateTopic(name)}
       />
     </motion.div>
   );

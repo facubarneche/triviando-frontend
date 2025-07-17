@@ -8,14 +8,13 @@ import { ITopic } from '../types';
 
 interface CreatingTopic {
   name: string;
-  context: string;
   timestamp: number;
 }
 
 interface TopicsProps {
   topics: ITopic[];
   creatingTopics: CreatingTopic[];
-  onCreateTopic: (name: string, context: string) => Promise<void>;
+  onCreateTopic: (name: string) => Promise<void>;
 }
 
 const Topics = ({ topics, creatingTopics, onCreateTopic }: TopicsProps) => {

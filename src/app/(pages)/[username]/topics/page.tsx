@@ -18,13 +18,13 @@ export default function TopicsPage() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [topics, setTopics] = useState<ITopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [userId, setUserId] = useState<number>(0);
   const { creatingTopics, setCreating, removeCreating, clearOldCreations, setRefreshCallback } =
     useTopicCreationStore();
   // Función para refrescar los tópicos
   const refreshTopics = async (): Promise<void> => {
     try {
-      const id = getUserIdCSR();
-      const topics = await topicService.getTopics({ id });
+      const topics = await topicService.getTopics({ id: userId });
       const parsedTopics = parserTopics(topics);
       setTopics(parsedTopics);
     } catch (error) {
@@ -38,6 +38,7 @@ export default function TopicsPage() {
         clearOldCreations();
 
         const id = getUserIdCSR();
+        setUserId(id);
         const topics = await topicService.getTopics({ id });
         const parsedTopics = parserTopics(topics);
         setTopics(parsedTopics);
@@ -89,12 +90,12 @@ export default function TopicsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creatingTopics.length, loading]); // Usar solo length para evitar loops
 
-  const handleCreateTopic = async (name: string, context: string) => {
+  const handleCreateTopic = async (name: string) => {
     // Usar el store de Zustand para manejar el estado de creación
-    setCreating(name, context);
+    setCreating(name);
 
     try {
-      const response = await topicService.createTopic(name, context);
+      const response = await topicService.createTopic(name, userId);
       const created = (response as ITopicDTO[]).find((t: ITopicDTO) => t.topic === name);
       if (created) {
         const newTopic: ITopic = {

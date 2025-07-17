@@ -58,12 +58,12 @@ describe('quizService', () => {
     it('should call axiosService.post with correct payload', async () => {
       mockPost.mockResolvedValue({ data: { generated: true } });
 
-      await quizService.generateQuiz('science');
+      await quizService.generateQuiz('science', 1);
 
       expect(mockPost).toHaveBeenCalledWith('/preguntas/generate', {
         topic: 'science',
-        promptContext: '',
         promptType: 'questionPrompter',
+        userId: 1,
       });
     });
   });

@@ -165,7 +165,7 @@ const QuizPage = () => {
       }
     }
 
-    quizService.generateQuiz(decodeURITopic);
+    quizService.generateQuiz(decodeURITopic, userId);
     router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
 
@@ -201,7 +201,7 @@ const QuizPage = () => {
     try {
       const feedbackData: IFeedbackDTO = {
         questionId: currentQuestion.id,
-        feedbackType,
+        feedbackType: feedbackType.toUpperCase(),
         ...(description && { description }),
       };
       await quizService.sendFeedback(feedbackData);

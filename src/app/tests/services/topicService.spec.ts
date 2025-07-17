@@ -33,12 +33,12 @@ describe('TopicService', () => {
       const mockData = { id: 1, topic: 'history' };
       (topicService as any).axiosService.post = jest.fn().mockResolvedValue({ data: mockData });
 
-      const result = await topicService.createTopic('history', 'context info');
+      const result = await topicService.createTopic('history', 1);
 
       expect((topicService as any).axiosService.post).toHaveBeenCalledWith('/preguntas/generate', {
         topic: 'history',
-        promptContext: 'context info',
         promptType: 'topicPrompter',
+        userId: 1,
       });
       expect(result).toEqual(mockData);
     });
@@ -56,7 +56,7 @@ describe('TopicService', () => {
       (topicService as any).axiosService.post = jest
         .fn()
         .mockRejectedValue(new Error('Post error'));
-      await expect(topicService.createTopic('fail', 'context')).rejects.toThrow('Post error');
+      await expect(topicService.createTopic('fail', 1)).rejects.toThrow('Post error');
     });
   });
 });
