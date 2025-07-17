@@ -1,4 +1,4 @@
-# 📚 Flashcards - Proyecto 2025
+# 📚 TrivIAndo - Proyecto 2025
 
 **Proyecto de Software – TPI – UNSAM**  
 Grupo **Nullpointer**
@@ -16,7 +16,7 @@ npm run dev
 
 ## ✨ Descripción
 
-**Flashcards** es una aplicación web _mobile first_ diseñada para fomentar el hábito de estudio mediante la gamificación del aprendizaje. A partir de una temática ingresada por el usuario, la app genera automáticamente preguntas y desafíos que ayudan a reforzar conocimientos de manera divertida y competitiva.
+**TrivIAndo** es una aplicación web _mobile first_ diseñada para fomentar el hábito de estudio mediante la gamificación del aprendizaje. A partir de una temática ingresada por el usuario, la app genera automáticamente preguntas y desafíos que ayudan a reforzar conocimientos de manera divertida y competitiva.
 
 ---
 

@@ -28,6 +28,6 @@ describe('Logo', () => {
 
   it('no muestra tagline si showTagline es false', () => {
     render(<Logo showTagline={false} />);
-    expect(screen.queryByText(/flashcards/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/trivIAndo/i)).not.toBeInTheDocument();
   });
 });

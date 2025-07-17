@@ -11,7 +11,7 @@ describe('Header', () => {
   it('displays the correct description', () => {
     render(<Header />);
     expect(
-      screen.getByText('Únete a Flashcards y pon a prueba tus conocimientos'),
+      screen.getByText('Únete a TrivIAndo y pon a prueba tus conocimientos'),
     ).toBeInTheDocument();
   });
 
