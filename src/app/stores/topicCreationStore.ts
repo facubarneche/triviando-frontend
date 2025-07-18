@@ -36,9 +36,13 @@ export const useTopicCreationStore = create<TopicCreationStore>()(
           creatingTopics: state.creatingTopics.filter((t) => t.name !== name),
         }));
         // Trigger refresh when a topic creation is completed
+        // Solo si no estamos en medio de una operación de creación
         const { refreshCallback } = get();
         if (refreshCallback) {
-          refreshCallback();
+          // Ejecutar el refresh de forma silenciosa para evitar errores duplicados
+          refreshCallback().catch((error) => {
+            console.warn('Error en refresh automático del store:', error);
+          });
         }
       },
 
