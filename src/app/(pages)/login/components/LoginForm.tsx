@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FaGoogle } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -20,7 +19,6 @@ import { toast } from 'react-toastify';
 import Logo from '@/app/components/logo';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
 

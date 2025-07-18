@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Clock, RefreshCw, AlertCircle, ArrowLeft, Home, CreditCard } from 'lucide-react';
 import { Card, CardContent } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 
-export default function SubscriptionPending() {
+function SubscriptionPendingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { username } = useParams<{ username: string }>();
@@ -333,5 +333,24 @@ export default function SubscriptionPending() {
         </Card>
       </motion.div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center">
+      <div className="text-center text-white">
+        <div className="animate-spin h-8 w-8 mx-auto mb-4 border-2 border-white border-t-transparent rounded-full" />
+        <p>Cargando...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function SubscriptionPending() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <SubscriptionPendingContent />
+    </Suspense>
   );
 }
