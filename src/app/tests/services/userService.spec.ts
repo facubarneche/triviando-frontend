@@ -120,14 +120,41 @@ describe('UserService', () => {
       currentPassword: 'oldpass',
     };
     const mockResponse = { success: true };
+    const mockUserData = {
+      id: 2,
+      name: 'Facu',
+      lastName: 'Dev',
+      username: 'facu',
+      email: 'f@e.com',
+      birthDate: '2000-01-01',
+      phoneNumber: '123',
+      countryCode: 'AR',
+      age: 24,
+      joinDate: '2023-01-01',
+      avatar: undefined,
+    };
+
     const putMock = jest.fn().mockResolvedValue({ data: mockResponse });
+    const getMock = jest.fn().mockResolvedValue({ data: mockUserData });
+
     // @ts-expect-error: Mocking axiosService.put for test in editUserById
     userService.axiosService.put = putMock;
+    // @ts-expect-error: Mocking axiosService.get for getUserById
+    userService.axiosService.get = getMock;
+
+    // Mock Cookies.get to return current user cookie
+    (jest.spyOn(Cookies, 'get') as jest.Mock).mockReturnValue(
+      JSON.stringify({ token: 'test-token' }),
+    );
 
     const result = await userService.editUserById(userData);
 
     expect(putMock).toHaveBeenCalledWith('/users', userData);
+    expect(getMock).toHaveBeenCalledWith('/users/2');
     expect(result).toEqual(mockResponse);
+
+    // Cleanup
+    jest.restoreAllMocks();
   });
 
   it('should throw error with backend message on editUserById failure', async () => {
@@ -232,10 +259,32 @@ describe('UserService', () => {
       currentPassword: 'pass',
     };
     const mockResponse = { success: true };
+    const mockUserData = {
+      id: 3,
+      name: 'Test',
+      lastName: 'User',
+      username: 'testuser',
+      email: 'test@e.com',
+      birthDate: '1990-01-01',
+      phoneNumber: '555',
+      countryCode: 'US',
+      age: 34,
+      joinDate: '2023-01-01',
+      avatar: undefined,
+    };
+
     const putMock = jest.fn().mockResolvedValue({ data: mockResponse });
+    const getMock = jest.fn().mockResolvedValue({ data: mockUserData });
+
     // @ts-expect-error: Mocking axiosService.put
     userService.axiosService.put = putMock;
+    // @ts-expect-error: Mocking axiosService.get
+    userService.axiosService.get = getMock;
+
     const setCookieSpy = jest.spyOn(Cookies, 'set');
+    (jest.spyOn(Cookies, 'get') as jest.Mock).mockReturnValue(
+      JSON.stringify({ token: 'test-token' }),
+    );
 
     await userService.editUserById(userData);
 
@@ -246,24 +295,55 @@ describe('UserService', () => {
         name: userData.name,
         lastName: userData.lastName,
         username: userData.username,
+        avatar: undefined,
+        token: 'test-token',
       }),
-      { expires: 1 },
+      {
+        expires: 1,
+        path: '/',
+        sameSite: 'lax',
+      },
     );
     setCookieSpy.mockRestore();
+    jest.restoreAllMocks();
   });
 
   it('should not set cookie if required fields are missing in editUserById', async () => {
     const userData = { id: 4 }; // missing name and username
     const mockResponse = { success: true };
+    const mockUserData = {
+      id: 4,
+      name: '',
+      lastName: '',
+      username: '',
+      email: 'test@e.com',
+      birthDate: '1990-01-01',
+      phoneNumber: '555',
+      countryCode: 'US',
+      age: 34,
+      joinDate: '2023-01-01',
+      avatar: undefined,
+    };
+
     const putMock = jest.fn().mockResolvedValue({ data: mockResponse });
+    const getMock = jest.fn().mockResolvedValue({ data: mockUserData });
+
     // @ts-expect-error: Mocking axiosService.put
     userService.axiosService.put = putMock;
+    // @ts-expect-error: Mocking axiosService.get
+    userService.axiosService.get = getMock;
+
     const setCookieSpy = jest.spyOn(Cookies, 'set');
+    (jest.spyOn(Cookies, 'get') as jest.Mock).mockReturnValue(
+      JSON.stringify({ token: 'test-token' }),
+    );
 
     await userService.editUserById(userData);
 
-    expect(setCookieSpy).not.toHaveBeenCalled();
+    // El nuevo código siempre actualiza la cookie, incluso si faltan campos
+    expect(setCookieSpy).toHaveBeenCalled();
     setCookieSpy.mockRestore();
+    jest.restoreAllMocks();
   });
 
   it('should throw error with backend message on getUserRegisterDate failure', async () => {

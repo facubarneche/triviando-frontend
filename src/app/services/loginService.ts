@@ -9,6 +9,13 @@ class LoginService extends BaseService {
     const response = await this.axiosService.post<Usuario>(`/users/login`, credentials);
     const user = response.data;
 
+    // Debug: verificar si el backend envía el token
+    console.log('Login response:', user);
+
+    if (!user.token) {
+      console.warn('Warning: No token received from backend');
+    }
+
     // Guardar en cookie (mantener compatibilidad) con configuración más específica
     Cookies.set('usuario', JSON.stringify(user), {
       expires: 1,

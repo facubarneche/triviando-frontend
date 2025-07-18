@@ -13,8 +13,8 @@ const mockAxiosPost = jest.fn();
 jest.spyOn(loginService['axiosService'], 'post').mockImplementation(mockAxiosPost);
 
 describe('LoginService', () => {
-  const mockUser = { id: 1, nombre: 'Test', email: 'test@test.com' };
-  const credentials: LoginCredentials = { email: 'test@test.com', password: '1234' };
+  const mockUser = { id: 1, nombre: 'Test', username: 'testuser' };
+  const credentials: LoginCredentials = { username: 'testuser', password: '1234' };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -23,7 +23,11 @@ describe('LoginService', () => {
   it('should login and set cookie', async () => {
     mockAxiosPost.mockResolvedValueOnce({ data: mockUser });
     await expect(loginService.login(credentials)).resolves.toEqual(mockUser);
-    expect(Cookies.set).toHaveBeenCalledWith('usuario', JSON.stringify(mockUser), { expires: 1 });
+    expect(Cookies.set).toHaveBeenCalledWith('usuario', JSON.stringify(mockUser), {
+      expires: 1,
+      path: '/',
+      sameSite: 'lax',
+    });
   });
 
   it('should remove cookie on logout', () => {
@@ -36,12 +40,10 @@ describe('LoginService', () => {
     expect(loginService.getUsuarioActual()).toEqual(mockUser);
   });
 
-
   it('should return true if authenticated', () => {
     (Cookies.get as jest.Mock).mockReturnValueOnce('somevalue');
     expect(loginService.isAuthenticated()).toBe(true);
   });
-
 
   it('should throw error if user does not exist', () => {
     jest.spyOn(loginService, 'getUsuarioActual').mockReturnValueOnce(null);

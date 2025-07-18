@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { BaseService } from './baseService';
 import Cookies from 'js-cookie';
+import { useUserStore } from '../stores/userStore';
 
 interface IUser {
   username: string;
@@ -68,20 +69,44 @@ class UserService extends BaseService {
   editUserById = async (userData: Partial<IUpdateUserData>) => {
     try {
       const { data } = await this.axiosService.put(`/users`, userData);
-      //Actualizamos la cookie del usuario (TODO: usar el response del backend)
-      if (userData && userData.id && userData.name && userData.username) {
-        Cookies.set(
-          'usuario',
-          JSON.stringify({
-            id: userData.id,
-            name: userData.name || '',
-            lastName: userData.lastName || '',
-            username: userData.username,
-            avatar: userData.avatar, // Incluir avatar en la cookie
-          }),
-          { expires: 1 },
-        );
+
+      // Obtener los datos actualizados del servidor para asegurar consistencia
+      if (userData.id) {
+        const updatedUser = await this.getUserById(userData.id);
+
+        // Obtener el token de la cookie actual para preservarlo
+        const currentCookie = Cookies.get('usuario');
+        let currentToken = null;
+        if (currentCookie) {
+          try {
+            const currentUser = JSON.parse(currentCookie);
+            currentToken = currentUser.token;
+          } catch (error) {
+            console.error('Error parsing current cookie:', error);
+          }
+        }
+
+        // Crear el objeto usuario para la cookie (mismo formato que en login)
+        const userForCookie = {
+          id: updatedUser.id,
+          name: updatedUser.name,
+          lastName: updatedUser.lastName,
+          username: updatedUser.username,
+          avatar: updatedUser.avatar,
+          token: currentToken, // Preservar el token
+        };
+
+        // Actualizar la cookie con la misma configuración que en login
+        Cookies.set('usuario', JSON.stringify(userForCookie), {
+          expires: 1,
+          path: '/',
+          sameSite: 'lax',
+        });
+
+        // Actualizar el store de Zustand también
+        useUserStore.getState().setUser(userForCookie);
       }
+
       return data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {

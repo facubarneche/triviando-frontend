@@ -12,23 +12,45 @@ export function middleware(request: NextRequest) {
 
   const profileMatch = url.pathname.match(/^\/([^\/]+)\/profile$/);
 
-  if (cookieUsuario && profileMatch) {
-    try {
-      const user = JSON.parse(decodeURIComponent(cookieUsuario.value));
-      const usernameFromUrl = profileMatch[1]; // lo que viene en la ruta
-      const usernameFromCookie = user.username;
+  if (profileMatch) {
+    const usernameFromUrl = profileMatch[1];
 
-      if (!usernameFromCookie || usernameFromUrl !== usernameFromCookie) {
-        // Redirigir a /unauthorized si no coinciden o no hay username
+    if (!cookieUsuario) {
+      // Si no hay cookie pero se intenta acceder al perfil, redirigir a login
+      console.log('No cookie found, redirecting to login');
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    try {
+      const rawCookieValue = cookieUsuario.value;
+      let user;
+
+      // Intentar parsear la cookie directamente primero
+      try {
+        user = JSON.parse(rawCookieValue);
+      } catch {
+        // Si falla, intentar con decodeURIComponent
+        user = JSON.parse(decodeURIComponent(rawCookieValue));
+      }
+
+      const usernameFromCookie = user?.username;
+
+      if (!usernameFromCookie) {
+        console.log('No username in cookie, redirecting to unauthorized');
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
+
+      if (usernameFromUrl !== usernameFromCookie) {
+        console.log(`Username mismatch: URL=${usernameFromUrl}, Cookie=${usernameFromCookie}`);
+        return NextResponse.redirect(new URL('/unauthorized', request.url));
+      }
+
+      // Todo está bien, continuar
+      console.log(`Access granted for user: ${usernameFromCookie}`);
     } catch (error) {
-      console.error('Error parsing user cookie:', error);
+      console.error('Error parsing user cookie:', error, 'Cookie value:', cookieUsuario.value);
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
-  } else if (!cookieUsuario && profileMatch) {
-    // Si no hay cookie pero se intenta acceder al perfil, redirigir a login
-    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   return NextResponse.next();

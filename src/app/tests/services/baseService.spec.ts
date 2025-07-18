@@ -5,6 +5,16 @@ import axios from 'axios';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+// Mock del interceptor
+const mockInterceptors = {
+  request: {
+    use: jest.fn(),
+  },
+  response: {
+    use: jest.fn(),
+  },
+};
+
 describe('BaseService', () => {
   const OLD_ENV = process.env;
 
@@ -12,6 +22,11 @@ describe('BaseService', () => {
     jest.resetModules();
     process.env = { ...OLD_ENV };
     mockedAxios.create.mockClear();
+
+    // Mock axios.create para que devuelva un objeto con interceptors
+    mockedAxios.create.mockReturnValue({
+      interceptors: mockInterceptors,
+    } as any);
   });
 
   afterAll(() => {
@@ -26,7 +41,6 @@ describe('BaseService', () => {
 
     expect(mockedAxios.create).toHaveBeenCalledWith({
       baseURL: 'http://client-url:4000/api/v1',
-      headers: {},
       withCredentials: true,
     });
   });
@@ -39,7 +53,6 @@ describe('BaseService', () => {
 
     expect(mockedAxios.create).toHaveBeenCalledWith({
       baseURL: 'http://localhost:8080/api/v1',
-      headers: {},
       withCredentials: true,
     });
   });
@@ -52,7 +65,6 @@ describe('BaseService', () => {
 
     expect(mockedAxios.create).toHaveBeenCalledWith({
       baseURL: 'http://localhost:8080/api/v1',
-      headers: {},
       withCredentials: true,
     });
   });

@@ -11,8 +11,6 @@ import { useUserStore } from '@/app/stores/userStore';
 import { useInitializeUser } from '@/app/hooks/useInitializeUser';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import Image from 'next/image';
-import { suscriptionService } from '@/app/services/suscriptionService';
-import { userService } from '@/app/services/userService';
 
 const Header = () => {
   const router = useRouter();
