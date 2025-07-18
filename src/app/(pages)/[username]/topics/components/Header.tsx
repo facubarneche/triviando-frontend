@@ -82,16 +82,9 @@ const Header = () => {
     router.push(`/${username}/leaderboard`);
   };
 
-  const handleSubscription = async () => {
+  const handleSubscription = () => {
     setIsOpen(false);
-    //TODO: Se podria obtener al logearse o registrarse el email del usuario y persistir en zustand
-    const { email } = await userService.getUserById(loginService.getUserId());
-
-    //TODO: Se podria agregar una pantalla para la suscripción y redirigir a mp desde ella
-    // router.push(`/${username}/subscription`);
-
-    const checkoutUrl = await suscriptionService.getCheckoutUrlForSubscription({ email });
-    router.push(checkoutUrl);
+    router.push('/payment');
   };
 
   return (
