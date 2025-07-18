@@ -132,44 +132,30 @@ export default function Subscription() {
         email: userDetails.email,
       });
 
-      // Verificar que recibimos la URL de Mercado Pago
-      if (!data.url && !data.checkout_url && !data.init_point) {
-        throw new Error('No se recibió la URL de pago de Mercado Pago');
+      console.log('Respuesta del backend:', data);
+
+      // El backend devuelve la URL directamente como string
+      let checkoutUrl: string;
+
+      if (typeof data === 'string') {
+        // Si la respuesta es un string directo
+        checkoutUrl = data;
+      } else if (data && typeof data === 'object') {
+        // Si es un objeto, buscar en las propiedades comunes
+        checkoutUrl = data.url || data.checkout_url || data.init_point;
+      } else {
+        throw new Error('Formato de respuesta inesperado del servidor');
       }
 
-      // Obtener la URL (puede venir en diferentes campos según la respuesta)
-      const checkoutUrl = data.url || data.checkout_url || data.init_point;
-
-      // Abrir Mercado Pago en una nueva ventana/popup
-      const popup = window.open(
-        checkoutUrl,
-        'mercadopago-checkout',
-        'width=800,height=600,scrollbars=yes,resizable=yes,status=yes,location=yes,toolbar=no,menubar=no',
-      );
-
-      if (!popup) {
-        // Si el popup fue bloqueado, redirigir en la misma ventana
-        window.location.href = checkoutUrl;
-        return;
+      // Verificar que tenemos una URL válida
+      if (!checkoutUrl || typeof checkoutUrl !== 'string') {
+        throw new Error('No se recibió una URL válida de pago de Mercado Pago');
       }
 
-      // Monitorear el popup para detectar cuando se cierre
-      const checkClosed = setInterval(() => {
-        if (popup.closed) {
-          clearInterval(checkClosed);
-          setIsLoading(false);
+      console.log('URL de checkout:', checkoutUrl);
 
-          // Opcional: verificar el estado de la suscripción
-          // En una app real, podrías hacer una llamada para verificar si el pago fue exitoso
-          console.log('Popup de Mercado Pago cerrado');
-        }
-      }, 1000);
-
-      // Limpiar el intervalo después de 10 minutos por seguridad
-      setTimeout(() => {
-        clearInterval(checkClosed);
-        setIsLoading(false);
-      }, 600000); // 10 minutos
+      // Redirigir directamente a Mercado Pago en la misma ventana
+      window.location.href = checkoutUrl;
     } catch (err) {
       console.error('Error al procesar suscripción:', err);
       setError(err instanceof Error ? err.message : 'Error desconocido al procesar la suscripción');
@@ -181,7 +167,7 @@ export default function Subscription() {
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
       <header className="p-4">
         <Link
-          href="/topics"
+          href={`/${user?.username}/topics`}
           className="inline-flex items-center text-white hover:text-white/80 transition-colors"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
