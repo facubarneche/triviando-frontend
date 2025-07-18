@@ -80,6 +80,13 @@ describe('LoginPage', () => {
   });
 
   it('calls loginService and redirects on successful login', async () => {
+    // Mock window.location.href
+    const mockLocation = { href: '' };
+    Object.defineProperty(window, 'location', {
+      value: mockLocation,
+      writable: true,
+    });
+
     (loginService.login as jest.Mock).mockResolvedValue({ username: 'facundo' });
     render(<LoginPage />);
     fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'a@b.com' } });
@@ -89,8 +96,15 @@ describe('LoginPage', () => {
     await waitFor(() => {
       expect(loginService.login).toHaveBeenCalledWith({ username: 'a@b.com', password: 'pass' });
       expect(toast.success).toHaveBeenCalledWith('Inicio de sesión exitoso');
-      expect(push).toHaveBeenCalledWith('/facundo/topics');
     });
+
+    // Wait a bit more for the setTimeout and window.location.href assignment
+    await waitFor(
+      () => {
+        expect(mockLocation.href).toBe('/facundo/topics');
+      },
+      { timeout: 200 },
+    );
   });
 
   it('calls handleError on login failure', async () => {
