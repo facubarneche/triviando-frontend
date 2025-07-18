@@ -40,7 +40,8 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
 
-      if (usernameFromUrl !== usernameFromCookie) {
+      // Comparación case-insensitive entre username de URL y cookie
+      if (usernameFromUrl.toLowerCase() !== usernameFromCookie.toLowerCase()) {
         console.log(`Username mismatch: URL=${usernameFromUrl}, Cookie=${usernameFromCookie}`);
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
