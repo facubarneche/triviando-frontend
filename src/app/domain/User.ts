@@ -11,4 +11,5 @@ export interface Usuario {
   name: string;
   username: string;
   avatar?: string; // Cloudinary public_id for the avatar image
+  token?: string; // JWT token para autenticación
 }

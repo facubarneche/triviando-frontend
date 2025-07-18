@@ -6,13 +6,25 @@ export class BaseService {
 
   constructor() {
     const baseURL = this.getBaseURL();
-    const token = this.getToken();
 
     this.axiosService = axios.create({
       baseURL,
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
       withCredentials: true, // por si usás cookies HttpOnly
     });
+
+    // Interceptor para agregar el token dinámicamente en cada request
+    this.axiosService.interceptors.request.use(
+      (config) => {
+        const token = this.getToken();
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      },
+    );
   }
 
   private getBaseURL() {
