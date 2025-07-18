@@ -9,8 +9,12 @@ class LoginService extends BaseService {
     const response = await this.axiosService.post<Usuario>(`/users/login`, credentials);
     const user = response.data;
 
-    // Guardar en cookie (mantener compatibilidad)
-    Cookies.set('usuario', JSON.stringify(user), { expires: 1 });
+    // Guardar en cookie (mantener compatibilidad) con configuración más específica
+    Cookies.set('usuario', JSON.stringify(user), {
+      expires: 1,
+      path: '/',
+      sameSite: 'lax',
+    });
 
     // Guardar en Zustand store
     useUserStore.getState().setUser(user);

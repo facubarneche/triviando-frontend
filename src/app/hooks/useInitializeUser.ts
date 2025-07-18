@@ -12,27 +12,28 @@ export const useInitializeUser = () => {
 
   useEffect(() => {
     const initializeUserAndAvatar = async () => {
-      // Solo inicializar si no hay usuario en el store
-      if (!user) {
-        try {
-          const currentUser = loginService.getUsuarioActual();
-          if (currentUser) {
-            setUser(currentUser);
+      try {
+        const currentUser = loginService.getUsuarioActual();
+        if (currentUser && (!user || user.id !== currentUser.id)) {
+          setUser(currentUser);
 
-            // Buscar avatar del usuario en Cloudinary
+          // Buscar avatar del usuario en Cloudinary
+          try {
             const avatar = await cloudinaryAvatarService.getCurrentUserAvatar();
             if (avatar) {
               setAvatar(avatar);
             }
+          } catch {
+            // Error fetching avatar, continue without it
           }
-        } catch {
-          // Error initializing user, continue silently
         }
+      } catch {
+        // Error initializing user, continue silently
       }
     };
 
     initializeUserAndAvatar();
-  }, [user, setUser, setAvatar]);
+  }, []); // Eliminar dependencias para evitar re-ejecuciones innecesarias
 
   return user;
 };

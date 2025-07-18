@@ -29,7 +29,12 @@ export default function LoginPage() {
     try {
       const { username } = await loginService.login({ username: user, password });
       toast.success('Inicio de sesión exitoso');
-      router.push(`/${username}/topics`);
+
+      // Esperar un poco para asegurar que las cookies se hayan establecido
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Forzar recarga para asegurar sincronización
+      window.location.href = `/${username}/topics`;
     } catch (error) {
       handleError(error);
     }
