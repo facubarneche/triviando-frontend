@@ -24,7 +24,8 @@ export default function TopicsPage() {
   // Función para refrescar los tópicos
   const refreshTopics = async (): Promise<void> => {
     try {
-      const topics = await topicService.getTopics({ id: userId });
+      const id = userId || getUserIdCSR();
+      const topics = await topicService.getTopics({ id });
       const parsedTopics = parserTopics(topics);
       setTopics(parsedTopics);
     } catch (error) {
@@ -69,17 +70,22 @@ export default function TopicsPage() {
     const checkForCompletedTopics = async () => {
       if (creatingTopics.length > 0 && !loading) {
         // Refrescar la lista para ver si algún tópico se completó
-        await refreshTopics();
+        try {
+          await refreshTopics();
 
-        // Verificar si algún tópico que se estaba creando ya existe
-        creatingTopics.forEach((creatingTopic) => {
-          const exists = topics.some(
-            (t) => t.name.toLowerCase() === creatingTopic.name.toLowerCase(),
-          );
-          if (exists) {
-            removeCreating(creatingTopic.name);
-          }
-        });
+          // Verificar si algún tópico que se estaba creando ya existe
+          creatingTopics.forEach((creatingTopic) => {
+            const exists = topics.some(
+              (t) => t.name.toLowerCase() === creatingTopic.name.toLowerCase(),
+            );
+            if (exists) {
+              removeCreating(creatingTopic.name);
+            }
+          });
+        } catch (error) {
+          // Error en la verificación automática no debe ser mostrado al usuario
+          console.warn('Error al verificar tópicos completados:', error);
+        }
       }
     };
 
@@ -105,18 +111,15 @@ export default function TopicsPage() {
           questionsCount: created.size,
         };
 
-        // Actualizar la lista local
+        // Actualizar la lista local primero
         setTopics((prev) =>
           prev.some((t) => t.name === newTopic.name) ? prev : [...prev, newTopic],
         );
 
-        // Remover del estado de creación
-        removeCreating(name);
-
         toast.success(`Tópico "${created.topic}" creado exitosamente.`);
 
-        // Refrescar la lista para asegurar consistencia
-        await refreshTopics();
+        // Remover del estado de creación (esto automáticamente ejecuta refresh)
+        removeCreating(name);
       } else {
         toast.error('Ocurrió un error al crear el tópico. Intenta nuevamente.');
         removeCreating(name);

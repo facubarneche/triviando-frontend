@@ -52,4 +52,28 @@ describe('middleware', () => {
     expect(NextResponse.next).toHaveBeenCalled();
     expect(res).toEqual({ next: true });
   });
+
+  it('allows access when username case differs between URL and cookie', () => {
+    const user = encodeURIComponent(JSON.stringify({ username: 'MaxUser' }));
+    const req = createRequest('/maxuser/profile', user);
+    const res = middleware(req as any);
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ next: true });
+  });
+
+  it('allows access when URL has mixed case but cookie has different case', () => {
+    const user = encodeURIComponent(JSON.stringify({ username: 'john' }));
+    const req = createRequest('/JOHN/profile', user);
+    const res = middleware(req as any);
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ next: true });
+  });
+
+  it('still blocks access when usernames are completely different (case-insensitive)', () => {
+    const user = encodeURIComponent(JSON.stringify({ username: 'MaxUser' }));
+    const req = createRequest('/differentuser/profile', user);
+    const res = middleware(req as any);
+    expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/unauthorized', req.url));
+    expect(res).toEqual({ redirect: new URL('/unauthorized', req.url) });
+  });
 });
