@@ -61,6 +61,7 @@ describe('FormRegister', () => {
     fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
       target: { value: '12345678' },
     });
+    fireEvent.click(screen.getByTestId('terms-checkbox'));
 
     fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
 
@@ -70,6 +71,7 @@ describe('FormRegister', () => {
         email: 'facu@email.com',
         password: '12345678',
         confirmPassword: '12345678',
+        termsAndPolicy: true,
       });
       expect(toast.success).toHaveBeenCalledWith('Registro exitoso');
       expect(pushMock).toHaveBeenCalledWith('/facu/topics');
@@ -104,9 +106,33 @@ describe('FormRegister', () => {
     fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
       target: { value: '87654321' },
     });
+    fireEvent.click(screen.getByTestId('terms-checkbox'));
 
     fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
 
     expect(await screen.findByText(/las contraseñas deben coincidir/i)).toBeInTheDocument();
+  });
+
+  it('debería mostrar un error si los terminos no son aceptados', async () => {
+    render(<FormRegister />);
+
+    fireEvent.change(screen.getByLabelText(/nombre de usuario/i), {
+      target: { value: 'facu' },
+    });
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { value: 'facu@email.com' },
+    });
+    fireEvent.change(screen.getByLabelText(/^contraseña$/i), {
+      target: { value: '12345678' },
+    });
+    fireEvent.change(screen.getByLabelText(/confirmar contraseña/i), {
+      target: { value: '87654321' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }));
+
+    expect(
+      await screen.findByText(/debe aceptar los términos y la política de convivencia/i),
+    ).toBeInTheDocument();
   });
 });

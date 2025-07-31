@@ -126,13 +126,10 @@ export default function Subscription() {
     setError(null);
 
     try {
-      console.log('Iniciando proceso de suscripción para:', userDetails.email);
       // Usar el subscription service con el email de userDetails
       const data = await suscriptionService.getCheckoutUrlForSubscription({
         email: userDetails.email,
       });
-
-      console.log('Respuesta del backend:', data);
 
       // El backend devuelve la URL directamente como string
       let checkoutUrl: string;
@@ -151,8 +148,6 @@ export default function Subscription() {
       if (!checkoutUrl || typeof checkoutUrl !== 'string') {
         throw new Error('No se recibió una URL válida de pago de Mercado Pago');
       }
-
-      console.log('URL de checkout:', checkoutUrl);
 
       // Redirigir directamente a Mercado Pago en la misma ventana
       window.location.href = checkoutUrl;

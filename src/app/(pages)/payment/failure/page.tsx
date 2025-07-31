@@ -38,8 +38,6 @@ function SubscriptionFailureContent() {
 
       // En una app real, aquí crearías una nueva preferencia de pago
       // router.push("/subscription/checkout")
-
-      console.log('Redirecting to new payment session...');
     } catch (error) {
       console.error('Error retrying payment:', error);
     } finally {

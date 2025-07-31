@@ -17,7 +17,6 @@ export function middleware(request: NextRequest) {
 
     if (!cookieUsuario) {
       // Si no hay cookie pero se intenta acceder al perfil, redirigir a login
-      console.log('No cookie found, redirecting to login');
       return NextResponse.redirect(new URL('/login', request.url));
     }
 
@@ -36,18 +35,13 @@ export function middleware(request: NextRequest) {
       const usernameFromCookie = user?.username;
 
       if (!usernameFromCookie) {
-        console.log('No username in cookie, redirecting to unauthorized');
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
 
       // Comparación case-insensitive entre username de URL y cookie
       if (usernameFromUrl.toLowerCase() !== usernameFromCookie.toLowerCase()) {
-        console.log(`Username mismatch: URL=${usernameFromUrl}, Cookie=${usernameFromCookie}`);
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
-
-      // Todo está bien, continuar
-      console.log(`Access granted for user: ${usernameFromCookie}`);
     } catch (error) {
       console.error('Error parsing user cookie:', error, 'Cookie value:', cookieUsuario.value);
       return NextResponse.redirect(new URL('/unauthorized', request.url));
@@ -56,4 +50,3 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
-

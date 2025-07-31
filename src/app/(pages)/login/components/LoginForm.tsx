@@ -21,9 +21,11 @@ import Logo from '@/app/components/logo';
 export default function LoginPage() {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
+  const [isFetching, setIsFetching] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsFetching(true);
     try {
       const { username } = await loginService.login({ username: user, password });
       toast.success('Inicio de sesión exitoso');
@@ -35,6 +37,8 @@ export default function LoginPage() {
       window.location.href = `/${username}/topics`;
     } catch (error) {
       handleError(error);
+    } finally {
+      setIsFetching(false);
     }
   };
 
@@ -149,6 +153,7 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   className="w-full bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
+                  disabled={isFetching}
                 >
                   Iniciar Sesión
                 </Button>

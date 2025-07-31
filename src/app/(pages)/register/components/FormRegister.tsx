@@ -14,11 +14,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { formRegisterSchema } from '@/app/schemas/formRegisterSchema';
 import { userService } from '@/app/services/userService';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 type FormData = z.infer<typeof formRegisterSchema>;
 
 const FormRegister = () => {
   const router = useRouter();
+  const [isFetching, setIsFetching] = useState(false);
 
   const {
     register,
@@ -30,12 +32,15 @@ const FormRegister = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
+      setIsFetching(true);
       const { username } = await userService.createUser({ ...data });
       toast.success('Registro exitoso');
       router.push(`/${username}/topics`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       toast.error(e.message ?? 'Falló el registro');
+    } finally {
+      setIsFetching(false);
     }
   };
 
@@ -123,9 +128,34 @@ const FormRegister = () => {
           transition={{ delay: 0.6 }}
           className="w-full"
         >
+          <div className="mb-4">
+            <label className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                className="mt-1"
+                {...register('termsAndPolicy')}
+                data-testid="terms-checkbox"
+              />
+              <span className="text-sm text-gray-700">
+                Acepto los{' '}
+                <Link href="/terms" className="text-blue-600 underline">
+                  Términos de uso
+                </Link>{' '}
+                y la{' '}
+                <Link href="/policy" className="text-blue-600 underline">
+                  Política de conducta
+                </Link>
+              </span>
+            </label>
+            {errors.termsAndPolicy && (
+              <p className="text-red-500 text-sm">{errors.termsAndPolicy.message}</p>
+            )}
+          </div>
+
           <Button
             type="submit"
             className="w-full bg-teal-400 shadow-md hover:shadow-lg text-white font-bold cursor-pointer"
+            disabled={isFetching}
           >
             Crear Cuenta
           </Button>
