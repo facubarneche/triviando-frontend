@@ -2,9 +2,9 @@ import Table from '@/app/(pages)/[username]/leaderboard/components/Table';
 import { render, screen } from '@testing-library/react';
 
 const mockData = [
-  { username: 'alice', rank: 1, avatar: '', score: 100 },
-  { username: 'bob', rank: 2, avatar: '', score: 90 },
-  { username: 'charlie', rank: 4, avatar: '', score: 80 },
+  { username: 'alice', rank: 1, avatar: '', score: 100, userId: 1 },
+  { username: 'bob', rank: 2, avatar: '', score: 90, userId: 2 },
+  { username: 'charlie', rank: 4, avatar: '', score: 80, userId: 3 },
 ];
 
 describe('Table', () => {
