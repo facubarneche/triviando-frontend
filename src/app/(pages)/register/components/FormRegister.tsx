@@ -4,7 +4,7 @@ import { Button } from '@/app/components/ui/button';
 import { CardContent, CardFooter } from '@/app/components/ui/card';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
-import { motion } from 'framer-motion';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FaGoogle } from 'react-icons/fa';
@@ -53,12 +53,7 @@ const FormRegister = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <CardContent className="space-y-4">
-        <motion.div
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="space-y-2"
-        >
+        <AnimatedContainer animation="slideRight" delay={0.2} className="space-y-2">
           <Label htmlFor="username">Nombre de usuario</Label>
           <Input
             id="username"
@@ -67,14 +62,9 @@ const FormRegister = () => {
             className="border-cyan-200 focus:border-cyan-400"
           />
           {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
-        </motion.div>
+        </AnimatedContainer>
 
-        <motion.div
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-2"
-        >
+        <AnimatedContainer animation="slideRight" delay={0.3} className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -84,14 +74,9 @@ const FormRegister = () => {
             className="border-cyan-200 focus:border-cyan-400"
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-        </motion.div>
+        </AnimatedContainer>
 
-        <motion.div
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="space-y-2"
-        >
+        <AnimatedContainer animation="slideRight" delay={0.4} className="space-y-2">
           <Label htmlFor="password">Contraseña</Label>
           <Input
             id="password"
@@ -100,14 +85,9 @@ const FormRegister = () => {
             className="border-cyan-200 focus:border-cyan-400"
           />
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-        </motion.div>
+        </AnimatedContainer>
 
-        <motion.div
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="space-y-2"
-        >
+        <AnimatedContainer animation="slideRight" delay={0.5} className="space-y-2">
           <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
           <Input
             id="confirmPassword"
@@ -118,16 +98,11 @@ const FormRegister = () => {
           {errors.confirmPassword && (
             <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
           )}
-        </motion.div>
+        </AnimatedContainer>
       </CardContent>
 
       <CardFooter className="flex flex-col space-y-4">
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="w-full"
-        >
+        <AnimatedContainer animation="slideUp" delay={0.6} className="w-full">
           <div className="mb-4">
             <label className="flex items-start gap-2">
               <input
@@ -159,7 +134,7 @@ const FormRegister = () => {
           >
             Crear Cuenta
           </Button>
-        </motion.div>
+        </AnimatedContainer>
 
         <div className="relative w-full flex items-center gap-2 my-2 cursor-default">
           <div className="flex-1 border-t border-gray-300"></div>
@@ -167,12 +142,7 @@ const FormRegister = () => {
           <div className="flex-1 border-t border-gray-300"></div>
         </div>
 
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="w-full"
-        >
+        <AnimatedContainer animation="slideUp" delay={0.7} className="w-full">
           <Button
             type="button"
             variant="outline"
@@ -182,13 +152,12 @@ const FormRegister = () => {
             <FaGoogle className="mr-2 h-4 w-4 text-red-500" />
             Continuar con Google
           </Button>
-        </motion.div>
+        </AnimatedContainer>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="text-center text-sm cursor-default"
+        <AnimatedContainer
+          animation="fade"
+          delay={0.8}
+          className="text-center text-sm cursor-default text-gray-700"
         >
           ¿Ya tienes una cuenta?{' '}
           <Link
@@ -197,7 +166,7 @@ const FormRegister = () => {
           >
             Iniciar sesión
           </Link>
-        </motion.div>
+        </AnimatedContainer>
       </CardFooter>
     </form>
   );

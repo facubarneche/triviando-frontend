@@ -1,108 +1,580 @@
-# 📚 TrivIAndo - Proyecto 2025
+# 🧠 TrivIAndo - Trivia Inteligente con IA
 
-**Proyecto de Software – TPI – UNSAM**  
-Grupo **Nullpointer**
+[![React](https://img.shields.io/badge/React-18-blue.svg)](https://reactjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0-teal.svg)](https://tailwindcss.com/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-blue.svg)](https://www.docker.com/)
+
+> **Una plataforma de trivia inteligente que transforma el aprendizaje en una experiencia gamificada usando Inteligencia Artificial**
+
+![TrivIAndo Banner](public/logo-triviando.png)
 
 ---
 
-## 🐳 Levantar el proyecto con Docker
+## 🌟 Visión General
 
+**TrivIAndo** es una aplicación web innovadora que revoluciona la forma de estudiar y aprender mediante la gamificación del conocimiento. Utilizando algoritmos de Inteligencia Artificial avanzados, la plataforma genera automáticamente preguntas personalizadas sobre cualquier tema que el usuario desee explorar, creando una experiencia de aprendizaje única, interactiva y altamente efectiva.
+
+### 🎯 Misión
+
+Democratizar el acceso al conocimiento a través de una plataforma que convierte el estudio tradicional en una experiencia divertida, competitiva y altamente personalizada, fomentando hábitos de aprendizaje sostenibles.
+
+---
+
+## 🚀 Características Principales
+
+### 🤖 **Generación Inteligente de Contenido**
+
+- **IA Generativa**: Creación automática de preguntas contextualizadas usando modelos de lenguaje avanzados
+- **Personalización Adaptativa**: Contenido que se ajusta al nivel y estilo de aprendizaje del usuario
+- **Diversidad Temática**: Soporte para cualquier área de conocimiento
+
+### 🎮 **Experiencia Gamificada**
+
+- **Sistema de Puntuación**: Algoritmo inteligente que premia la consistencia y mejora
+- **Rankings Dinámicos**: Leaderboards por temática que fomentan la competencia saludable
+- **Feedback Inmediato**: Explicaciones detalladas para respuestas incorrectas con IA
+- **Progresión Visual**: Estadísticas avanzadas y métricas de rendimiento
+
+### 🔧 **Funcionalidades Avanzadas**
+
+- **Modo "Aprendamos Juntos"**: Explicaciones generadas por IA para respuestas incorrectas
+- **Sistema de Feedback**: Mejora continua del algoritmo basada en interacciones del usuario
+- **Responsive Design**: Experiencia optimizada para todos los dispositivos
+- **Gestión de Sesiones**: Sistema robusto de autenticación y persistencia
+
+---
+
+## 🏗️ Arquitectura del Sistema
+
+### **Stack Tecnológico**
+
+#### **Frontend (Este Repositorio)**
+
+- **Framework**: Next.js 15 con App Router
+- **UI/UX**: React 18 + TypeScript + Tailwind CSS
+- **Animaciones**: Framer Motion para micro-interacciones
+- **Estado Global**: Zustand para gestión de estado
+- **Testing**: Jest + React Testing Library
+
+#### **Backend & IA**
+
+- **API**: Java Spring Boot con arquitectura REST
+- **Base de Datos**:
+  - **SQL**: PostgreSQL para datos estructurados
+  - **NoSQL**: MongoDB para contenido generado por IA
+- **IA & ML**:
+  - **Nomic Embeddings** para procesamiento semántico
+  - **Modelos de Lenguaje** para generación de preguntas
+- **Infraestructura**: Docker + Microservicios
+
+---
+
+# 💻 Frontend - Especificaciones Técnicas
+
+## 🛠️ Tecnologías y Herramientas
+
+### **Core Technologies**
+
+- **Next.js 15**: Framework React con App Router y SSR
+- **TypeScript 5.0**: Tipado estático para mayor robustez
+- **Tailwind CSS**: Framework de utilidades para diseño responsivo
+- **Framer Motion**: Librería de animaciones para React
+
+### **Estado y Datos**
+
+- **Zustand**: Gestión de estado global minimalista
+- **React Hook Form**: Manejo eficiente de formularios
+
+### **Calidad y Testing**
+
+- **ESLint + Prettier**: Linting y formateo de código
+- **Jest**: Framework de testing unitario
+- **React Testing Library**: Testing de componentes React
+
+---
+
+## 🎨 Design System Unificado
+
+### **🌟 Nuevas Optimizaciones Implementadas**
+
+#### **Sistema de Colores Centralizado**
+
+```typescript
+// utils/designSystem.ts - Colores de la marca unificados
+export const COLORS = {
+  brand: {
+    teal: '#14b8a6',
+    cyan: '#06b6d4',
+    gradient: 'linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%)',
+  },
+};
+```
+
+#### **Botones Optimizados**
+
+- ✅ **Primario**: Gradiente teal con texto blanco (mejorada legibilidad)
+- ✅ **Secundario**: Efecto glass con backdrop blur
+- ✅ **Estados**: Hover, loading, disabled con animaciones fluidas
+
+#### **Cards con Glass Effect**
+
+- ✅ **Backdrop blur** para efecto moderno
+- ✅ **Bordes translúcidos** que se integran con el gradiente de fondo
+- ✅ **Hover animations** consistentes en toda la app
+
+#### **Sistema de Animaciones Unificado**
+
+```typescript
+// utils/animations.ts - Animaciones reutilizables
+import { AnimatedContainer } from '@/components/AnimatedContainer';
+
+// Uso simple y consistente
+<AnimatedContainer animation="slideUp" delay={0.2}>
+  <Card>Contenido animado</Card>
+</AnimatedContainer>;
+```
+
+### **Animaciones Disponibles**
+
+- **Entrada**: fade, slideUp, slideDown, slideLeft, slideRight, scale, bounce
+- **Lista**: stagger animations para elementos múltiples
+- **Hover**: scale, glow, bounce effects
+- **Página**: transiciones fluidas entre rutas
+
+---
+
+## 🔧 Instalación y Desarrollo
+
+### **Inicio Rápido**
+
+```bash
+# Con Docker (Recomendado)
 docker-compose up --build
-docker-compose up
 
-## Sin docker
-
+# Sin Docker
+npm install
 npm run dev
+```
 
-## ✨ Descripción
+### **Scripts Disponibles**
 
-**TrivIAndo** es una aplicación web _mobile first_ diseñada para fomentar el hábito de estudio mediante la gamificación del aprendizaje. A partir de una temática ingresada por el usuario, la app genera automáticamente preguntas y desafíos que ayudan a reforzar conocimientos de manera divertida y competitiva.
+```bash
+# Desarrollo
+npm run dev          # Servidor de desarrollo
+npm run build        # Build de producción
+npm run start        # Servidor de producción
 
----
+# Testing
+npm run test         # Tests unitarios
+npm run test:watch   # Tests en modo watch
+npm run test:coverage # Cobertura de tests
 
-## 🎯 Objetivos
-
-- Facilitar la creación de hábitos de estudio continuos.
-- Utilizar técnicas de gamificación (puntos, rankings, recompensas).
-- Incentivar la competencia entre usuarios y el autoaprendizaje.
-
----
-
-## 🧠 Funcionalidades principales
-
-- Generación automática de preguntas usando **Nomic Embeddings** según el tema que elija el usuario.
-- Modo de juego individual (con posibilidad de expansión a otras modalidades).
-- Sistema de puntuación y ranking general por temática.
-- Interfaz web adaptable a dispositivos móviles.
-- Recordatorios y notificaciones (deseado para versiones futuras).
+# Calidad de código
+npm run lint         # ESLint
+npm run lint:fix     # Auto-fix de ESLint
+npm run format       # Prettier formatting
+```
 
 ---
 
-## 🧱 Arquitectura
+## 📁 Estructura del Proyecto Optimizada
 
-El backend está construido con:
-
-- **Java Spring Boot**
-- **Base de datos relacional**: SQL (MySQL/PostgreSQL)
-- **Base de datos NoSQL**: MongoDB
-- **Integración de IA**: Nomic Embeddings para generación de preguntas
-
-> A futuro se espera incluir nuevas modalidades de juego, más personalización para el usuario y opciones de suscripción con funciones premium.
-
----
-
-## 🧪 Riesgos identificados
-
-- Carga excesiva de solicitudes a la IA, afectando el rendimiento.
-- Baja adopción por parte de los usuarios.
-- Falta de motivación para el uso sostenido de la aplicación.
-
----
-
-## 🚀 Oportunidades
-
-- Colaboración con universidades y centros educativos.
-- Extensión de funcionalidades hacia modelos pagos.
-- Mejora general del aprendizaje mediante repaso frecuente.
+```
+src/
+├── app/                    # App Router (Next.js 15)
+│   ├── (pages)/           # Rutas agrupadas por funcionalidad
+│   ├── components/        # Componentes reutilizables
+│   │   ├── AnimatedContainer.tsx  # 🆕 Wrapper de animaciones
+│   │   └── ui/           # Design System componentes
+│   ├── services/         # Capa de servicios API
+│   ├── stores/           # Estado global (Zustand)
+│   └── middleware.ts     # Middleware de autenticación
+├── utils/                # 🆕 Utilidades centralizadas
+│   ├── animations.ts     # 🆕 Sistema de animaciones unificado
+│   ├── designSystem.ts   # 🆕 Constantes de diseño
+│   ├── constants.ts      # 🆕 Textos y configuración
+│   └── playSound.ts      # 🆕 Sistema de sonidos mejorado
+```
 
 ---
 
-## ⛔ Restricciones
+## 🎮 Características de la Optimización
 
-- El contenido depende de la interacción del usuario para generarse.
-- Inicialmente solo se contará con una modalidad de juego (modo single).
+### **🔧 Mejoras Implementadas**
+
+#### **1. Design System Centralizado**
+
+- ✅ Colores, tipografía y espaciado unificados
+- ✅ Tokens de diseño reutilizables
+- ✅ Consistencia visual en toda la aplicación
+
+#### **2. Sistema de Animaciones Modular**
+
+- ✅ Animaciones reutilizables y configurables
+- ✅ Performance optimizado con Framer Motion
+- ✅ Fácil mantenimiento y extensión
+
+#### **3. Gestión de Sonidos Mejorada**
+
+- ✅ Cache de audio para mejor rendimiento
+- ✅ Tipos de sonido centralizados
+- ✅ Control de volumen global
+
+#### **4. Constantes y Textos Unificados**
+
+- ✅ Todos los textos en un solo lugar
+- ✅ Fácil localización futura
+- ✅ Configuración centralizada
 
 ---
 
-## ✅ SCRUM - Convenciones
+## 🚀 Performance y Buenas Prácticas
 
-### Definition of Ready (DoR)
+### **Optimizaciones de Rendimiento**
 
-- Tareas sin dependencias bloqueantes.
-- Criterios de aceptación establecidos.
-- Alcance claro y descripción completa.
-- Tareas asignadas y completamente estimadas.
+- **Code Splitting**: Lazy loading automático
+- **Image Optimization**: Next.js Image component
+- **Cache Strategy**: Service Worker para assets
+- **Bundle Size**: Análisis y optimización continua
 
-### Definition of Done (DoD)
+### **Estándares de Código**
 
-- Código revisado y funcional.
-- Criterios de aceptación validados.
-- Revisión por parte del PR reviewer.
-- Merge a la rama `develop`.
+- **TypeScript Strict**: Tipado estricto en todo el proyecto
+- **ESLint**: Reglas de calidad estrictas
+- **Prettier**: Formateo consistente
+- **Conventional Commits**: Historial limpio y semántico
 
 ---
 
-## Buenas Prácticas
+## 🤝 Flujo de Desarrollo y Convenciones
 
-## Ramas y Commits
+### **Convención de Ramas**
 
-Crearemos ramas siguiendo esta convención de nombres:
-
+```bash
 TIPO/SCRUM-N°TAREA-BREVE-DESCRIPCION
+```
 
-✅ Ejemplo: DOCS/SCRUM-9-definir-convenciones
+✅ **Ejemplo**: `FEATURE/SCRUM-123-sistema-animaciones`
 
-Esto asegura consistencia y trazabilidad de las tareas a lo largo del proyecto. Convención de Mensajes de Commit
+### **Convención de Commits**
+
+```bash
+[FEATURE] → Nueva funcionalidad
+[FIX] → Corrección de errores
+[IMPROVEMENT] → Mejoras y optimizaciones
+[DOCS] → Documentación
+[REFACTOR] → Refactorización de código
+[TEST] → Tests y pruebas
+```
+
+### **Flujo de Trabajo**
+
+```bash
+# Crear nueva feature desde develop
+git checkout develop
+git checkout -b FEATURE/SCRUM-123-nueva-funcionalidad
+
+# Desarrollo con commits descriptivos
+git commit -m "[FEATURE] Implementar sistema de animaciones unificado"
+
+# Pull Request hacia develop
+git push origin FEATURE/SCRUM-123-nueva-funcionalidad
+```
+
+---
+
+## 📈 Roadmap y Próximas Mejoras
+
+### **Optimizaciones Completadas ✅**
+
+- [x] Design System unificado con tokens centralizados
+- [x] Sistema de animaciones modular y reutilizable
+- [x] Botones optimizados con gradiente teal y texto blanco
+- [x] Cards con Glass Effect y backdrop blur
+- [x] Sistema de sonidos mejorado con cache
+- [x] Constantes y textos centralizados
+- [x] Background con gradiente teal fijo en toda la app
+
+### **Próximas Funcionalidades 🚀**
+
+- [ ] **Modo Multijugador**: Competencias en tiempo real
+- [ ] **PWA Completo**: Funcionalidad offline
+- [ ] **Notificaciones Push**: Recordatorios personalizados
+- [ ] **Analytics Avanzados**: Dashboard de métricas
+- [ ] **Localización**: Soporte multi-idioma
+
+---
+
+## 🏆 Equipo de Desarrollo
+
+**Grupo Nullpointer - UNSAM 2025**
+
+| Desarrollador         | Rol                  | GitHub                                                   |
+| --------------------- | -------------------- | -------------------------------------------------------- |
+| **Facundo Barneche**  | Frontend Lead        | [@facubarneche](https://github.com/facubarneche)         |
+| **Julian Gibelli**    | Backend Developer    | [@juliangibelli](https://github.com/juliangibelli)       |
+| **Alan Guarino**      | Full Stack Developer | [@alanguarino](https://github.com/alanguarino)           |
+| **Juan Caceffo**      | DevOps Engineer      | [@juancaceffo](https://github.com/juancaceffo)           |
+| **Federico Serafini** | UI/UX Developer      | [@federicoserafini](https://github.com/federicoserafini) |
+| **Facundo Sacchi**    | QA Engineer          | [@facundosacchi](https://github.com/facundosacchi)       |
+
+### **Supervisores Académicos**
+
+- **Pablo Andrés Núñez Monzon**
+- **Mariano Cristobo**
+
+---
+
+<div align="center">
+
+## 🎓 **Proyecto de Software – TPI**
+
+**Universidad Nacional de San Martín (UNSAM) - 2025**
+
+[![UNSAM](https://img.shields.io/badge/UNSAM-Universidad%20Nacional%20de%20San%20Martín-blue.svg)](https://www.unsam.edu.ar/)
+
+---
+
+### 🌟 **Optimizaciones Implementadas**
+
+✅ **Design System Unificado**: Colores, tipografía y espaciado centralizados  
+✅ **Animaciones Consistentes**: Sistema modular reutilizable  
+✅ **Botones Mejorados**: Gradiente teal con texto blanco optimizado  
+✅ **Glass Effect**: Cards modernas con backdrop blur  
+✅ **Sound System**: Gestión centralizada y optimizada  
+✅ **Constants**: Textos y configuración unificados  
+✅ **Background**: Gradiente teal fijo en toda la aplicación  
+✅ **Performance**: Code splitting y optimizaciones avanzadas
+
+_Transformando la educación a través de la tecnología y la innovación_ 🚀
+
+## </div>
+
+## 🚀 Características Principales
+
+### 🤖 **Generación Inteligente de Contenido**
+
+- **IA Generativa**: Creación automática de preguntas contextualizadas usando modelos de lenguaje avanzados
+- **Personalización Adaptativa**: Contenido que se ajusta al nivel y estilo de aprendizaje del usuario
+- **Diversidad Temática**: Soporte para cualquier área de conocimiento
+
+### 🎮 **Experiencia Gamificada**
+
+- **Sistema de Puntuación**: Algoritmo inteligente que premia la consistencia y mejora
+- **Rankings Dinámicos**: Leaderboards por temática que fomentan la competencia saludable
+- **Feedback Inmediato**: Explicaciones detalladas para respuestas incorrectas con IA
+- **Progresión Visual**: Estadísticas avanzadas y métricas de rendimiento
+
+### 🔧 **Funcionalidades Avanzadas**
+
+- **Modo "Aprendamos Juntos"**: Explicaciones generadas por IA para respuestas incorrectas
+- **Sistema de Feedback**: Mejora continua del algoritmo basada en interacciones del usuario
+- **Responsive Design**: Experiencia optimizada para todos los dispositivos
+- **Gestión de Sesiones**: Sistema robusto de autenticación y persistencia
+
+---
+
+## 🏗️ Arquitectura del Sistema
+
+### **Stack Tecnológico**
+
+#### **Frontend (Este Repositorio)**
+
+- **Framework**: Next.js 15 con App Router
+- **UI/UX**: React 18 + TypeScript + Tailwind CSS
+- **Animaciones**: Framer Motion para micro-interacciones
+- **Estado Global**: Zustand para gestión de estado
+- **Testing**: Jest + React Testing Library
+
+#### **Backend & IA**
+
+- **API**: Java Spring Boot con arquitectura REST
+- **Base de Datos**:
+  - **SQL**: PostgreSQL para datos estructurados
+  - **NoSQL**: MongoDB para contenido generado por IA
+- **IA & ML**:
+  - **Nomic Embeddings** para procesamiento semántico
+  - **Modelos de Lenguaje** para generación de preguntas
+- **Infraestructura**: Docker + Microservicios
+
+---
+
+# 💻 Frontend - Especificaciones Técnicas
+
+## 🛠️ Tecnologías y Herramientas
+
+### **Core Technologies**
+
+- **Next.js 15**: Framework React con App Router y SSR
+- **TypeScript 5.0**: Tipado estático para mayor robustez
+- **Tailwind CSS**: Framework de utilidades para diseño responsivo
+- **Framer Motion**: Librería de animaciones para React
+
+### **Estado y Datos**
+
+- **Zustand**: Gestión de estado global minimalista
+- **React Hook Form**: Manejo eficiente de formularios
+
+### **Calidad y Testing**
+
+- **ESLint + Prettier**: Linting y formateo de código
+- **Jest**: Framework de testing unitario
+- **React Testing Library**: Testing de componentes React
+
+---
+
+## 🎨 Design System Unificado
+
+### **🌟 Nuevas Optimizaciones Implementadas**
+
+#### **Sistema de Colores Centralizado**
+
+```typescript
+// utils/designSystem.ts - Colores de la marca unificados
+export const COLORS = {
+  brand: {
+    teal: '#14b8a6',
+    cyan: '#06b6d4',
+    gradient: 'linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%)',
+  },
+};
+```
+
+#### **Botones Optimizados**
+
+- ✅ **Primario**: Gradiente teal con texto blanco (mejorada legibilidad)
+- ✅ **Secundario**: Efecto glass con backdrop blur
+- ✅ **Estados**: Hover, loading, disabled con animaciones fluidas
+
+#### **Cards con Glass Effect**
+
+- ✅ **Backdrop blur** para efecto moderno
+- ✅ **Bordes translúcidos** que se integran con el gradiente de fondo
+- ✅ **Hover animations** consistentes en toda la app
+
+#### **Sistema de Animaciones Unificado**
+
+```typescript
+// utils/animations.ts - Animaciones reutilizables
+import { AnimatedContainer } from '@/components/AnimatedContainer';
+
+// Uso simple y consistente
+<AnimatedContainer animation="slideUp" delay={0.2}>
+  <Card>Contenido animado</Card>
+</AnimatedContainer>;
+```
+
+### **Animaciones Disponibles**
+
+- **Entrada**: fade, slideUp, slideDown, slideLeft, slideRight, scale, bounce
+- **Lista**: stagger animations para elementos múltiples
+- **Hover**: scale, glow, bounce effects
+- **Página**: transiciones fluidas entre rutas
+
+---
+
+## 🔧 Instalación y Desarrollo
+
+### **Inicio Rápido**
+
+```bash
+# Con Docker (Recomendado)
+docker-compose up --build
+
+# Sin Docker
+npm install
+npm run dev
+```
+
+### **Scripts Disponibles**
+
+```bash
+# Desarrollo
+npm run dev          # Servidor de desarrollo
+npm run build        # Build de producción
+npm run start        # Servidor de producción
+
+# Testing
+npm run test         # Tests unitarios
+npm run test:watch   # Tests en modo watch
+npm run test:coverage # Cobertura de tests
+
+# Calidad de código
+npm run lint         # ESLint
+npm run lint:fix     # Auto-fix de ESLint
+npm run format       # Prettier formatting
+```
+
+---
+
+## 📁 Estructura del Proyecto Optimizada
+
+```
+src/
+├── app/                    # App Router (Next.js 15)
+│   ├── (pages)/           # Rutas agrupadas por funcionalidad
+│   ├── components/        # Componentes reutilizables
+│   │   ├── AnimatedContainer.tsx  # 🆕 Wrapper de animaciones
+│   │   └── ui/           # Design System componentes
+│   ├── services/         # Capa de servicios API
+│   ├── stores/           # Estado global (Zustand)
+│   └── middleware.ts     # Middleware de autenticación
+├── utils/                # 🆕 Utilidades centralizadas
+│   ├── animations.ts     # 🆕 Sistema de animaciones unificado
+│   ├── designSystem.ts   # 🆕 Constantes de diseño
+│   ├── constants.ts      # 🆕 Textos y configuración
+│   └── playSound.ts      # 🆕 Sistema de sonidos mejorado
+```
+
+---
+
+## 🎮 Características de la Optimización
+
+### **🔧 Mejoras Implementadas**
+
+#### **1. Design System Centralizado**
+
+- ✅ Colores, tipografía y espaciado unificados
+- ✅ Tokens de diseño reutilizables
+- ✅ Consistencia visual en toda la aplicación
+
+#### **2. Sistema de Animaciones Modular**
+
+- ✅ Animaciones reutilizables y configurables
+- ✅ Performance optimizado con Framer Motion
+- ✅ Fácil mantenimiento y extensión
+
+#### **3. Gestión de Sonidos Mejorada**
+
+- ✅ Cache de audio para mejor rendimiento
+- ✅ Tipos de sonido centralizados
+- ✅ Control de volumen global
+
+#### **4. Constantes y Textos Unificados**
+
+- ✅ Todos los textos en un solo lugar
+- ✅ Fácil localización futura
+- ✅ Configuración centralizada
+
+---
+
+## 🚀 Performance y Buenas Prácticas
+
+### **Optimizaciones de Rendimiento**
+
+- **Code Splitting**: Lazy loading automático
+- **Image Optimization**: Next.js Image component
+- **Cache Strategy**: Service Worker para assets
+- **Bundle Size**: Análisis y optimización continua
+
+### **Estándares de Código**
+
+- **TypeScript Strict**: Tipado estricto en todo el proyecto
+- **ESLint**: Reglas de calidad estrictas
+- **Prettier**: Formateo consistente
+- **Conventional Commits**: Historial limpio y semántico
 
 Para mantener la claridad en el historial de commits, utilizaremos los siguientes prefijos:
 

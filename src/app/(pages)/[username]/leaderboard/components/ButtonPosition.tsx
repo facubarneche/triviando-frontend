@@ -9,7 +9,7 @@ const ButtonPosition = () => {
   return (
     <div className="relative w-full h-9 md:h-4">
       <Button
-        className="absolute top-1 left-1/2 transform -translate-x-1/2 rounded-full shadow-lg bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white font-medium px-4 py-2 transition-all duration-300 hover:scale-105 flex items-center gap-2"
+        className="absolute top-1 left-1/2 transform -translate-x-1/2 rounded-full shadow-lg bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white font-medium px-4 py-2 transition-all duration-300 hover:shadow-xl flex items-center gap-2"
         onClick={() => push('?')}
       >
         <svg

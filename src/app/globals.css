@@ -1,27 +1,65 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* TrivIAndo Brand Colors */
+  --primary-teal: 20 184 166; /* #14b8a6 */
+  --primary-cyan: 6 182 212; /* #06b6d4 */
+  --success: 16 185 129; /* #10b981 */
+  --error: 239 68 68; /* #ef4444 */
+  --warning: 245 158 11; /* #f59e0b */
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+  /* Unified Theme Variables */
+  --background: 15 23 42; /* Dark slate background */
+  --foreground: 55 65 81; /* Gris oscuro para texto */
+  --card: 30 41 59; /* Card background */
+  --card-foreground: 55 65 81; /* Gris oscuro para texto en cards */
+
+  /* Border and input colors */
+  --border: 51 65 85;
+  --input: 51 65 85;
+  --ring: var(--primary-teal);
+
+  /* Primary colors (teal gradient) */
+  --primary: var(--primary-teal);
+  --primary-foreground: 255 255 255; /* White text on teal */
+
+  /* Secondary colors */
+  --secondary: 71 85 105;
+  --secondary-foreground: 248 250 252;
+
+  /* Destructive colors */
+  --destructive: var(--error);
+  --destructive-foreground: 255 255 255;
+
+  /* Muted colors */
+  --muted: 51 65 85;
+  --muted-foreground: 148 163 184;
+
+  /* Accent colors */
+  --accent: 51 65 85;
+  --accent-foreground: 248 250 252;
+
+  /* Popover colors */
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+
+  /* Border radius */
+  --radius: 0.5rem;
+}
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  height: 100%;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(55, 65, 81); /* Color gris oscuro en lugar de usar hsl(var(--foreground)) */
+  background: linear-gradient(135deg, rgb(var(--primary-teal)) 0%, rgb(var(--primary-cyan)) 100%);
+  background-attachment: fixed;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -4,7 +4,6 @@ import { loginService } from '@/app/services/loginService';
 import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { AxiosError } from 'axios';
-import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { UserStatistics } from '../types';
 
@@ -39,11 +38,7 @@ const ProfileStatistics = () => {
       : 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-    >
+    <div>
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
           <CardHeader className="pb-2">
@@ -76,7 +71,7 @@ const ProfileStatistics = () => {
           </CardContent>
         </Card>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

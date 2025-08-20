@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/app/components/ui/card';
 import { Input } from '@/app/components/ui/input';
-import { motion } from 'framer-motion';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import { Search } from 'lucide-react';
 
 interface FilterProps {
@@ -8,11 +8,7 @@ interface FilterProps {
   setSearchTerm: (term: string) => void;
 }
 const Filter = ({ searchTerm, setSearchTerm }: FilterProps) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: 0.2 }}
-  >
+  <AnimatedContainer animation="slideUp" delay={0.2}>
     <Card className="mb-6 border-0 shadow-lg bg-white/90 backdrop-blur-sm">
       <CardContent className="p-3">
         <div className="relative">
@@ -26,7 +22,7 @@ const Filter = ({ searchTerm, setSearchTerm }: FilterProps) => (
         </div>
       </CardContent>
     </Card>
-  </motion.div>
+  </AnimatedContainer>
 );
 
 export default Filter;

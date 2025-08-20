@@ -5,7 +5,6 @@ import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
 import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { formatDateToMonthYear } from '@/app/utils/formatDateToMonthYear';
-import { motion } from 'framer-motion';
 import { Edit, LogOut } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -85,11 +84,7 @@ const ProfileInfo = () => {
   const fullName = getDisplayName();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div>
       <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -139,7 +134,7 @@ const ProfileInfo = () => {
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 };
 

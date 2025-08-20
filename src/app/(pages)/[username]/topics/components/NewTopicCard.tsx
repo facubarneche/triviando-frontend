@@ -1,6 +1,7 @@
 'use client';
 import { Card, CardContent } from '@/app/components/ui/card';
 import { motion } from 'framer-motion';
+import AnimatedContainer, { useCardAnimation } from '@/app/components/AnimatedContainer';
 import { Plus, Sparkles } from 'lucide-react';
 import NewTopicModal from './NewTopicModal';
 import { useState } from 'react';
@@ -11,14 +12,10 @@ interface NewTopicCardProps {
 
 const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
   const [open, setOpen] = useState(false);
+  const cardAnimation = useCardAnimation();
 
   return (
-    <motion.div
-      style={{ height: '100%' }}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-    >
+    <AnimatedContainer style={{ height: '100%' }} animation="fade" {...cardAnimation}>
       <Card
         className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
         onClick={(e) => {
@@ -47,7 +44,7 @@ const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
         onClose={() => setOpen(false)}
         onCreateTopic={({ name }) => onCreateTopic(name)}
       />
-    </motion.div>
+    </AnimatedContainer>
   );
 };
 

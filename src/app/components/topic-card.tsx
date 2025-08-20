@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Card, CardContent } from '../components/ui/card';
 import { motion } from 'framer-motion';
+import AnimatedContainer, { useCardAnimation } from './AnimatedContainer';
 import { ITopic } from '../(pages)/[username]/topics/types';
 import { useParams } from 'next/navigation';
 
@@ -13,14 +14,11 @@ interface TopicCardProps {
 export default function TopicCard({ topic }: TopicCardProps) {
   const { username } = useParams<{ username: string }>();
   const { name, questionsCount, color, icon } = topic;
+  const cardAnimation = useCardAnimation();
+
   return (
     <Link href={{ pathname: `/${username}/quiz/${name}` }}>
-      <motion.div
-        style={{ height: '100%' }}
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-      >
+      <AnimatedContainer animation="fade" style={{ height: '100%' }} {...cardAnimation}>
         <Card className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer">
           <CardContent className="p-6 flex flex-col items-center text-center">
             <motion.div
@@ -34,7 +32,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
             <p className="text-sm text-muted-foreground">{questionsCount} preguntas</p>
           </CardContent>
         </Card>
-      </motion.div>
+      </AnimatedContainer>
     </Link>
   );
 }
