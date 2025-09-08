@@ -1,6 +1,5 @@
 'use client';
 import { Card, CardContent } from '@/app/components/ui/card';
-import { motion } from 'framer-motion';
 import AnimatedContainer, { useCardAnimation } from '@/app/components/AnimatedContainer';
 import { Plus, Sparkles } from 'lucide-react';
 import NewTopicModal from './NewTopicModal';
@@ -24,13 +23,11 @@ const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
         }}
       >
         <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
-          <motion.div
-            whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-            transition={{ duration: 0.5 }}
-            className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 flex items-center justify-center mb-4 shadow-md"
-          >
-            <Plus className="h-6 w-6 text-white" />
-          </motion.div>
+          <AnimatedContainer animation="bounce" delay={0.2}>
+            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 flex items-center justify-center mb-4 shadow-md">
+              <Plus className="h-6 w-6 text-white" />
+            </div>
+          </AnimatedContainer>
           <h3 className="text-xl font-bold mb-1 text-cyan-700">Crear Nuevo Tema</h3>
           <p className="text-sm text-muted-foreground">Personaliza tus preguntas</p>
           <div className="mt-2 flex items-center justify-center gap-1 text-teal-500 font-medium">

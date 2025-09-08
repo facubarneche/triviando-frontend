@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { AlertTriangle, Send } from 'lucide-react';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import { feedbackOptions } from '../helpers';
 import {
   Dialog,
@@ -84,10 +85,11 @@ export default function FeedbackModal({ isOpen, onClose, onSubmit }: FeedbackMod
               className="space-y-3"
             >
               {feedbackOptions.map((option) => (
-                <motion.div
+                <AnimatedContainer
                   key={option.id}
+                  animation="slideUp"
+                  delay={0.1}
                   className="flex items-start space-x-3"
-                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 >
                   <RadioGroupItem value={option.id} id={option.id} className="mt-1" />
                   <div className="flex-1">
@@ -96,7 +98,7 @@ export default function FeedbackModal({ isOpen, onClose, onSubmit }: FeedbackMod
                     </Label>
                     <p className="text-xs text-muted-foreground mt-1">{option.description}</p>
                   </div>
-                </motion.div>
+                </AnimatedContainer>
               ))}
             </RadioGroup>
 
