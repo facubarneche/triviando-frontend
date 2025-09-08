@@ -80,7 +80,11 @@ export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   ) {
     const currentVisible = modifiedVariants.visible as Record<string, unknown>;
     const currentTransition = (currentVisible.transition as Record<string, unknown>) || {};
-    const transition = { ...currentTransition };
+    const transition = { 
+      ...currentTransition,
+      type: 'tween', // Siempre usar tween para mejor performance
+      ease: 'easeInOut'
+    };
 
     if (delay > 0) transition.delay = delay;
     if (duration) transition.duration = duration;
@@ -94,9 +98,12 @@ export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   const initialState = animation === 'page' ? 'initial' : 'hidden';
   const animateState = animation === 'page' ? 'in' : 'visible';
 
+  // Agregar clases de optimización automáticamente
+  const optimizedClassName = `${className} will-change-transform`.trim();
+
   return (
     <motion.div
-      className={className}
+      className={optimizedClassName}
       variants={modifiedVariants}
       initial={initialState}
       animate={animateState}
@@ -152,7 +159,11 @@ export const useHoverAnimation = () => {
       boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
       y: -2,
     },
-    transition: { duration: 0.2, ease: 'easeInOut' },
+    transition: { 
+      duration: 0.2, 
+      ease: 'easeInOut',
+      type: 'tween' // Más eficiente que spring
+    },
   };
 };
 
@@ -164,7 +175,11 @@ export const useButtonAnimation = () => {
       y: -1,
     },
     whileTap: { y: 0 },
-    transition: { duration: 0.2, ease: 'easeInOut' },
+    transition: { 
+      duration: 0.15, 
+      ease: 'easeInOut',
+      type: 'tween'
+    },
   };
 };
 
@@ -173,9 +188,13 @@ export const useCardAnimation = () => {
   return {
     whileHover: {
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-      y: -4,
+      y: -2,
     },
-    transition: { duration: 0.3, ease: 'easeInOut' },
+    transition: { 
+      duration: 0.2, 
+      ease: 'easeInOut',
+      type: 'tween' // Más eficiente que spring
+    },
   };
 };
 
