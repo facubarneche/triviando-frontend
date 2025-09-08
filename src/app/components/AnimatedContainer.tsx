@@ -80,10 +80,10 @@ export const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   ) {
     const currentVisible = modifiedVariants.visible as Record<string, unknown>;
     const currentTransition = (currentVisible.transition as Record<string, unknown>) || {};
-    const transition = { 
+    const transition: Record<string, unknown> = {
       ...currentTransition,
       type: 'tween', // Siempre usar tween para mejor performance
-      ease: 'easeInOut'
+      ease: 'easeInOut',
     };
 
     if (delay > 0) transition.delay = delay;
@@ -159,10 +159,10 @@ export const useHoverAnimation = () => {
       boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
       y: -2,
     },
-    transition: { 
-      duration: 0.2, 
+    transition: {
+      duration: 0.2,
       ease: 'easeInOut',
-      type: 'tween' // Más eficiente que spring
+      type: 'tween', // Más eficiente que spring
     },
   };
 };
@@ -175,10 +175,10 @@ export const useButtonAnimation = () => {
       y: -1,
     },
     whileTap: { y: 0 },
-    transition: { 
-      duration: 0.15, 
+    transition: {
+      duration: 0.15,
       ease: 'easeInOut',
-      type: 'tween'
+      type: 'tween',
     },
   };
 };
@@ -190,10 +190,10 @@ export const useCardAnimation = () => {
       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
       y: -2,
     },
-    transition: { 
-      duration: 0.2, 
+    transition: {
+      duration: 0.2,
       ease: 'easeInOut',
-      type: 'tween' // Más eficiente que spring
+      type: 'tween', // Más eficiente que spring
     },
   };
 };

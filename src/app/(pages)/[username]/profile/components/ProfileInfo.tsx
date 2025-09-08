@@ -98,7 +98,7 @@ const ProfileInfo = () => {
                 alt="Avatar del usuario"
               />
             </AnimatedContainer>
-            
+
             <div className="flex-1 text-center sm:text-left">
               <AnimatedContainer animation="slideLeft" delay={0.2}>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
@@ -111,15 +111,17 @@ const ProfileInfo = () => {
                   </Badge>
                 </div>
               </AnimatedContainer>
-              
+
               <AnimatedContainer animation="slideLeft" delay={0.3}>
-                {fullName && <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>}
+                {fullName && (
+                  <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>
+                )}
                 <p className="text-muted-foreground">{user.email}</p>
                 <p className="text-sm text-muted-foreground text-gray-600 mt-2">
                   Miembro desde {formatDateToMonthYear(user.joinDate)}
                 </p>
               </AnimatedContainer>
-              
+
               <AnimatedContainer animation="slideUp" delay={0.4}>
                 <div className="flex gap-2 mt-4 justify-center sm:justify-start">
                   <Button

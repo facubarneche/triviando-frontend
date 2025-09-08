@@ -27,7 +27,7 @@ export default function Profile() {
         <AnimatedContainer animation="slideUp" delay={0.2}>
           <ProfileInfo />
         </AnimatedContainer>
-        
+
         <AnimatedContainer animation="slideUp" delay={0.4}>
           <ProfileStatistics />
         </AnimatedContainer>

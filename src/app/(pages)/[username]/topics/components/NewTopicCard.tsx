@@ -14,11 +14,7 @@ const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
   const cardAnimation = useCardAnimation();
 
   return (
-    <AnimatedContainer 
-      style={{ height: '100%' }} 
-      animation="fade" 
-      {...cardAnimation}
-    >
+    <AnimatedContainer style={{ height: '100%' }} animation="fade" {...cardAnimation}>
       <Card
         hover={false}
         className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-shadow duration-200 cursor-pointer"
