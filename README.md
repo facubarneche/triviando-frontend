@@ -18,7 +18,7 @@ Una aplicación web moderna de trivia desarrollada con Next.js 14, TypeScript y 
 
 ### Cobertura de Tests
 
-![coverage](coverage/lcov-report/index.html)
+![coverage](coverage/lcov-report/src/index.html)
 
 ## 🚀 Características Principales
 
