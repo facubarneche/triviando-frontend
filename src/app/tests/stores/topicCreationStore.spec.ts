@@ -3,6 +3,7 @@ import { act, renderHook } from '@testing-library/react';
 
 // Mock console.warn for error handling tests
 const originalConsoleWarn = console.warn;
+const originalDateNow = Date.now;
 
 describe('topicCreationStore', () => {
   beforeEach(() => {
@@ -11,11 +12,18 @@ describe('topicCreationStore', () => {
       creatingTopics: [],
       refreshCallback: null,
     });
+
+    // Clear all timers and mocks
+    jest.clearAllTimers();
+    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    // Restore console.warn
+    // Restore all mocks
     console.warn = originalConsoleWarn;
+    Date.now = originalDateNow;
+    jest.clearAllTimers();
+    jest.restoreAllMocks();
   });
 
   describe('Initial State', () => {
@@ -54,15 +62,19 @@ describe('topicCreationStore', () => {
 
       const firstTimestamp = result.current.creatingTopics[0].timestamp;
 
-      // Wait a bit to ensure different timestamp
-      setTimeout(() => {
-        act(() => {
-          result.current.setCreating('JavaScript Basics');
-        });
+      // Mock Date.now to ensure different timestamp
+      const originalDateNow = Date.now;
+      Date.now = jest.fn(() => firstTimestamp + 1000);
 
-        expect(result.current.creatingTopics).toHaveLength(1);
-        expect(result.current.creatingTopics[0].timestamp).toBeGreaterThan(firstTimestamp);
-      }, 10);
+      act(() => {
+        result.current.setCreating('JavaScript Basics');
+      });
+
+      expect(result.current.creatingTopics).toHaveLength(1);
+      expect(result.current.creatingTopics[0].timestamp).toBeGreaterThan(firstTimestamp);
+
+      // Restore original Date.now
+      Date.now = originalDateNow;
     });
 
     it('adds multiple different topics', () => {
@@ -151,7 +163,7 @@ describe('topicCreationStore', () => {
 
     it('handles refreshCallback errors gracefully', async () => {
       const mockRefreshCallback = jest.fn().mockRejectedValue(new Error('Refresh failed'));
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       const { result } = renderHook(() => useTopicCreationStore());
 
       act(() => {
@@ -165,15 +177,17 @@ describe('topicCreationStore', () => {
 
       expect(mockRefreshCallback).toHaveBeenCalledTimes(1);
 
-      // Wait for the promise to resolve
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Error en refresh automático del store:',
-        expect.any(Error),
-      );
-
-      consoleSpy.mockRestore();
+      // Wait for the promise to reject and the error handler to be called
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          expect(consoleSpy).toHaveBeenCalledWith(
+            'Error en refresh automático del store:',
+            expect.any(Error),
+          );
+          consoleSpy.mockRestore();
+          resolve(undefined);
+        }, 50);
+      });
     });
 
     it('does not call refreshCallback when no callback is set', () => {
@@ -241,16 +255,21 @@ describe('topicCreationStore', () => {
   describe('clearOldCreations', () => {
     it('removes topics older than 1 hour', () => {
       const { result } = renderHook(() => useTopicCreationStore());
-      const oneHourAgo = Date.now() - 60 * 60 * 1000;
-      const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
+      const now = 1640995200000; // Fixed timestamp: 2022-01-01 00:00:00
+      const oneHourAgo = now - 60 * 60 * 1000;
+      const twoHoursAgo = now - 2 * 60 * 60 * 1000;
+      const thirtyMinutesAgo = now - 30 * 60 * 1000;
 
-      // Manually add old topics
+      // Mock Date.now to return fixed time
+      Date.now = jest.fn(() => now);
+
+      // Manually add topics with specific timestamps
       act(() => {
         useTopicCreationStore.setState({
           creatingTopics: [
             { name: 'Old Topic 1', timestamp: twoHoursAgo },
             { name: 'Old Topic 2', timestamp: oneHourAgo - 1000 }, // Just over 1 hour old
-            { name: 'Recent Topic', timestamp: Date.now() - 30 * 60 * 1000 }, // 30 minutes old
+            { name: 'Recent Topic', timestamp: thirtyMinutesAgo }, // 30 minutes old
           ],
         });
       });
@@ -284,7 +303,11 @@ describe('topicCreationStore', () => {
 
     it('removes all topics when all are older than 1 hour', () => {
       const { result } = renderHook(() => useTopicCreationStore());
-      const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
+      const now = 1640995200000; // Fixed timestamp
+      const twoHoursAgo = now - 2 * 60 * 60 * 1000;
+
+      // Mock Date.now to return fixed time
+      Date.now = jest.fn(() => now);
 
       // Manually add old topics
       act(() => {
