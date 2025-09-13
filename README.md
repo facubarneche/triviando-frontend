@@ -10,12 +10,6 @@ Una aplicación web moderna de trivia desarrollada con Next.js 14, TypeScript y 
 ![Coverage](https://img.shields.io/badge/Coverage-90%25-success)
 ![Docker](https://img.shields.io/badge/Docker-ready-blue)
 
-## 📸 Vista Previa
-
-### Home - SSR/CSR
-
-![image.png](image.png)
-
 ### Cobertura de Tests
 
 ![coverage](coverage/lcov-report/src/index.html)
