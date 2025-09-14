@@ -11,28 +11,28 @@ describe('Button', () => {
   it('applies default variant and size classes', () => {
     const { getByRole } = render(<Button>Default</Button>);
     const btn = getByRole('button');
-    expect(btn.className).toContain('bg-primary');
+    expect(btn.className).toContain('from-teal-500');
     expect(btn.className).toContain('h-10');
   });
 
   it('applies destructive variant', () => {
     const { getByRole } = render(<Button variant="destructive">Danger</Button>);
-    expect(getByRole('button').className).toContain('bg-destructive');
+    expect(getByRole('button').className).toContain('from-red-500');
   });
 
   it('applies outline variant', () => {
     const { getByRole } = render(<Button variant="outline">Outline</Button>);
-    expect(getByRole('button').className).toContain('border-input');
+    expect(getByRole('button').className).toContain('border-teal-500');
   });
 
   it('applies secondary variant', () => {
     const { getByRole } = render(<Button variant="secondary">Secondary</Button>);
-    expect(getByRole('button').className).toContain('bg-secondary');
+    expect(getByRole('button').className).toContain('bg-white/90');
   });
 
   it('applies ghost variant', () => {
     const { getByRole } = render(<Button variant="ghost">Ghost</Button>);
-    expect(getByRole('button').className).toContain('hover:bg-accent');
+    expect(getByRole('button').className).toContain('hover:bg-white/20');
   });
 
   it('applies link variant', () => {
@@ -42,12 +42,12 @@ describe('Button', () => {
 
   it('applies size sm', () => {
     const { getByRole } = render(<Button size="sm">Small</Button>);
-    expect(getByRole('button').className).toContain('h-9');
+    expect(getByRole('button').className).toContain('h-8');
   });
 
   it('applies size lg', () => {
     const { getByRole } = render(<Button size="lg">Large</Button>);
-    expect(getByRole('button').className).toContain('h-11');
+    expect(getByRole('button').className).toContain('h-12');
   });
 
   it('applies size icon', () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import { ThumbsUp, ThumbsDown } from 'lucide-react';
 import { QuestionFeedbackProps } from '../types';
 import FeedbackModal from './FeedbackModal';
@@ -74,10 +74,7 @@ export default function QuestionFeedback({
     <>
       <div className="flex items-center gap-2">
         {/* Botón de feedback positivo */}
-        <motion.div
-          whileHover={{ scale: disabled ? 1 : 1.1 }}
-          whileTap={{ scale: disabled ? 1 : 0.95 }}
-        >
+        <AnimatedContainer animation="fade">
           <Button
             variant="ghost"
             size="sm"
@@ -92,13 +89,10 @@ export default function QuestionFeedback({
           >
             <ThumbsUp className="h-5 w-5" />
           </Button>
-        </motion.div>
+        </AnimatedContainer>
 
         {/* Botón de feedback negativo */}
-        <motion.div
-          whileHover={{ scale: disabled ? 1 : 1.1 }}
-          whileTap={{ scale: disabled ? 1 : 0.95 }}
-        >
+        <AnimatedContainer animation="fade">
           <Button
             variant="ghost"
             size="sm"
@@ -113,7 +107,7 @@ export default function QuestionFeedback({
           >
             <ThumbsDown className="h-5 w-5" />
           </Button>
-        </motion.div>
+        </AnimatedContainer>
       </div>
 
       {/* Modal de feedback negativo */}

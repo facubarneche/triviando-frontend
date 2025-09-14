@@ -4,6 +4,7 @@ import { Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { Trophy, Home, RotateCcw } from 'lucide-react';
 import { motion } from 'framer-motion';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import confetti from 'canvas-confetti';
 import { getColorAndMessage } from './utils/percentage';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/ui/card';
@@ -60,21 +61,15 @@ function Results() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
+      <AnimatedContainer animation="scale" delay={0} duration={0.5} className="w-full max-w-md">
         <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Resultados del Quiz</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3, type: 'spring' }}
+            <AnimatedContainer
+              animation="scale"
+              delay={0.3}
               className="flex flex-col items-center justify-center"
             >
               <motion.div
@@ -88,45 +83,30 @@ function Results() {
                   repeat: 0,
                 }}
               >
-                <Trophy className="h-20 w-20 text-yellow-500 mb-4" />
+                <Trophy className="h-20 w-20 text-amber-500 mb-4" />
               </motion.div>
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
+              <AnimatedContainer
+                animation="slideUp"
+                delay={0.5}
                 className={`text-3xl font-bold ${result.color}`}
               >
                 {result.message}
-              </motion.h2>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="text-xl mt-2"
-              >
+              </AnimatedContainer>
+              <AnimatedContainer animation="slideUp" delay={0.7} className="text-xl mt-2">
                 Obtuviste <span className="font-bold">{score}</span> de{' '}
                 <span className="font-bold">{total}</span>
-              </motion.p>
-            </motion.div>
+              </AnimatedContainer>
+            </AnimatedContainer>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-              className="space-y-2"
-            >
+            <AnimatedContainer animation="slideUp" delay={0.9} className="space-y-2">
               <div className="flex justify-between">
                 <span>Tu puntuación</span>
                 <span>{percentage}%</span>
               </div>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: '100%' }}
-                transition={{ delay: 1.1, duration: 0.8 }}
-              >
+              <AnimatedContainer animation="fade" delay={1.1} className="w-full">
                 <Progress value={percentage} className="h-3 bg-cyan-100" />
-              </motion.div>
-            </motion.div>
+              </AnimatedContainer>
+            </AnimatedContainer>
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
             <Button
@@ -147,7 +127,7 @@ function Results() {
             </Button>
           </CardFooter>
         </Card>
-      </motion.div>
+      </AnimatedContainer>
     </div>
   );
 }

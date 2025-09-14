@@ -8,7 +8,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/comp
 import { Progress } from '@/app/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/app/components/ui/radio-group';
 import { Label } from '@/app/components/ui/label';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import confetti from 'canvas-confetti';
 import { explicationBackUp, parserQuiz, variants } from './helpers';
 import WaitingModal from './components/WaitingModal';
@@ -96,7 +97,7 @@ const QuizPage = () => {
 
       if (score) {
         setScore((prev) => prev + 1);
-        playSound('/sounds/correct.mp3');
+        playSound('correct');
 
         // Trigger confetti
         if (confettiRef.current) {
@@ -113,7 +114,7 @@ const QuizPage = () => {
       }
     }
     setIsCorrect(false);
-    playSound('/sounds/incorrect.mp3');
+    playSound('incorrect');
   };
 
   const handleNext = async () => {
@@ -251,10 +252,10 @@ const QuizPage = () => {
 
           <CardContent className="pt-6 overflow-hidden">
             <AnimatePresence custom={direction} mode="wait">
-              <motion.div
+              <AnimatedContainer
                 key={currentQuestionIndex}
                 custom={direction}
-                variants={variants}
+                customVariants={variants}
                 initial="enter"
                 animate="center"
                 exit="exit"
@@ -267,12 +268,11 @@ const QuizPage = () => {
 
                 <RadioGroup value={selectedOption ?? ''} className="space-y-3">
                   {currentQuestion.options.map(({ text, letter }, index: number) => (
-                    <motion.div
+                    <AnimatedContainer
                       key={`${currentQuestionIndex}-${letter}`}
                       className="flex items-center"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1 * 0.1 }}
+                      animation="slideUp"
+                      delay={1 * 0.1}
                     >
                       <RadioGroupItem
                         value={letter}
@@ -296,16 +296,15 @@ const QuizPage = () => {
                           <X className="h-5 w-5 text-red-500 ml-2" />
                         )}
                       </Label>
-                    </motion.div>
+                    </AnimatedContainer>
                   ))}
                 </RadioGroup>
 
                 {/* Botones que aparecen después de responder */}
                 {isCorrect !== null && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                  <AnimatedContainer
+                    animation="slideUp"
+                    delay={0.3}
                     className="mt-6 flex flex-col gap-3"
                   >
                     {/* Botón Aprendamos juntos - solo para respuestas incorrectas */}
@@ -332,9 +331,9 @@ const QuizPage = () => {
                         />
                       </div>
                     </div>
-                  </motion.div>
+                  </AnimatedContainer>
                 )}
-              </motion.div>
+              </AnimatedContainer>
             </AnimatePresence>
           </CardContent>
 

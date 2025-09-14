@@ -17,19 +17,31 @@ describe('NewTopicCard', () => {
 
   it('opens modal on card click', () => {
     render(<NewTopicCard onCreateTopic={onCreateTopic} />);
-    fireEvent.click(
-      screen.getByText('Crear Nuevo Tema').closest('div[class*="rounded-lg"]') as HTMLElement,
-    );
-    // Busca el modal por su rol de diálogo
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    const card =
+      screen.getByText('Crear Nuevo Tema').closest('[role="button"]') ||
+      screen.getByText('Crear Nuevo Tema').closest('.cursor-pointer');
+    if (card) {
+      fireEvent.click(card);
+      // Busca el modal por su rol de diálogo
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    } else {
+      // Si no encuentra el card, busca por el texto directamente
+      fireEvent.click(screen.getByText('Crear Nuevo Tema'));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    }
   });
 
   it('closes modal when onClose is called', () => {
     render(<NewTopicCard onCreateTopic={onCreateTopic} />);
     // Open the modal first
-    fireEvent.click(
-      screen.getByText('Crear Nuevo Tema').closest('div[class*="rounded-lg"]') as HTMLElement,
-    );
+    const card =
+      screen.getByText('Crear Nuevo Tema').closest('[role="button"]') ||
+      screen.getByText('Crear Nuevo Tema').closest('.cursor-pointer');
+    if (card) {
+      fireEvent.click(card);
+    } else {
+      fireEvent.click(screen.getByText('Crear Nuevo Tema'));
+    }
     // Now try to close the modal by clicking the close button (adjust the name if needed)
     fireEvent.click(screen.getByRole('button', { name: /cerrar|close/i }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();

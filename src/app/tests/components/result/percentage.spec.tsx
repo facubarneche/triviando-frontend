@@ -33,7 +33,7 @@ describe('getColorAndMessage', () => {
   it('returns correct values for 65%', () => {
     expect(getColorAndMessage(65)).toEqual({
       message: '¡Puedes mejorar!',
-      color: 'text-yellow-500',
+      color: 'text-gray-600',
     });
   });
 

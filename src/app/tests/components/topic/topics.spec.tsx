@@ -67,19 +67,29 @@ describe('Topics component', () => {
   });
 
   it('shows loader when creatingTopics contains a topic that does not exist', () => {
-    render(<Topics topics={mockTopics} creatingTopics={mockCreatingTopics} onCreateTopic={jest.fn()} />);
+    render(
+      <Topics topics={mockTopics} creatingTopics={mockCreatingTopics} onCreateTopic={jest.fn()} />,
+    );
     expect(screen.getByTestId('topic-card-loader')).toHaveTextContent('LoaderTopic');
-  });  it('does not show loader when topic with same name already exists', () => {
+  });
+  it('does not show loader when topic with same name already exists', () => {
     const creatingExistingTopic = [
       { name: 'Math', context: 'Test context', timestamp: Date.now() },
     ];
-    
+
     // Filtrar tópicos que están creándose pero ya existen (simular la lógica de page.tsx)
-    const filteredCreatingTopics = creatingExistingTopic.filter(creatingTopic =>
-      !mockTopics.some(t => t.name.toLowerCase() === creatingTopic.name.toLowerCase())
+    const filteredCreatingTopics = creatingExistingTopic.filter(
+      (creatingTopic) =>
+        !mockTopics.some((t) => t.name.toLowerCase() === creatingTopic.name.toLowerCase()),
     );
-    
-    render(<Topics topics={mockTopics} creatingTopics={filteredCreatingTopics} onCreateTopic={jest.fn()} />);
+
+    render(
+      <Topics
+        topics={mockTopics}
+        creatingTopics={filteredCreatingTopics}
+        onCreateTopic={jest.fn()}
+      />,
+    );
     expect(screen.queryByTestId('topic-card-loader')).not.toBeInTheDocument();
   });
 
@@ -88,12 +98,13 @@ describe('Topics component', () => {
       { name: 'Math', context: 'Existing topic', timestamp: Date.now() },
       { name: 'NewTopic', context: 'New topic', timestamp: Date.now() },
     ];
-    
+
     // Esta es la lógica que se usa en page.tsx
-    const filteredCreatingTopics = creatingTopics.filter(creatingTopic =>
-      !mockTopics.some(t => t.name.toLowerCase() === creatingTopic.name.toLowerCase())
+    const filteredCreatingTopics = creatingTopics.filter(
+      (creatingTopic) =>
+        !mockTopics.some((t) => t.name.toLowerCase() === creatingTopic.name.toLowerCase()),
     );
-    
+
     // Solo debe quedar 'NewTopic' ya que 'Math' ya existe en mockTopics
     expect(filteredCreatingTopics).toHaveLength(1);
     expect(filteredCreatingTopics[0].name).toBe('NewTopic');
@@ -104,7 +115,13 @@ describe('Topics component', () => {
       { name: 'LoaderTopic1', context: 'Test context 1', timestamp: Date.now() },
       { name: 'LoaderTopic2', context: 'Test context 2', timestamp: Date.now() },
     ];
-    render(<Topics topics={mockTopics} creatingTopics={multipleCreatingTopics} onCreateTopic={jest.fn()} />);
+    render(
+      <Topics
+        topics={mockTopics}
+        creatingTopics={multipleCreatingTopics}
+        onCreateTopic={jest.fn()}
+      />,
+    );
     expect(screen.getByText('LoaderTopic1')).toBeInTheDocument();
     expect(screen.getByText('LoaderTopic2')).toBeInTheDocument();
   });
@@ -112,9 +129,9 @@ describe('Topics component', () => {
   it('handles error when topic creation fails', async () => {
     (topicService.createTopic as jest.Mock).mockRejectedValueOnce(new Error('fail'));
 
-    const onCreateTopic = async (name: string, context: string) => {
+    const onCreateTopic = async (name: string) => {
       try {
-        await topicService.createTopic(name, context);
+        await topicService.createTopic(name, 1);
       } catch (error) {
         handleError(error);
       }

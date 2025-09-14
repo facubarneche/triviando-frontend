@@ -5,7 +5,6 @@ import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
 import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { formatDateToMonthYear } from '@/app/utils/formatDateToMonthYear';
-import { motion } from 'framer-motion';
 import { Edit, LogOut } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +13,7 @@ import { loginService } from '@/app/services/loginService';
 import { useUserStore } from '@/app/stores/userStore';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 
 const ProfileInfo = () => {
   const { username } = useParams();
@@ -85,61 +85,74 @@ const ProfileInfo = () => {
   const fullName = getDisplayName();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div>
       <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <CloudinaryAvatar
-              publicId={storeUser?.avatar || avatarPublicId || user.avatar}
-              fallbackText={fullName ? fullName.charAt(0) || '' : user.username?.charAt(0) || 'U'}
-              className="w-24 h-24 border-4 border-[#9d4edd]/30"
-              size={96}
-              alt="Avatar del usuario"
-            />
+            <AnimatedContainer animation="scale" delay={0.1}>
+              <CloudinaryAvatar
+                publicId={storeUser?.avatar || avatarPublicId || user.avatar}
+                fallbackText={
+                  fullName
+                    ? fullName.charAt(0) || ''
+                    : user.username?.charAt(0) || user.email.charAt(0)
+                }
+                className="w-24 h-24 border-4 border-[#9d4edd]/30"
+                size={96}
+                alt="Avatar del usuario"
+              />
+            </AnimatedContainer>
+
             <div className="flex-1 text-center sm:text-left">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                <h1 className="text-2xl font-bold text-[#3c096c]">{user.username}</h1>
-                <Badge
-                  variant="outline"
-                  className="bg-[#9d4edd]/10 text-[#5a189a] border-[#9d4edd]/30 self-center"
-                >
-                  Quiz Master
-                </Badge>
-              </div>
-              {fullName && <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>}
-              <p className="text-muted-foreground">{user.email}</p>
-              <p className="text-sm text-muted-foreground text-gray-600 mt-2">
-                Miembro desde {formatDateToMonthYear(user.joinDate)}
-              </p>
-              <div className="flex gap-2 mt-4 justify-center sm:justify-start">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
-                  onClick={() => router.push(`/${user.username}/profile/edit`)}
-                >
-                  <Edit className="h-4 w-4" />
-                  Editar Perfil
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="gap-1 text-red-500 border-red-200 hover:bg-red-100 hover:text-red-600"
-                  onClick={onLogOut}
-                >
-                  <LogOut className="h-4 w-4" />
-                  Cerrar Sesión
-                </Button>
-              </div>
+              <AnimatedContainer animation="slideLeft" delay={0.2}>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                  <h1 className="text-2xl font-bold text-[#3c096c]">{user.username}</h1>
+                  <Badge
+                    variant="outline"
+                    className="bg-[#9d4edd]/10 text-[#5a189a] border-[#9d4edd]/30 self-center"
+                  >
+                    Quiz Master
+                  </Badge>
+                </div>
+              </AnimatedContainer>
+
+              <AnimatedContainer animation="slideLeft" delay={0.3}>
+                {fullName && (
+                  <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>
+                )}
+                <p className="text-muted-foreground">{user.email}</p>
+                <p className="text-sm text-muted-foreground text-gray-600 mt-2">
+                  Miembro desde {formatDateToMonthYear(user.joinDate)}
+                </p>
+              </AnimatedContainer>
+
+              <AnimatedContainer animation="slideUp" delay={0.4}>
+                <div className="flex gap-2 mt-4 justify-center sm:justify-start">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
+                    onClick={() => router.push(`/${user.username}/profile/edit`)}
+                  >
+                    <Edit className="h-4 w-4" />
+                    Editar Perfil
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1 text-red-500 border-red-200 hover:bg-red-100 hover:text-red-600"
+                    onClick={onLogOut}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Cerrar Sesión
+                  </Button>
+                </div>
+              </AnimatedContainer>
             </div>
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 };
 

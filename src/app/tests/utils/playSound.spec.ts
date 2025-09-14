@@ -19,13 +19,13 @@ describe('playSound', () => {
   });
 
   it('should create an Audio instance with the provided src', () => {
-    const src = 'test.mp3';
+    const src = 'correct';
     playSound(src);
-    expect(audioConstructorMock).toHaveBeenCalledWith(src);
+    expect(audioConstructorMock).toHaveBeenCalledWith('/sounds/correct.mp3');
   });
 
   it('should call play on the Audio instance', () => {
-    playSound('sound.mp3');
+    playSound('incorrect');
     expect(playMock).toHaveBeenCalled();
   });
 });

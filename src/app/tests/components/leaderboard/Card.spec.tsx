@@ -4,8 +4,8 @@ import '@testing-library/jest-dom';
 
 const mockLeaderBoardHistoricalData = {
   content: [
-    { id: 1, username: 'John Smith', score: 80, position: 2 },
-    { id: 2, username: 'Jane Doe', score: 100, position: 1 },
+    { id: 1, username: 'John Smith', score: 80, rank: 2, avatar: '', userId: 1 },
+    { id: 2, username: 'Jane Doe', score: 100, rank: 1, avatar: '', userId: 2 },
   ],
   totalElements: 2,
   totalPages: 1,
@@ -19,8 +19,8 @@ const mockLeaderBoardHistoricalData = {
 
 const mockLeaderBoardWeeklyData = {
   content: [
-    { id: 1, username: 'John Smith', score: 20, position: 1 },
-    { id: 2, username: 'Jane Doe', score: 10, position: 2 },
+    { id: 1, username: 'John Smith', score: 20, rank: 1, avatar: '', userId: 1 },
+    { id: 2, username: 'Jane Doe', score: 10, rank: 2, avatar: '', userId: 2 },
   ],
   totalElements: 2,
   totalPages: 1,

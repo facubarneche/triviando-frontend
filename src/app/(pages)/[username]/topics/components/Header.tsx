@@ -6,6 +6,7 @@ import { Button } from '@/app/components/ui/button';
 import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
 import { Trophy, LogOut, User, ChevronDown, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import { loginService } from '@/app/services/loginService';
 import { useUserStore } from '@/app/stores/userStore';
 import { useInitializeUser } from '@/app/hooks/useInitializeUser';
@@ -89,7 +90,7 @@ const Header = () => {
     <header className="p-4 flex flex-col md:flex-row-reverse gap-4 justify-between">
       <div className="flex items-center gap-4 justify-end">
         {/* Botón de ranking */}
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+        <AnimatedContainer animation="fade">
           <Button
             variant="ghost"
             size="icon"
@@ -98,7 +99,7 @@ const Header = () => {
           >
             <Trophy className="h-5 w-5" />
           </Button>
-        </motion.div>
+        </AnimatedContainer>
 
         {/* Menú de usuario */}
         <div className="relative" ref={dropdownRef}>
@@ -127,11 +128,8 @@ const Header = () => {
           {/* Dropdown Menu */}
           <AnimatePresence>
             {isOpen && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                transition={{ duration: 0.2 }}
+              <AnimatedContainer
+                animation="slideDown"
                 className="absolute right-0 mt-2 w-56 sm:w-56 xs:w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50 
                          sm:max-w-none max-w-[280px] min-w-[260px]"
               >
@@ -170,7 +168,7 @@ const Header = () => {
                   <LogOut className="mr-3 h-4 w-4" />
                   Cerrar Sesión
                 </button>
-              </motion.div>
+              </AnimatedContainer>
             )}
           </AnimatePresence>
         </div>

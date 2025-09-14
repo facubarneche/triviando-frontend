@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { FaGoogle } from 'react-icons/fa';
-import { motion } from 'framer-motion';
 import {
   Card,
   CardContent,
@@ -49,64 +48,19 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 p-4">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -inset-[10px] opacity-30">
-          {Array.from({ length: 20 }).map(() => (
-            <motion.div
-              key={crypto.randomUUID()}
-              className="absolute rounded-full bg-white"
-              initial={{
-                opacity: Math.random() * 0.5 + 0.3,
-                x: Math.random() * 100 + '%',
-                y: Math.random() * 100 + '%',
-                scale: Math.random() * 0.5 + 0.5,
-              }}
-              animate={{
-                y: [null, '-20%'],
-                x: [null, Math.random() * 10 - 5 + '%'],
-              }}
-              transition={{
-                duration: Math.random() * 10 + 20,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: 'linear',
-              }}
-              style={{
-                width: Math.random() * 30 + 10,
-                height: Math.random() * 30 + 10,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md z-10"
-      >
-        <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
+      <div className="w-full max-w-md z-10">
+        <Card hover={false} className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
           <CardHeader className="space-y-1 cursor-default">
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 150 }}
-              className="mx-auto"
-            >
+            <div className="mx-auto">
               <Logo size="lg" animated={true} showTagline={true} />
-            </motion.div>
+            </div>
             <CardDescription className="text-center text-md font-bold text-cyan-700">
               Inicia sesión para comenzar a jugar
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
-              <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="space-y-2"
-              >
+              <div className="space-y-2">
                 <Label htmlFor="user">Username</Label>
                 <Input
                   id="user"
@@ -117,13 +71,8 @@ export default function LoginPage() {
                   required
                   className="border-cyan-200 focus:border-cyan-400"
                 />
-              </motion.div>
-              <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="space-y-2"
-              >
+              </div>
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Contraseña</Label>
                   <Link
@@ -141,15 +90,10 @@ export default function LoginPage() {
                   required
                   className="border-cyan-200 focus:border-cyan-400"
                 />
-              </motion.div>
+              </div>
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="w-full"
-              >
+              <div className="w-full">
                 <Button
                   type="submit"
                   className="w-full bg-gradient-to-r from-teal-400 to-cyan-600 hover:from-teal-500 hover:to-cyan-700 transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
@@ -157,7 +101,7 @@ export default function LoginPage() {
                 >
                   Iniciar Sesión
                 </Button>
-              </motion.div>
+              </div>
 
               <div className="relative w-full flex items-center gap-2 my-2 cursor-default">
                 <div className="flex-1 border-t border-gray-300"></div>
@@ -165,12 +109,7 @@ export default function LoginPage() {
                 <div className="flex-1 border-t border-gray-300"></div>
               </div>
 
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="w-full"
-              >
+              <div className="w-full">
                 <Button
                   type="button"
                   variant="outline"
@@ -181,14 +120,9 @@ export default function LoginPage() {
                   <FaGoogle className="mr-2 h-4 w-4 text-red-500" />
                   Continuar con Google
                 </Button>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
-                className="text-center text-sm cursor-default"
-              >
+              <div className="text-center text-sm cursor-default text-gray-700">
                 ¿No tienes una cuenta?{' '}
                 <Link
                   href="/register"
@@ -196,11 +130,11 @@ export default function LoginPage() {
                 >
                   Regístrate
                 </Link>
-              </motion.div>
+              </div>
             </CardFooter>
           </form>
         </Card>
-      </motion.div>
+      </div>
     </div>
   );
 }

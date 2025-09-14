@@ -4,9 +4,9 @@ import { loginService } from '@/app/services/loginService';
 import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
 import { AxiosError } from 'axios';
-import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { UserStatistics } from '../types';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 
 const ProfileStatistics = () => {
   const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(null);
@@ -39,44 +39,46 @@ const ProfileStatistics = () => {
       : 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-    >
+    <div>
       <div className="grid gap-6 md:grid-cols-3 mb-6">
-        <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg text-black">Total de Quizzes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.totalQuizzes}</p>
-          </CardContent>
-        </Card>
+        <AnimatedContainer animation="scale" delay={0.1} className="h-full">
+          <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm h-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg text-slate-600">Total de Quizzes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.totalQuizzes}</p>
+            </CardContent>
+          </Card>
+        </AnimatedContainer>
 
-        <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg text-black">Respuestas Correctas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.correctAnswers}</p>
-            <p className="text-sm text-muted-foreground text-gray-600">
-              de {userStatistics.totalQuestions} preguntas
-            </p>
-          </CardContent>
-        </Card>
+        <AnimatedContainer animation="scale" delay={0.2} className="h-full">
+          <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm h-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg text-slate-600">Respuestas Correctas</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.correctAnswers}</p>
+              <p className="text-sm text-muted-foreground text-gray-600">
+                de {userStatistics.totalQuestions} preguntas
+              </p>
+            </CardContent>
+          </Card>
+        </AnimatedContainer>
 
-        <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg text-black">Precisión</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold text-[#5a189a]">{accuracy}%</p>
-            <Progress value={accuracy} className="h-2 mt-2 bg-[#9d4edd]/20" />
-          </CardContent>
-        </Card>
+        <AnimatedContainer animation="scale" delay={0.3} className="h-full">
+          <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm h-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg text-slate-600">Precisión</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-[#5a189a]">{accuracy}%</p>
+              <Progress value={accuracy} className="h-2 mt-2 bg-[#9d4edd]/20" />
+            </CardContent>
+          </Card>
+        </AnimatedContainer>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
