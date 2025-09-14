@@ -14,7 +14,7 @@ const SOUND_CONFIG = {
     incorrect: '/sounds/incorrect.mp3',
     excellent: '/sounds/excelent.mp3',
     loser: '/sounds/looser.mp3',
-    click: '/sounds/click.mp3', // Puedes agregar más sonidos
+    click: '/sounds/click.mp3', 
     hover: '/sounds/hover.mp3',
   },
 } as const;

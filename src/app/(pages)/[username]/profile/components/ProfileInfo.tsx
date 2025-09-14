@@ -92,7 +92,11 @@ const ProfileInfo = () => {
             <AnimatedContainer animation="scale" delay={0.1}>
               <CloudinaryAvatar
                 publicId={storeUser?.avatar || avatarPublicId || user.avatar}
-                fallbackText={fullName ? fullName.charAt(0) || '' : user.username?.charAt(0) || 'U'}
+                fallbackText={
+                  fullName
+                    ? fullName.charAt(0) || ''
+                    : user.username?.charAt(0) || user.email.charAt(0)
+                }
                 className="w-24 h-24 border-4 border-[#9d4edd]/30"
                 size={96}
                 alt="Avatar del usuario"

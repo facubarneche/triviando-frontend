@@ -16,7 +16,7 @@ export function getColorAndMessage(percentage: number): { message: string; color
     color = 'text-blue-500';
   } else if (percentage >= 60) {
     message = '¡Puedes mejorar!';
-    color = 'text-gray-600'; // Cambiado de amarillo a gris oscuro
+    color = 'text-gray-600';
   } else if (percentage >= 40) {
     message = '¡Sigue practicando!';
     color = 'text-orange-500';
