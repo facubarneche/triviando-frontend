@@ -4,7 +4,7 @@ import { Flame } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { userService } from '@/app/services/userService';
-import { loginService } from '@/app/services/loginService';
+import { useUserStore } from '@/app/stores/userStore';
 
 interface StreakData {
   rachaActual: number;
@@ -13,11 +13,14 @@ interface StreakData {
 //TODO: Hacer responsive el modal en mobile
 
 export function StreakModal() {
+  const { user } = useUserStore();
   const [open, setOpen] = useState(false);
   const [streakData, setStreakData] = useState<StreakData | null>(null);
 
   useEffect(() => {
     const checkStreak = async () => {
+      if (!user?.id) return;
+
       try {
         // Simulación de respuesta del backend (hardcodeada)
         // Esto se reemplazará luego por la llamada real a userService
@@ -27,7 +30,7 @@ export function StreakModal() {
         // setStreakData(mockResponse);
 
         //TODO: Luego utilizar el servicio real
-        const userId = loginService.getUserId();
+        const userId = user.id;
         const data = await userService.getStreak(userId);
         setStreakData(data);
         //Si hay racha se abre el modal, sino simplemente aparecen los topicos
@@ -48,7 +51,7 @@ export function StreakModal() {
 
     //Verificar la racha al cargar el componente
     checkStreak();
-  }, []);
+  }, [user?.id]);
 
   const handleClose = () => {
     const today = new Date().toISOString().split('T')[0];

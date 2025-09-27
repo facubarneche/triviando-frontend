@@ -29,7 +29,7 @@ import {
 import { motion } from 'framer-motion';
 import { countryCodes } from '@/app/utils/countryCodes';
 import { userService } from '@/app/services/userService';
-import { loginService } from '@/app/services/loginService';
+
 import { handleError } from '@/app/utils/errorHandler';
 import { useUserStore } from '@/app/stores/userStore';
 import { cloudinaryAvatarService } from '@/app/services/cloudinaryAvatarService';
@@ -61,7 +61,9 @@ export default function EditProfile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userData = await userService.getUserById(loginService.getUserId());
+      if (!user?.id) return;
+
+      const userData = await userService.getUserById(user.id);
       setUserData(userData);
       setOriginalUsername(userData.username || '');
 
@@ -85,7 +87,7 @@ export default function EditProfile() {
       }
     };
     fetchUserData();
-  }, [user?.avatar]);
+  }, [user?.avatar, user?.id]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});

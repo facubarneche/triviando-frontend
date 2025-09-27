@@ -9,7 +9,7 @@ import { Edit, LogOut } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import type { IUserData } from '@/app/services/userService';
-import { loginService } from '@/app/services/loginService';
+
 import { useUserStore } from '@/app/stores/userStore';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
@@ -17,6 +17,7 @@ import AnimatedContainer from '@/app/components/AnimatedContainer';
 
 const ProfileInfo = () => {
   const { username } = useParams();
+  const { user: currentUser } = useUserStore();
   const [user, setUser] = useState<IUserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -32,10 +33,15 @@ const ProfileInfo = () => {
       try {
         // Si username es string, buscar por username, si es id, parsear a number
         // Pero getUserById espera un number (id), así que hay que obtener el id del usuario logueado
-        // Si el perfil es el propio, usamos loginService.getUserId(), si no, habría que buscar por username
+        // Si el perfil es el propio, usamos currentUser?.id, si no, habría que buscar por username
         let userId: number;
-        if (loginService.getUsuarioActual()?.username === username) {
-          userId = loginService.getUserId();
+        if (currentUser?.username === username) {
+          if (!currentUser?.id) {
+            setUser(null);
+            setLoading(false);
+            return;
+          }
+          userId = currentUser.id;
         } else {
           // Si no es el usuario logueado, habría que buscar el id por username (no implementado aquí)
           setUser(null);
@@ -51,7 +57,7 @@ const ProfileInfo = () => {
       }
     };
     fetchUser();
-  }, [username]);
+  }, [username, currentUser?.id, currentUser?.username]);
 
   const onLogOut = () => {
     // Elimina la cookie 'usuario'

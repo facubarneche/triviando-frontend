@@ -1,4 +1,4 @@
-import { getUserIdSSR } from '@/app/utils/getUserIdSSR';
+import { useUserStore } from '@/app/stores/userStore';
 import { CloudinaryServerService } from '@/app/services/cloudinaryServerService';
 
 export const styledRank = (rank: number) => {
@@ -30,5 +30,6 @@ export const parseLeaderboardData = async (
 };
 
 export const getProp = async (page: number) => {
-  return page ? { page: page - 1 } : { page, userId: await getUserIdSSR() };
+  const userId = useUserStore.getState().user?.id;
+  return page ? { page: page - 1 } : { page, userId };
 };

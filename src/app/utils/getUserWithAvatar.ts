@@ -1,4 +1,4 @@
-import { getUserId } from './getUserIdFromStore';
+import { useUserStore } from '../stores/userStore';
 import { userService } from '../services/userService';
 import type { IUserData } from '../services/userService';
 
@@ -8,7 +8,7 @@ import type { IUserData } from '../services/userService';
  */
 export const getUserWithAvatar = async (): Promise<IUserData | null> => {
   try {
-    const userId = getUserId();
+    const userId = useUserStore.getState().user?.id;
     if (!userId) return null;
 
     const userData = await userService.getUserById(userId);

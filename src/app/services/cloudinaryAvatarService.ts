@@ -1,4 +1,4 @@
-import { getUserId } from '../utils/getUserIdFromStore';
+import { useUserStore } from '../stores/userStore';
 
 /**
  * Servicio para manejar avatares usando la API de Cloudinary
@@ -18,7 +18,7 @@ export class CloudinaryAvatarService {
    * Busca el avatar del usuario actual en Cloudinary usando el user_id en los metadatos
    */
   async getCurrentUserAvatar(): Promise<string | null> {
-    const userId = getUserId();
+    const userId = useUserStore.getState().user?.id;
 
     if (!userId) {
       return null;
@@ -45,7 +45,7 @@ export class CloudinaryAvatarService {
    * Obtiene las opciones para el upload widget con metadatos del usuario
    */
   getUploadOptions() {
-    const userId = getUserId();
+    const userId = useUserStore.getState().user?.id;
     if (!userId) return {};
 
     return {
