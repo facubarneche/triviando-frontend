@@ -1,4 +1,4 @@
-import { getUserIdCSR } from './getUserIdCSR';
+import { getUserId } from './getUserIdFromStore';
 
 /**
  * Genera el public_id para el avatar basado en el ID del usuario
@@ -14,7 +14,7 @@ export function generateAvatarPublicId(userId: number): string {
  * @returns public_id del avatar o null si no hay usuario
  */
 export function getCurrentUserAvatarPublicId(): string | null {
-  const userId = getUserIdCSR();
+  const userId = getUserId();
   if (!userId) return null;
 
   return generateAvatarPublicId(userId);

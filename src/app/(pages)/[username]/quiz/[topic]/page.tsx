@@ -17,7 +17,7 @@ import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IFeedbackDTO, IQuiz, LetterType } from './types';
-import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
+import { getUserId } from '@/app/utils/getUserIdFromStore';
 import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
 import QuestionFeedback from './components/QuestionFeedback';
@@ -47,7 +47,7 @@ const QuizPage = () => {
     description?: string;
   } | null>(null);
   const confettiRef = useRef<HTMLDivElement>(null);
-  const userId = getUserIdCSR();
+  const userId = getUserId();
   const timerRef = useRef<TimerHandle>(null);
 
   useEffect(() => {
@@ -76,6 +76,8 @@ const QuizPage = () => {
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
+    if (!userId) return;
+
     timerRef.current?.stop();
     const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
     const { score, correctOption } = await quizService.getQuizAnswer({
@@ -166,7 +168,9 @@ const QuizPage = () => {
       }
     }
 
-    quizService.generateQuiz(decodeURITopic, userId);
+    if (userId) {
+      quizService.generateQuiz(decodeURITopic, userId);
+    }
     router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
 

@@ -10,7 +10,7 @@ import { ITopic, ITopicDTO } from './types';
 import TopicsSkeleton from './components/TopicsSkeleton';
 import { StreakModal } from '@/app/components/modals/StreakModal';
 import { handleError } from '@/app/utils/errorHandler';
-import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
+import { getUserId } from '@/app/utils/getUserIdFromStore';
 import { toast } from 'react-toastify';
 import { useTopicCreationStore } from '@/app/stores/topicCreationStore';
 
@@ -24,7 +24,8 @@ export default function TopicsPage() {
   // Función para refrescar los tópicos
   const refreshTopics = async (): Promise<void> => {
     try {
-      const id = userId || getUserIdCSR();
+      const id = userId || getUserId();
+      if (!id) return;
       const topics = await topicService.getTopics({ id });
       const parsedTopics = parserTopics(topics);
       setTopics(parsedTopics);
@@ -38,7 +39,8 @@ export default function TopicsPage() {
         // Limpiar creaciones antiguas
         clearOldCreations();
 
-        const id = getUserIdCSR();
+        const id = getUserId();
+        if (!id) return;
         setUserId(id);
         const topics = await topicService.getTopics({ id });
         const parsedTopics = parserTopics(topics);
