@@ -1,14 +1,39 @@
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtClaims {
+  id: number;
+  sub: string;
+  fullname: string;
+  account: 'FREE' | 'PREMIUM';
+  exp: number;
+}
+
 /**
- * Recupera el ID del usuario desde las cookies del lado del cliente.
+ * Recupera el ID del usuario desde el token JWT en cookies del lado del cliente.
  *
  * @returns El ID del usuario si se encuentra, o `null` si no está presente.
  *
- * La función accede a la cookie `usuario`, analiza su valor como JSON
- * y extrae la propiedad `id`. Si la cookie no está configurada o no se puede analizar,
+ * La función accede a la cookie `token`, decodifica el JWT
+ * y extrae la propiedad `id`. Si la cookie no está configurada o el token es inválido,
  * devuelve `null`.
  */
 export const getUserIdCSR = () => {
-  const cookies = document.cookie.split('; ').find((row) => row.startsWith('usuario='));
-  const user = cookies ? cookies.split('=')[1] : null;
-  return user ? JSON.parse(decodeURIComponent(user)).id : null;
+  const cookies = document.cookie.split('; ').find((row) => row.startsWith('token='));
+  const token = cookies ? cookies.split('=')[1] : null;
+
+  if (!token) return null;
+
+  try {
+    const claims = jwtDecode<JwtClaims>(decodeURIComponent(token));
+
+    // Verificar si el token ha expirado
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (claims.exp < currentTime) {
+      return null;
+    }
+
+    return claims.id;
+  } catch {
+    return null;
+  }
 };

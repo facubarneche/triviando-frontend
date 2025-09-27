@@ -1,12 +1,32 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtClaims {
+  id: number;
+  sub: string; // username
+  fullname: string;
+  account: 'FREE' | 'PREMIUM';
+  exp: number;
+  iat?: number;
+}
+
+function isTokenExpired(token: string): boolean {
+  try {
+    const claims = jwtDecode<JwtClaims>(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+    return claims.exp < currentTime;
+  } catch {
+    return true;
+  }
+}
 
 export function middleware(request: NextRequest) {
-  const cookieUsuario = request.cookies.get('usuario');
+  const tokenCookie = request.cookies.get('token');
   const url = request.nextUrl;
 
   // Redirección inicial según login
-  if (!cookieUsuario && url.pathname === '/') {
+  if (!tokenCookie && url.pathname === '/') {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
@@ -15,35 +35,33 @@ export function middleware(request: NextRequest) {
   if (profileMatch) {
     const usernameFromUrl = profileMatch[1];
 
-    if (!cookieUsuario) {
-      // Si no hay cookie pero se intenta acceder al perfil, redirigir a login
+    if (!tokenCookie) {
+      // Si no hay token pero se intenta acceder al perfil, redirigir a login
       return NextResponse.redirect(new URL('/login', request.url));
     }
 
     try {
-      const rawCookieValue = cookieUsuario.value;
-      let user;
+      const token = tokenCookie.value;
 
-      // Intentar parsear la cookie directamente primero
-      try {
-        user = JSON.parse(rawCookieValue);
-      } catch {
-        // Si falla, intentar con decodeURIComponent
-        user = JSON.parse(decodeURIComponent(rawCookieValue));
+      // Verificar si el token ha expirado
+      if (isTokenExpired(token)) {
+        return NextResponse.redirect(new URL('/login', request.url));
       }
 
-      const usernameFromCookie = user?.username;
+      // Decodificar el token para obtener el username
+      const claims = jwtDecode<JwtClaims>(token);
+      const usernameFromToken = claims.sub;
 
-      if (!usernameFromCookie) {
+      if (!usernameFromToken) {
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
 
-      // Comparación case-insensitive entre username de URL y cookie
-      if (usernameFromUrl.toLowerCase() !== usernameFromCookie.toLowerCase()) {
+      // Comparación case-insensitive entre username de URL y token
+      if (usernameFromUrl.toLowerCase() !== usernameFromToken.toLowerCase()) {
         return NextResponse.redirect(new URL('/unauthorized', request.url));
       }
     } catch (error) {
-      console.error('Error parsing user cookie:', error, 'Cookie value:', cookieUsuario.value);
+      console.error('Error parsing JWT token:', error, 'Token value:', tokenCookie.value);
       return NextResponse.redirect(new URL('/unauthorized', request.url));
     }
   }
