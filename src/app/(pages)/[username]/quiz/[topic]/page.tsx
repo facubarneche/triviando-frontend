@@ -80,10 +80,10 @@ const QuizPage = () => {
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
     // Prevenir múltiples submissions
     if (isSubmittingAnswer || isCorrect !== null) return;
-    
+
     setIsSubmittingAnswer(true);
     setSubmittingOption(option);
-    
+
     try {
       timerRef.current?.stop();
       const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
@@ -93,7 +93,7 @@ const QuizPage = () => {
         optionSelected: option,
         millisecondsSpent,
       });
-      
+
       setSelectedOption(option);
       setCorrectOption({ text: correctOption.text, letter: correctOption.letter });
 
@@ -242,7 +242,7 @@ const QuizPage = () => {
       }
       return 'opacity-50 cursor-not-allowed';
     }
-    
+
     if (isCorrect === null) return;
     if (isCorrect && option === selectedOption) return 'border-green-500 bg-green-100';
     if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
@@ -313,25 +313,25 @@ const QuizPage = () => {
                       <Label
                         htmlFor={`option-${index}`}
                         className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${
-                          isSubmittingAnswer && letter !== submittingOption 
-                            ? 'cursor-not-allowed' 
+                          isSubmittingAnswer && letter !== submittingOption
+                            ? 'cursor-not-allowed'
                             : 'cursor-pointer'
                         } ${getAnswerStyles(isCorrect, letter)}`}
                       >
                         <span className="flex-1">{text}</span>
-                        
+
                         {/* Loader para la opción que está siendo enviada */}
                         {isSubmittingAnswer && letter === submittingOption && (
                           <Loader2 className="h-5 w-5 text-blue-500 ml-2 animate-spin" />
                         )}
-                        
+
                         {/* Íconos de resultado después de la respuesta */}
                         {isCorrect && letter === selectedOption && !isSubmittingAnswer && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
-                        {isCorrect === false && letter === selectedOption && !isSubmittingAnswer && (
-                          <X className="h-5 w-5 text-red-500 ml-2" />
-                        )}
+                        {isCorrect === false &&
+                          letter === selectedOption &&
+                          !isSubmittingAnswer && <X className="h-5 w-5 text-red-500 ml-2" />}
                       </Label>
                     </AnimatedContainer>
                   ))}
