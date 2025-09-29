@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { quizService } from '../../services/quizService';
-import { loginService } from '../../services/loginService';
 
-jest.mock('../../services/loginService', () => ({
-  loginService: {
-    getUserId: jest.fn(),
+// Mock useUserStore
+jest.mock('../../stores/userStore', () => ({
+  useUserStore: {
+    getState: jest.fn(),
   },
 }));
+
+import { useUserStore } from '../../stores/userStore';
 
 const mockGet = jest.fn();
 const mockPost = jest.fn();
@@ -24,12 +26,14 @@ describe('quizService', () => {
 
   describe('getQuiz', () => {
     it('should call axiosService.get with correct params', async () => {
-      (loginService.getUserId as jest.Mock).mockReturnValue(123);
+      (useUserStore.getState as jest.Mock).mockReturnValue({
+        user: { id: 123 },
+      });
       mockGet.mockResolvedValue({ data: { quiz: 'data' } });
 
       const result = await quizService.getQuiz('math');
 
-      expect(loginService.getUserId).toHaveBeenCalled();
+      expect(useUserStore.getState).toHaveBeenCalled();
       expect(mockGet).toHaveBeenCalledWith('/preguntas', {
         params: { topico: 'math', userId: 123 },
       });
