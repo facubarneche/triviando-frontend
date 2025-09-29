@@ -6,7 +6,7 @@ jest.mock('next/headers', () => ({
   cookies: jest.fn(),
 }));
 
-// Mock JWT decode function from security/jwtUtils  
+// Mock JWT decode function from security/jwtUtils
 jest.mock('@/app/security/jwtUtils', () => ({
   decodeJwtToken: jest.fn(),
 }));
@@ -24,7 +24,8 @@ describe('SSR Auth Utils', () => {
 
   describe('getTokenSSR', () => {
     it('should return token when cookie exists', async () => {
-      const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      const mockToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
       const mockGet = jest.fn().mockReturnValue({ value: mockToken });
       const mockCookieStore = Promise.resolve({ get: mockGet });
       mockCookies.mockReturnValue(mockCookieStore as any);
@@ -59,9 +60,10 @@ describe('SSR Auth Utils', () => {
 
   describe('getUserIdSSR', () => {
     it('should return user ID when valid token exists', async () => {
-      const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      const mockToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
       const mockDecodedToken = { id: 123, name: 'John Doe' };
-      
+
       const mockGet = jest.fn().mockReturnValue({ value: mockToken });
       const mockCookieStore = Promise.resolve({ get: mockGet });
       mockCookies.mockReturnValue(mockCookieStore as any);
@@ -88,7 +90,7 @@ describe('SSR Auth Utils', () => {
 
     it('should return null when token is invalid', async () => {
       const mockToken = 'invalid-token';
-      
+
       const mockGet = jest.fn().mockReturnValue({ value: mockToken });
       const mockCookieStore = Promise.resolve({ get: mockGet });
       mockCookies.mockReturnValue(mockCookieStore as any);
@@ -104,9 +106,10 @@ describe('SSR Auth Utils', () => {
     });
 
     it('should return null when decoded token has no id', async () => {
-      const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      const mockToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
       const mockDecodedToken = { name: 'John Doe' }; // No id property
-      
+
       const mockGet = jest.fn().mockReturnValue({ value: mockToken });
       const mockCookieStore = Promise.resolve({ get: mockGet });
       mockCookies.mockReturnValue(mockCookieStore as any);
@@ -122,14 +125,15 @@ describe('SSR Auth Utils', () => {
 
   describe('getUserClaimsSSR', () => {
     it('should return user claims when valid token exists', async () => {
-      const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-      const mockDecodedToken = { 
-        id: 123, 
-        name: 'John Doe', 
+      const mockToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      const mockDecodedToken = {
+        id: 123,
+        name: 'John Doe',
         username: 'johndoe',
-        exp: Math.floor(Date.now() / 1000) + 3600 // 1 hour from now
+        exp: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
       };
-      
+
       const mockGet = jest.fn().mockReturnValue({ value: mockToken });
       const mockCookieStore = Promise.resolve({ get: mockGet });
       mockCookies.mockReturnValue(mockCookieStore as any);
@@ -163,7 +167,7 @@ describe('SSR Auth Utils', () => {
 
     it('should return null when decodeJwtToken throws error', async () => {
       const mockToken = 'invalid-token';
-      
+
       const mockGet = jest.fn().mockReturnValue({ value: mockToken });
       const mockCookieStore = Promise.resolve({ get: mockGet });
       mockCookies.mockReturnValue(mockCookieStore as any);

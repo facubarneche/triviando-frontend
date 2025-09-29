@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { 
-  getUserInfoFromToken, 
-  isTokenExpired, 
+import {
+  getUserInfoFromToken,
+  isTokenExpired,
   extractTokenFromCookie,
   decodeJwtToken,
-  getValidTokenClaims
+  getValidTokenClaims,
 } from '../../security/jwtUtils';
 
 // Mock jwtDecode
