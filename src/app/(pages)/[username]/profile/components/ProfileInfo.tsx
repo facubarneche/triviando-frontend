@@ -71,7 +71,7 @@ const ProfileInfo = () => {
 
   if (!user) {
     return (
-      <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card variant="solid" className="mb-6 border-0 shadow-lg hover:shadow-lg">
         <CardContent className="p-6 text-center text-gray-500">
           No se pudo cargar el perfil.
         </CardContent>
@@ -92,7 +92,7 @@ const ProfileInfo = () => {
 
   return (
     <div>
-      <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card variant="solid" className="mb-6 border-0 shadow-lg hover:shadow-lg" hover={false}>
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <AnimatedContainer animation="scale" delay={0.1}>
