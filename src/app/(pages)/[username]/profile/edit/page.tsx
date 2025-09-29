@@ -31,6 +31,7 @@ import { countryCodes } from '@/app/utils/countryCodes';
 import { userService } from '@/app/services/userService';
 
 import { handleError } from '@/app/utils/errorHandler';
+import { useCurrentUser } from '@/app/utils/auth';
 import { useUserStore } from '@/app/stores/userStore';
 import { cloudinaryAvatarService } from '@/app/services/cloudinaryAvatarService';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';

@@ -10,24 +10,22 @@ import { ITopic, ITopicDTO } from './types';
 import TopicsSkeleton from './components/TopicsSkeleton';
 import { StreakModal } from '@/app/components/modals/StreakModal';
 import { handleError } from '@/app/utils/errorHandler';
-import { useUserStore } from '@/app/stores/userStore';
+import { useCurrentUserId } from '@/app/utils/auth';
 import { toast } from 'react-toastify';
 import { useTopicCreationStore } from '@/app/stores/topicCreationStore';
 
 export default function TopicsPage() {
-  const { user } = useUserStore();
+  const userId = useCurrentUserId();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [topics, setTopics] = useState<ITopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [userId, setUserId] = useState<number>(0);
   const { creatingTopics, setCreating, removeCreating, clearOldCreations, setRefreshCallback } =
     useTopicCreationStore();
   // Función para refrescar los tópicos
   const refreshTopics = async (): Promise<void> => {
     try {
-      const id = userId || user?.id;
-      if (!id) return;
-      const topics = await topicService.getTopics({ id });
+      if (!userId) return;
+      const topics = await topicService.getTopics({ id: userId });
       const parsedTopics = parserTopics(topics);
       setTopics(parsedTopics);
     } catch (error) {
@@ -40,10 +38,8 @@ export default function TopicsPage() {
         // Limpiar creaciones antiguas
         clearOldCreations();
 
-        const id = user?.id;
-        if (!id) return;
-        setUserId(id);
-        const topics = await topicService.getTopics({ id });
+        if (!userId) return;
+        const topics = await topicService.getTopics({ id: userId });
         const parsedTopics = parserTopics(topics);
         setTopics(parsedTopics);
 
@@ -68,7 +64,7 @@ export default function TopicsPage() {
 
     getTopics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Efecto para refrescar cuando hay tópicos creándose y regresamos a la página
+  }, [userId]); // Depender del userId
   useEffect(() => {
     const checkForCompletedTopics = async () => {
       if (creatingTopics.length > 0 && !loading) {
@@ -100,6 +96,11 @@ export default function TopicsPage() {
   }, [creatingTopics.length, loading]); // Usar solo length para evitar loops
 
   const handleCreateTopic = async (name: string) => {
+    if (!userId) {
+      toast.error('Error: Usuario no autenticado');
+      return;
+    }
+
     // Usar el store de Zustand para manejar el estado de creación
     setCreating(name);
 

@@ -8,7 +8,7 @@ import { Trophy, LogOut, User, ChevronDown, Crown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedContainer from '@/app/components/AnimatedContainer';
 import { loginService } from '@/app/services/loginService';
-import { useUserStore } from '@/app/stores/userStore';
+import { useCurrentUser } from '@/app/utils/auth';
 import { useInitializeUser } from '@/app/hooks/useInitializeUser';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import Image from 'next/image';
@@ -22,8 +22,8 @@ const Header = () => {
   // Inicializar usuario desde cookies si es necesario
   useInitializeUser();
 
-  // Obtener datos del usuario desde Zustand
-  const { user } = useUserStore();
+  // Obtener datos del usuario desde hooks de autenticación
+  const user = useCurrentUser();
 
   // Obtener avatar del usuario usando el hook personalizado
   const { avatarPublicId } = useUserAvatar();

@@ -9,13 +9,14 @@ interface JwtClaims {
 }
 
 /**
+ * @deprecated Use useCurrentUserId() hook instead for React components
+ *
  * Recupera el ID del usuario desde el token JWT en cookies del lado del cliente.
  *
  * @returns El ID del usuario si se encuentra, o `null` si no está presente.
  *
- * La función accede a la cookie `token`, decodifica el JWT
- * y extrae la propiedad `id`. Si la cookie no está configurada o el token es inválido,
- * devuelve `null`.
+ * Para componentes React, usa: const userId = useCurrentUserId()
+ * Esta función solo debe usarse en funciones utilitarias fuera de React.
  */
 export const getUserIdCSR = () => {
   const cookies = document.cookie.split('; ').find((row) => row.startsWith('token='));

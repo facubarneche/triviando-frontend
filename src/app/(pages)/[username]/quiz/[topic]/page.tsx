@@ -17,14 +17,14 @@ import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IFeedbackDTO, IQuiz, LetterType } from './types';
-import { useUserStore } from '@/app/stores/userStore';
+import { useCurrentUserId } from '@/app/utils/auth';
 import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
 import QuestionFeedback from './components/QuestionFeedback';
 import { toast } from 'react-toastify';
 
 const QuizPage = () => {
-  const { user } = useUserStore();
+  const userId = useCurrentUserId();
   const { topic, username } = useParams<{ username: string; topic: string }>();
   const decodeURITopic = decodeURIComponent(topic);
   const router = useRouter();
@@ -48,7 +48,6 @@ const QuizPage = () => {
     description?: string;
   } | null>(null);
   const confettiRef = useRef<HTMLDivElement>(null);
-  const userId = user?.id;
   const timerRef = useRef<TimerHandle>(null);
 
   useEffect(() => {

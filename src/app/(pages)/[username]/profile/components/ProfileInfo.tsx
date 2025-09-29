@@ -10,20 +10,17 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import type { IUserData } from '@/app/services/userService';
 
-import { useUserStore } from '@/app/stores/userStore';
+import { useCurrentUser } from '@/app/utils/auth';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
 import AnimatedContainer from '@/app/components/AnimatedContainer';
 
 const ProfileInfo = () => {
   const { username } = useParams();
-  const { user: currentUser } = useUserStore();
+  const currentUser = useCurrentUser();
   const [user, setUser] = useState<IUserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  // Zustand store para el avatar
-  const { user: storeUser } = useUserStore();
 
   // Avatar del usuario usando el hook personalizado
   const { avatarPublicId } = useUserAvatar();
@@ -97,7 +94,7 @@ const ProfileInfo = () => {
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <AnimatedContainer animation="scale" delay={0.1}>
               <CloudinaryAvatar
-                publicId={storeUser?.avatar || avatarPublicId || user.avatar}
+                publicId={currentUser?.avatar || avatarPublicId || user.avatar}
                 fallbackText={
                   fullName
                     ? fullName.charAt(0) || ''

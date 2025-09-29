@@ -18,7 +18,7 @@ import {
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
-import { useUserStore } from '@/app/stores/userStore';
+import { useCurrentUser } from '@/app/utils/auth';
 import { suscriptionService } from '@/app/services/suscriptionService';
 import { userService } from '@/app/services/userService';
 import type { IUserData } from '@/app/services/userService';
@@ -27,7 +27,7 @@ export default function Subscription() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userDetails, setUserDetails] = useState<IUserData | null>(null);
-  const { user } = useUserStore();
+  const user = useCurrentUser();
 
   // Cargar los datos completos del usuario al montar el componente
   useEffect(() => {
