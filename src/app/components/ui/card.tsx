@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/utils';
 
 const cardVariants = cva(
-  'rounded-xl border shadow-lg transition-all duration-300 cursor-default text-gray-700',
+  'rounded-xl border shadow-lg transition-all duration-300 cursor-default text-gray-700 transform-gpu backface-visibility-hidden',
   {
     variants: {
       variant: {
@@ -80,7 +80,7 @@ const CardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivE
     <div
       ref={ref}
       className={cn(
-        'text-lg md:text-xl lg:text-2xl font-bold leading-tight tracking-tight text-gray-800',
+        'text-lg md:text-xl lg:text-2xl font-bold leading-tight tracking-tight text-gray-800 transform-gpu backface-visibility-hidden',
         className,
       )}
       {...props}
@@ -93,7 +93,10 @@ const CardDescription = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('text-sm md:text-base text-gray-600 leading-relaxed', className)}
+      className={cn(
+        'text-sm md:text-base text-gray-600 leading-relaxed transform-gpu backface-visibility-hidden',
+        className,
+      )}
       {...props}
     />
   ),
@@ -102,7 +105,14 @@ CardDescription.displayName = 'CardDescription';
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('p-4 md:p-6 pt-0 text-gray-700', className)} {...props} />
+    <div
+      ref={ref}
+      className={cn(
+        'p-4 md:p-6 pt-0 text-gray-700 transform-gpu backface-visibility-hidden',
+        className,
+      )}
+      {...props}
+    />
   ),
 );
 CardContent.displayName = 'CardContent';

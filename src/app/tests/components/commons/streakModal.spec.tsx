@@ -1,15 +1,27 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import * as userServiceModule from '@/app/services/userService';
-import * as loginServiceModule from '@/app/services/loginService';
 import { StreakModal } from '@/app/components/modals/StreakModal';
+
+// Mock the user store
+jest.mock('@/app/stores/userStore', () => ({
+  useUserStore: jest.fn(),
+}));
+
+import { useUserStore } from '@/app/stores/userStore';
 
 describe('StreakModal', () => {
   const mockUserId = 123;
   const mockStreakData = { rachaActual: 5 };
 
   beforeEach(() => {
-    jest.spyOn(loginServiceModule.loginService, 'getUserId').mockReturnValue(mockUserId);
+    jest.mocked(useUserStore).mockReturnValue({
+      user: { id: mockUserId },
+      setUser: jest.fn(),
+      setAvatar: jest.fn(),
+      updateUser: jest.fn(),
+      logout: jest.fn(),
+    });
     jest.spyOn(userServiceModule.userService, 'getStreak').mockResolvedValue(mockStreakData);
     localStorage.clear();
   });

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { BaseService } from './baseService';
-import Cookies from 'js-cookie';
 import { useUserStore } from '../stores/userStore';
 
 interface IUser {
@@ -41,9 +40,7 @@ class UserService extends BaseService {
     try {
       const { data } = await this.axiosService.post('/users', { username, email, password });
 
-      //Esta cookie expira en 1 día
-      Cookies.set('usuario', JSON.stringify(data), { expires: 1 });
-
+      // Solo retornar los datos, no manejar cookies aquí
       return data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {
@@ -74,37 +71,21 @@ class UserService extends BaseService {
       if (userData.id) {
         const updatedUser = await this.getUserById(userData.id);
 
-        // Obtener el token de la cookie actual para preservarlo
-        const currentCookie = Cookies.get('usuario');
-        let currentToken = null;
-        if (currentCookie) {
-          try {
-            const currentUser = JSON.parse(currentCookie);
-            currentToken = currentUser.token;
-          } catch (error) {
-            console.error('Error parsing current cookie:', error);
-          }
-        }
-
-        // Crear el objeto usuario para la cookie (mismo formato que en login)
-        const userForCookie = {
+        // Crear el objeto usuario para el store (compatible con la interfaz Usuario)
+        const userForStore = {
           id: updatedUser.id,
           name: updatedUser.name,
           lastName: updatedUser.lastName,
           username: updatedUser.username,
           avatar: updatedUser.avatar,
-          token: currentToken, // Preservar el token
+          // El token se mantiene en el store desde el login
         };
 
-        // Actualizar la cookie con la misma configuración que en login
-        Cookies.set('usuario', JSON.stringify(userForCookie), {
-          expires: 1,
-          path: '/',
-          sameSite: 'lax',
+        // Actualizar el store de Zustand con los datos actualizados
+        useUserStore.getState().setUser({
+          ...useUserStore.getState().user!,
+          ...userForStore,
         });
-
-        // Actualizar el store de Zustand también
-        useUserStore.getState().setUser(userForCookie);
       }
 
       return data;

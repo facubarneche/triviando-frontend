@@ -1,6 +1,6 @@
 import { IFeedbackDTO, LetterType } from '../(pages)/[username]/quiz/[topic]/types';
 import { BaseService } from './baseService';
-import { loginService } from './loginService';
+import { useUserStore } from '../stores/userStore';
 
 interface IAnswerRequestDTO {
   user: { id: number };
@@ -11,7 +11,9 @@ interface IAnswerRequestDTO {
 
 class QuizService extends BaseService {
   getQuiz = async (topic: string) => {
-    const userId = loginService.getUserId();
+    const userId = useUserStore.getState().user?.id;
+    if (!userId) throw new Error('Usuario no autenticado');
+
     const { data } = await this.axiosService.get('/preguntas', {
       params: { topico: topic, userId: userId },
     });
@@ -32,7 +34,9 @@ class QuizService extends BaseService {
     });
 
   sendFeedback = async (feedbackData: IFeedbackDTO) => {
-    const userId = loginService.getUserId();
+    const userId = useUserStore.getState().user?.id;
+    if (!userId) throw new Error('Usuario no autenticado');
+
     this.axiosService.post('/preguntas/send-feedback', {
       ...feedbackData,
       userId,

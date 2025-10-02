@@ -10,6 +10,9 @@ export interface Usuario {
   lastName: string;
   name: string;
   username: string;
+  email?: string; // Email del usuario
+  joinDate?: string; // Fecha de registro
+  account?: 'FREE' | 'PREMIUM'; // Tipo de cuenta
   avatar?: string; // Cloudinary public_id for the avatar image
   token?: string; // JWT token para autenticación
 }

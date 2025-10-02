@@ -9,20 +9,18 @@ import { Edit, LogOut } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import type { IUserData } from '@/app/services/userService';
-import { loginService } from '@/app/services/loginService';
-import { useUserStore } from '@/app/stores/userStore';
+
+import { useCurrentUser } from '@/app/utils/auth';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
 import AnimatedContainer from '@/app/components/AnimatedContainer';
 
 const ProfileInfo = () => {
   const { username } = useParams();
+  const currentUser = useCurrentUser();
   const [user, setUser] = useState<IUserData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  // Zustand store para el avatar
-  const { user: storeUser } = useUserStore();
 
   // Avatar del usuario usando el hook personalizado
   const { avatarPublicId } = useUserAvatar();
@@ -32,10 +30,15 @@ const ProfileInfo = () => {
       try {
         // Si username es string, buscar por username, si es id, parsear a number
         // Pero getUserById espera un number (id), así que hay que obtener el id del usuario logueado
-        // Si el perfil es el propio, usamos loginService.getUserId(), si no, habría que buscar por username
+        // Si el perfil es el propio, usamos currentUser?.id, si no, habría que buscar por username
         let userId: number;
-        if (loginService.getUsuarioActual()?.username === username) {
-          userId = loginService.getUserId();
+        if (currentUser?.username === username) {
+          if (!currentUser?.id) {
+            setUser(null);
+            setLoading(false);
+            return;
+          }
+          userId = currentUser.id;
         } else {
           // Si no es el usuario logueado, habría que buscar el id por username (no implementado aquí)
           setUser(null);
@@ -51,7 +54,7 @@ const ProfileInfo = () => {
       }
     };
     fetchUser();
-  }, [username]);
+  }, [username, currentUser?.id, currentUser?.username]);
 
   const onLogOut = () => {
     // Elimina la cookie 'usuario'
@@ -65,7 +68,7 @@ const ProfileInfo = () => {
 
   if (!user) {
     return (
-      <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card variant="solid" className="mb-6 border-0 shadow-lg hover:shadow-lg">
         <CardContent className="p-6 text-center text-gray-500">
           No se pudo cargar el perfil.
         </CardContent>
@@ -86,12 +89,12 @@ const ProfileInfo = () => {
 
   return (
     <div>
-      <Card className="mb-6 border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+      <Card variant="solid" className="mb-6 border-0 shadow-lg hover:shadow-lg" hover={false}>
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <AnimatedContainer animation="scale" delay={0.1}>
               <CloudinaryAvatar
-                publicId={storeUser?.avatar || avatarPublicId || user.avatar}
+                publicId={currentUser?.avatar || avatarPublicId || user.avatar}
                 fallbackText={
                   fullName
                     ? fullName.charAt(0) || ''
