@@ -42,7 +42,7 @@ const ProfileStatistics = () => {
     <div>
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         <AnimatedContainer animation="scale" delay={0.1} className="h-full">
-          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg" hover={false}>
+          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-slate-600">Total de Quizzes</CardTitle>
             </CardHeader>
@@ -53,7 +53,7 @@ const ProfileStatistics = () => {
         </AnimatedContainer>
 
         <AnimatedContainer animation="scale" delay={0.2} className="h-full">
-          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg" hover={false}>
+          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-slate-600">Respuestas Correctas</CardTitle>
             </CardHeader>
@@ -67,7 +67,7 @@ const ProfileStatistics = () => {
         </AnimatedContainer>
 
         <AnimatedContainer animation="scale" delay={0.3} className="h-full">
-          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg" hover={false}>
+          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-slate-600">Precisión</CardTitle>
             </CardHeader>
