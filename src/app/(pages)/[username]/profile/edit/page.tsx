@@ -29,7 +29,7 @@ import {
 import { motion } from 'framer-motion';
 import { countryCodes } from '@/app/utils/countryCodes';
 import { userService } from '@/app/services/userService';
-import { loginService } from '@/app/services/loginService';
+
 import { handleError } from '@/app/utils/errorHandler';
 import { useUserStore } from '@/app/stores/userStore';
 import { cloudinaryAvatarService } from '@/app/services/cloudinaryAvatarService';
@@ -51,6 +51,9 @@ export default function EditProfile() {
     currentPassword: '',
   });
   const [originalUsername, setOriginalUsername] = useState('');
+  const [cloudinaryError, setCloudinaryError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const router = useRouter();
 
   // Hook para manejar el avatar del usuario
@@ -59,9 +62,20 @@ export default function EditProfile() {
   // Zustand store
   const { user, updateUser } = useUserStore();
 
+  // Validar Cloudinary en useEffect
+  useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
+      setCloudinaryError('NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is not configured');
+      console.error('NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is not configured');
+      return;
+    }
+  }, []);
+
   useEffect(() => {
     const fetchUserData = async () => {
-      const userData = await userService.getUserById(loginService.getUserId());
+      if (!user?.id) return;
+
+      const userData = await userService.getUserById(user.id);
       setUserData(userData);
       setOriginalUsername(userData.username || '');
 
@@ -85,10 +99,26 @@ export default function EditProfile() {
       }
     };
     fetchUserData();
-  }, [user?.avatar]);
+  }, [user?.avatar, user?.id]);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  // Si hay error de Cloudinary, mostrar mensaje de error
+  if (cloudinaryError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-500 to-teal-400 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-red-600">Configuration Error</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>
+              Cloudinary cloud name is not configured. Please set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+              in your environment variables.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

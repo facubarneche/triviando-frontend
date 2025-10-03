@@ -17,13 +17,14 @@ import ProblemModal from './components/ProblemModal';
 import LearnTogether from './components/LearnTogether';
 import { quizService } from '@/app/services/quizService';
 import { IFeedbackDTO, IQuiz, LetterType } from './types';
-import { getUserIdCSR } from '@/app/utils/getUserIdCSR';
+import { useCurrentUserId } from '@/app/utils/auth';
 import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
 import QuestionFeedback from './components/QuestionFeedback';
 import { toast } from 'react-toastify';
 
 const QuizPage = () => {
+  const userId = useCurrentUserId();
   const { topic, username } = useParams<{ username: string; topic: string }>();
   const decodeURITopic = decodeURIComponent(topic);
   const router = useRouter();
@@ -49,7 +50,6 @@ const QuizPage = () => {
   const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
   const [submittingOption, setSubmittingOption] = useState<LetterType | null>(null);
   const confettiRef = useRef<HTMLDivElement>(null);
-  const userId = getUserIdCSR();
   const timerRef = useRef<TimerHandle>(null);
 
   useEffect(() => {
@@ -187,7 +187,9 @@ const QuizPage = () => {
       }
     }
 
-    quizService.generateQuiz(decodeURITopic, userId);
+    if (userId) {
+      quizService.generateQuiz(decodeURITopic, userId);
+    }
     router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
 

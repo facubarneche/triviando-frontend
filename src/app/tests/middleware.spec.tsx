@@ -9,17 +9,39 @@ jest.mock('next/server', () => ({
   },
 }));
 
-const createRequest = (pathname: string, cookieValue?: string) => ({
+// Mock jwtDecode
+jest.mock('jwt-decode', () => ({
+  jwtDecode: jest.fn(),
+}));
+
+import { jwtDecode } from 'jwt-decode';
+
+const createRequest = (pathname: string, tokenValue?: string) => ({
   cookies: {
-    get: jest.fn(() => (cookieValue ? { value: cookieValue } : undefined)),
+    get: jest.fn((name: string) => {
+      if (name === 'token' && tokenValue) {
+        return { value: tokenValue };
+      }
+      return undefined;
+    }),
   },
   nextUrl: { pathname, match: RegExp.prototype.exec.bind(/^\/([^\/]+)\/profile$/) },
   url: 'http://localhost' + pathname,
 });
 
+const mockValidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test';
+const mockJwtClaims = {
+  id: 1,
+  sub: 'john', // username
+  fullname: 'John Doe',
+  account: 'FREE' as const,
+  exp: Math.floor(Date.now() / 1000) + 3600, // Valid for 1 hour
+};
+
 describe('middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (jwtDecode as jest.Mock).mockReturnValue(mockJwtClaims);
   });
 
   it('redirects to /login if not logged in and at root', () => {
@@ -30,48 +52,51 @@ describe('middleware', () => {
   });
 
   it('allows logged in users to access root without redirect', () => {
-    const user = encodeURIComponent(JSON.stringify({ username: 'john' }));
-    const req = createRequest('/', user);
+    const req = createRequest('/', mockValidToken);
     const res = middleware(req as any);
     expect(NextResponse.next).toHaveBeenCalled();
     expect(res).toEqual({ next: true });
   });
 
-  it('redirects to /unauthorized if profile username does not match cookie', () => {
-    const user = encodeURIComponent(JSON.stringify({ username: 'john' }));
-    const req = createRequest('/jane/profile', user);
+  it('redirects to /unauthorized if profile username does not match token', () => {
+    const req = createRequest('/jane/profile', mockValidToken);
     const res = middleware(req as any);
     expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/unauthorized', req.url));
     expect(res).toEqual({ redirect: new URL('/unauthorized', req.url) });
   });
 
   it('calls NextResponse.next if everything is fine', () => {
-    const user = encodeURIComponent(JSON.stringify({ username: 'john' }));
-    const req = createRequest('/john/profile', user);
+    const req = createRequest('/john/profile', mockValidToken);
     const res = middleware(req as any);
     expect(NextResponse.next).toHaveBeenCalled();
     expect(res).toEqual({ next: true });
   });
 
-  it('allows access when username case differs between URL and cookie', () => {
-    const user = encodeURIComponent(JSON.stringify({ username: 'MaxUser' }));
-    const req = createRequest('/maxuser/profile', user);
+  it('allows access when username case differs between URL and token', () => {
+    const mockClaims = { ...mockJwtClaims, sub: 'MaxUser' };
+    (jwtDecode as jest.Mock).mockReturnValue(mockClaims);
+
+    const req = createRequest('/maxuser/profile', mockValidToken);
     const res = middleware(req as any);
     expect(NextResponse.next).toHaveBeenCalled();
     expect(res).toEqual({ next: true });
   });
 
-  it('allows access when URL has mixed case but cookie has different case', () => {
-    const user = encodeURIComponent(JSON.stringify({ username: 'john' }));
-    const req = createRequest('/JOHN/profile', user);
+  it('allows access when URL has mixed case but token has different case', () => {
+    const mockClaims = { ...mockJwtClaims, sub: 'john' };
+    (jwtDecode as jest.Mock).mockReturnValue(mockClaims);
+
+    const req = createRequest('/JOHN/profile', mockValidToken);
     const res = middleware(req as any);
     expect(NextResponse.next).toHaveBeenCalled();
     expect(res).toEqual({ next: true });
   });
 
   it('still blocks access when usernames are completely different (case-insensitive)', () => {
-    const user = encodeURIComponent(JSON.stringify({ username: 'MaxUser' }));
-    const req = createRequest('/differentuser/profile', user);
+    const mockClaims = { ...mockJwtClaims, sub: 'MaxUser' };
+    (jwtDecode as jest.Mock).mockReturnValue(mockClaims);
+
+    const req = createRequest('/differentuser/profile', mockValidToken);
     const res = middleware(req as any);
     expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/unauthorized', req.url));
     expect(res).toEqual({ redirect: new URL('/unauthorized', req.url) });

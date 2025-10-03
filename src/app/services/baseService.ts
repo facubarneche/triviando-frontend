@@ -42,16 +42,10 @@ export class BaseService {
   private getToken(): string | null {
     // parseCookies es compatible tanto con CSR como com SSR
     const cookies = parseCookies();
-    const userData = cookies['usuario'];
+    const token = cookies['token'];
 
-    if (!userData) return null;
+    if (!token) return null;
 
-    try {
-      const parsed = JSON.parse(userData);
-      return parsed.token ?? null;
-    } catch (e) {
-      console.error('Error al parsear la cookie usuario', e);
-      return null;
-    }
+    return token;
   }
 }
