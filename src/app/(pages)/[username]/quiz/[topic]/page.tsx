@@ -81,6 +81,12 @@ const QuizPage = () => {
     // Prevenir múltiples submissions
     if (isSubmittingAnswer || isCorrect !== null) return;
 
+    // El middleware ya garantiza que userId existe, pero mantenemos validación por seguridad de tipos
+    if (!userId) {
+      console.error('User not authenticated');
+      return;
+    }
+
     setIsSubmittingAnswer(true);
     setSubmittingOption(option);
 
@@ -234,7 +240,7 @@ const QuizPage = () => {
     }
   };
 
-  if (isLoading) return <WaitingModal topic={name ?? 'General'} />;
+  if (isLoading) return <WaitingModal topic={decodeURITopic ?? 'General'} />;
 
   const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
     if (isSubmittingAnswer) {

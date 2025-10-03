@@ -25,18 +25,28 @@ export function middleware(request: NextRequest) {
   const tokenCookie = request.cookies.get('token');
   const url = request.nextUrl;
 
+  // Rutas públicas que no requieren autenticación
+  const publicRoutes = ['/login', '/register', '/policy', '/terms', '/unauthorized'];
+  const isPublicRoute = publicRoutes.some((route) => url.pathname.startsWith(route));
+
   // Redirección inicial según login
   if (!tokenCookie && url.pathname === '/') {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  const profileMatch = url.pathname.match(/^\/([^\/]+)\/profile$/);
+  // Si es una ruta pública, permitir acceso
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
 
-  if (profileMatch) {
-    const usernameFromUrl = profileMatch[1];
+  // Para todas las rutas protegidas (cualquier ruta con username), verificar autenticación
+  const protectedRouteMatch = url.pathname.match(/^\/([^\/]+)(?:\/.*)?$/);
 
+  if (protectedRouteMatch) {
+    const usernameFromUrl = protectedRouteMatch[1];
+
+    // Si no hay token, redirigir a login
     if (!tokenCookie) {
-      // Si no hay token pero se intenta acceder al perfil, redirigir a login
       return NextResponse.redirect(new URL('/login', request.url));
     }
 
@@ -68,3 +78,17 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder files
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.gif$|.*\\.svg$|.*\\.ico$|.*\\.mp3$).*)',
+  ],
+};
