@@ -20,9 +20,9 @@ const buttonVariants = cva(
         destructive:
           'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 hover:shadow-lg shadow-md',
 
-        // Botón outline con transición suave
+        // Botón outline con transición suave - mantiene color de texto
         outline:
-          'border-2 border-teal-500 bg-white/90 text-teal-600 hover:bg-teal-500 hover:text-white hover:shadow-md shadow-sm',
+          'border-2 border-teal-500 bg-white/90 text-teal-600 hover:bg-teal-50 hover:text-teal-700 hover:shadow-md shadow-sm',
 
         // Botón ghost minimalista
         ghost: 'text-gray-700 hover:bg-white/20 hover:text-gray-800 shadow-none',

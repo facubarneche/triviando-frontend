@@ -5,6 +5,8 @@ export interface Usuario {
   lastName: string;
   name: string;
   username: string;
+  email: string; // Email del usuario
+  account: 'FREE' | 'PREMIUM'; // Tipo de cuenta del usuario
   avatar?: string; // Cloudinary public_id for the avatar
   token?: string; // JWT token para autenticación
 }

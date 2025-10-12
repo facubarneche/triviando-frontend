@@ -12,6 +12,7 @@ import { useCurrentUser } from '@/app/utils/auth';
 import { useInitializeUser } from '@/app/hooks/useInitializeUser';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import Image from 'next/image';
+import AccountBadge from '@/app/components/AccountBadge';
 
 const Header = () => {
   const router = useRouter();
@@ -88,42 +89,49 @@ const Header = () => {
 
   return (
     <header className="p-4 flex flex-col md:flex-row-reverse gap-4 justify-between">
-      <div className="flex items-center gap-4 justify-end">
-        {/* Botón de ranking */}
-        <AnimatedContainer animation="fade">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white hover:bg-white/20"
-            onClick={handleLeaderboard}
-          >
-            <Trophy className="h-5 w-5" />
-          </Button>
-        </AnimatedContainer>
+      <div className="flex items-center gap-4 justify-between md:justify-end w-full">
+        <AccountBadge
+          account={user?.account ?? "FREE"}
+          size="sm"
+          showIcon={true}
+          className="shrink-0"
+        />
+        <div className="flex items-center gap-4 justify-end">
+          {/* Botón de ranking */}
+          <AnimatedContainer animation="fade">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20"
+              onClick={handleLeaderboard}
+            >
+              <Trophy className="h-5 w-5" />
+            </Button>
+          </AnimatedContainer>
 
-        {/* Menú de usuario */}
-        <div className="relative" ref={dropdownRef}>
-          <Button
-            variant="ghost"
-            className="relative h-10 w-auto pl-2 pr-3 flex items-center gap-2 text-white hover:bg-white/20 rounded-full"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <CloudinaryAvatar
-              publicId={user?.avatar || avatarPublicId || undefined}
-              fallbackText={
-                (userData.name?.charAt(0) || '') + (userData.lastName?.charAt(0) || '') ||
-                userData.username?.charAt(0) ||
-                'U'
-              }
-              className="h-8 w-8 border-2 border-white/30"
-              size={32}
-              alt={username}
-            />
-            <span className="hidden sm:inline-block font-medium text-sm">{userData.username}</span>
-            <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              <ChevronDown className="h-4 w-4 opacity-70" />
-            </motion.div>
-          </Button>
+          {/* Menú de usuario */}
+          <div className="relative" ref={dropdownRef}>
+            <Button
+              variant="ghost"
+              className="relative h-10 w-auto pl-2 pr-3 flex items-center gap-2 text-white hover:bg-white/20 rounded-full"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <CloudinaryAvatar
+                publicId={user?.avatar || avatarPublicId || undefined}
+                fallbackText={
+                  (userData.name?.charAt(0) || '') + (userData.lastName?.charAt(0) || '') ||
+                  userData.username?.charAt(0) ||
+                  'U'
+                }
+                className="h-8 w-8 border-2 border-white/30"
+                size={32}
+                alt={username}
+              />
+              <span className="hidden sm:inline-block font-medium text-sm">{userData.username}</span>
+              <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </motion.div>
+            </Button>
 
           {/* Dropdown Menu */}
           <AnimatePresence>
@@ -173,6 +181,7 @@ const Header = () => {
           </AnimatePresence>
         </div>
       </div>
+    </div>
       <div className="flex justify-center md:justify-start">
         <Image
           src="/logo-triviando.png"

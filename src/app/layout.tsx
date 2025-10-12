@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
+import { DynamicBackground } from './components/DynamicBackground';
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { readonly children: React.Reac
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <DynamicBackground />
         {children}
         <ToastContainer />
       </body>

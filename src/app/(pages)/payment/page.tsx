@@ -49,7 +49,7 @@ export default function Subscription() {
   // Si no hay usuario cargado, mostrar un mensaje o redirigir
   if (!user || !userDetails) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center text-white">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p>Cargando información del usuario...</p>
@@ -159,7 +159,7 @@ export default function Subscription() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
+    <div className="min-h-screen">
       <header className="p-4">
         <Link
           href={`/${user?.username}/topics`}

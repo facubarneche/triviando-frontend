@@ -7,7 +7,7 @@ interface WaitingModalProps {
 
 const WaitingModal = ({ topic }: WaitingModalProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm p-8 w-full max-w-md">
         <div className="flex flex-col items-center justify-center">
           <Loader2 className="h-12 w-12 text-cyan-600 animate-spin mb-4" />
