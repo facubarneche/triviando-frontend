@@ -98,24 +98,26 @@ body {
       rgba(245, 229, 204, 0.18) 14%,
       transparent 58%
     ),
-    /* Halo dorado inferior derecho */ radial-gradient(
-      ellipse at 86% 82%,
-      rgba(255, 226, 186, 0.22) 0%,
-      rgba(235, 203, 161, 0.16) 18%,
-      transparent 60%
-    ),
-    /* Gradiente principal cálido */ linear-gradient(
-      140deg,
-      #0d1420 0%,
-      /* Azul profundo relajante */ #181f2c 12%,
-      /* Carbón azulado */ #232832 25%,
-      /* Grafito ahumado */ #2f333b 38%,
-      /* Mezcla carbón-cobre */ #3a3228 52%,
-      /* Marrón espresso satinado */ #4a3a2a 66%,
-      /* Oro viejo aterciopelado */ #7e5f3a 80%,
-      /* Champagne suave */ #b49360 92%,
-      /* Destello crema */ #f7e6c4 100%
-    );
+    /* Halo dorado inferior derecho */
+      radial-gradient(
+        ellipse at 86% 82%,
+        rgba(255, 226, 186, 0.22) 0%,
+        rgba(235, 203, 161, 0.16) 18%,
+        transparent 60%
+      ),
+    /* Gradiente principal cálido */
+      linear-gradient(
+        140deg,
+        #0d1420 0%,
+        /* Azul profundo relajante */ #181f2c 12%,
+        /* Carbón azulado */ #232832 25%,
+        /* Grafito ahumado */ #2f333b 38%,
+        /* Mezcla carbón-cobre */ #3a3228 52%,
+        /* Marrón espresso satinado */ #4a3a2a 66%,
+        /* Oro viejo aterciopelado */ #7e5f3a 80%,
+        /* Champagne suave */ #b49360 92%,
+        /* Destello crema */ #f7e6c4 100%
+      );
 
   background-attachment: fixed;
   position: relative;
