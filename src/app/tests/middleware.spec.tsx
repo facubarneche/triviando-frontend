@@ -25,7 +25,7 @@ const createRequest = (pathname: string, tokenValue?: string) => ({
       return undefined;
     }),
   },
-  nextUrl: { pathname, match: RegExp.prototype.exec.bind(/^\/([^\/]+)\/profile$/) },
+  nextUrl: { pathname },
   url: 'http://localhost' + pathname,
 });
 
@@ -51,11 +51,11 @@ describe('middleware', () => {
     expect(res).toEqual({ redirect: new URL('/login', req.url) });
   });
 
-  it('allows logged in users to access root without redirect', () => {
+  it('redirects logged in users from root to their topics page', () => {
     const req = createRequest('/', mockValidToken);
     const res = middleware(req as any);
-    expect(NextResponse.next).toHaveBeenCalled();
-    expect(res).toEqual({ next: true });
+    expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/john/topics', req.url));
+    expect(res).toEqual({ redirect: new URL('/john/topics', req.url) });
   });
 
   it('redirects to /unauthorized if profile username does not match token', () => {
@@ -100,5 +100,54 @@ describe('middleware', () => {
     const res = middleware(req as any);
     expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/unauthorized', req.url));
     expect(res).toEqual({ redirect: new URL('/unauthorized', req.url) });
+  });
+
+  it('allows access to public routes without token', () => {
+    const req = createRequest('/login');
+    const res = middleware(req as any);
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ next: true });
+  });
+
+  it('allows access to public routes with token', () => {
+    const req = createRequest('/register', mockValidToken);
+    const res = middleware(req as any);
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ next: true });
+  });
+
+  it('redirects to login for protected routes without token', () => {
+    const req = createRequest('/john/topics');
+    const res = middleware(req as any);
+    expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/login', req.url));
+    expect(res).toEqual({ redirect: new URL('/login', req.url) });
+  });
+
+  it('allows access to protected routes with valid token and matching username', () => {
+    const req = createRequest('/john/topics', mockValidToken);
+    const res = middleware(req as any);
+    expect(NextResponse.next).toHaveBeenCalled();
+    expect(res).toEqual({ next: true });
+  });
+
+  it('redirects to login when token is expired', () => {
+    const expiredClaims = { ...mockJwtClaims, exp: Math.floor(Date.now() / 1000) - 3600 };
+    (jwtDecode as jest.Mock).mockReturnValue(expiredClaims);
+
+    const req = createRequest('/', mockValidToken);
+    const res = middleware(req as any);
+    expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/login', req.url));
+    expect(res).toEqual({ redirect: new URL('/login', req.url) });
+  });
+
+  it('redirects to login when JWT decode fails', () => {
+    (jwtDecode as jest.Mock).mockImplementation(() => {
+      throw new Error('Invalid token');
+    });
+
+    const req = createRequest('/', mockValidToken);
+    const res = middleware(req as any);
+    expect(NextResponse.redirect).toHaveBeenCalledWith(new URL('/login', req.url));
+    expect(res).toEqual({ redirect: new URL('/login', req.url) });
   });
 });
