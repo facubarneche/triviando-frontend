@@ -135,7 +135,7 @@ describe('Topics component', () => {
 
     const onGenerateTopic = async (name: string) => {
       try {
-        await topicService.generateTopic(name, 1);
+        await topicService.generateTopic(name);
       } catch (error) {
         handleError(error);
       }

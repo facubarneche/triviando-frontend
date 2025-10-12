@@ -105,7 +105,7 @@ export default function TopicsPage() {
     setCreating(name);
 
     try {
-      const response = await topicService.generateTopic(name, userId);
+      const response = await topicService.generateTopic(name);
       const created = (response as ITopicDTO[]).find((t: ITopicDTO) => t.topic === name);
       if (created) {
         const newTopic: ITopic = {

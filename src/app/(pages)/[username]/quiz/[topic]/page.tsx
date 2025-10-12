@@ -193,9 +193,7 @@ const QuizPage = () => {
       }
     }
 
-    if (userId) {
-      quizService.generateQuiz(decodeURITopic, userId);
-    }
+    quizService.generateQuiz(decodeURITopic);
     router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
 
