@@ -26,10 +26,9 @@ class QuizService extends BaseService {
     return data;
   };
 
-  generateQuiz = (topic: string, userId: number) =>
+  generateQuiz = (topic: string) =>
     this.axiosService.post(`/preguntas/generate`, {
       topic,
-      userId,
       promptType: 'questionPrompter',
     });
 

@@ -6,17 +6,17 @@ import NewTopicModal from './NewTopicModal';
 import { useState } from 'react';
 
 interface NewTopicCardProps {
-  onCreateTopic: (name: string) => Promise<void>;
+  onGenerateTopic: (name: string) => Promise<void>;
 }
 
-const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
+const NewTopicCard = ({ onGenerateTopic }: NewTopicCardProps) => {
   const [open, setOpen] = useState(false);
   const cardAnimation = useCardAnimation();
 
   return (
     <AnimatedContainer style={{ height: '100%' }} animation="fade" {...cardAnimation}>
       <Card
-        hover={false}
+        hover={true}
         className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-shadow duration-200 cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
@@ -38,7 +38,7 @@ const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
       <NewTopicModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onCreateTopic={({ name }) => onCreateTopic(name)}
+        onGenerateTopic={({ name }) => onGenerateTopic(name)}
       />
     </AnimatedContainer>
   );

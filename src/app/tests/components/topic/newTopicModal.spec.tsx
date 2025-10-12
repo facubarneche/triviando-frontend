@@ -4,11 +4,16 @@ import CreateTopicModal from '@/app/(pages)/[username]/topics/components/NewTopi
 
 describe('CreateTopicModal', () => {
   const onClose = jest.fn();
-  const onCreateTopic = jest.fn();
+  const onGenerateTopic = jest.fn();
 
   const setup = (props = {}) =>
     render(
-      <CreateTopicModal isOpen={true} onClose={onClose} onCreateTopic={onCreateTopic} {...props} />,
+      <CreateTopicModal
+        isOpen={true}
+        onClose={onClose}
+        onGenerateTopic={onGenerateTopic}
+        {...props}
+      />,
     );
 
   beforeEach(() => {
@@ -27,7 +32,7 @@ describe('CreateTopicModal', () => {
     setup();
     fireEvent.click(screen.getByText('Crear Tema'));
     expect(screen.getByText('El nombre del tema es obligatorio')).toBeInTheDocument();
-    expect(onCreateTopic).not.toHaveBeenCalled();
+    expect(onGenerateTopic).not.toHaveBeenCalled();
   });
 
   it('clears errors when typing in fields', () => {
@@ -38,12 +43,12 @@ describe('CreateTopicModal', () => {
     expect(screen.queryByText('El nombre del tema es obligatorio')).not.toBeInTheDocument();
   });
 
-  it('calls onCreateTopic and onClose with valid input', () => {
+  it('calls onGenerateTopic and onClose with valid input', () => {
     setup();
     fireEvent.change(screen.getByLabelText('Nombre del tema'), { target: { value: 'Historia' } });
 
     fireEvent.click(screen.getByText('Crear Tema'));
-    expect(onCreateTopic).toHaveBeenCalledWith({ name: 'Historia' });
+    expect(onGenerateTopic).toHaveBeenCalledWith({ name: 'Historia' });
     expect(onClose).toHaveBeenCalled();
   });
 

@@ -89,7 +89,7 @@ const ProfileInfo = () => {
 
   return (
     <div>
-      <Card variant="solid" className="mb-6 border-0 shadow-lg hover:shadow-lg" hover={false}>
+      <Card variant="solid" className="mb-6 border-0 shadow-lg hover:shadow-lg">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center gap-6">
             <AnimatedContainer animation="scale" delay={0.1}>

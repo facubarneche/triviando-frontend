@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, BookOpen, X, Loader2 } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Progress } from '@/app/components/ui/progress';
@@ -47,6 +47,8 @@ const QuizPage = () => {
     type: string;
     description?: string;
   } | null>(null);
+  const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
+  const [submittingOption, setSubmittingOption] = useState<LetterType | null>(null);
   const confettiRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<TimerHandle>(null);
 
@@ -76,47 +78,67 @@ const QuizPage = () => {
   const progress = questions.length ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
 
   const handleOptionSelect = async (quizId: string, option: LetterType) => {
-    if (!userId) return;
+    // Prevenir múltiples submissions
+    if (isSubmittingAnswer || isCorrect !== null) return;
 
-    timerRef.current?.stop();
-    const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
-    const { score, correctOption } = await quizService.getQuizAnswer({
-      questionId: quizId,
-      user: { id: userId },
-      optionSelected: option,
-      millisecondsSpent,
-    });
-    setSelectedOption(option);
-    setCorrectOption({ text: correctOption.text, letter: correctOption.letter });
-
-    // Update answers array
-    const newAnswers = [...answers];
-    newAnswers[currentQuestionIndex] = option;
-    setAnswers(newAnswers);
-
-    if (currentQuestion && correctOption.letter === option) {
-      setIsCorrect(true);
-
-      if (score) {
-        setScore((prev) => prev + 1);
-        playSound('correct');
-
-        // Trigger confetti
-        if (confettiRef.current) {
-          const rect = confettiRef.current.getBoundingClientRect();
-          const x = (rect.left + rect.width / 2) / window.innerWidth;
-          const y = (rect.top + rect.height / 2) / window.innerHeight;
-
-          return confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { x, y: y - 0.1 },
-          });
-        }
-      }
+    // El middleware ya garantiza que userId existe, pero mantenemos validación por seguridad de tipos
+    if (!userId) {
+      console.error('User not authenticated');
+      return;
     }
-    setIsCorrect(false);
-    playSound('incorrect');
+
+    setIsSubmittingAnswer(true);
+    setSubmittingOption(option);
+
+    try {
+      timerRef.current?.stop();
+      const millisecondsSpent = timerRef.current?.getElapsedTime() || 0;
+      const { score, correctOption } = await quizService.getQuizAnswer({
+        questionId: quizId,
+        user: { id: userId },
+        optionSelected: option,
+        millisecondsSpent,
+      });
+
+      setSelectedOption(option);
+      setCorrectOption({ text: correctOption.text, letter: correctOption.letter });
+
+      // Update answers array
+      const newAnswers = [...answers];
+      newAnswers[currentQuestionIndex] = option;
+      setAnswers(newAnswers);
+
+      if (currentQuestion && correctOption.letter === option) {
+        setIsCorrect(true);
+
+        if (score) {
+          setScore((prev) => prev + 1);
+          playSound('correct');
+
+          // Trigger confetti
+          if (confettiRef.current) {
+            const rect = confettiRef.current.getBoundingClientRect();
+            const x = (rect.left + rect.width / 2) / window.innerWidth;
+            const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+            return confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { x, y: y - 0.1 },
+            });
+          }
+        }
+      } else {
+        setIsCorrect(false);
+        playSound('incorrect');
+      }
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+      // En caso de error, permitir intentar de nuevo
+    } finally {
+      setIsSubmittingAnswer(false);
+      setSubmittingOption(null);
+    }
   };
 
   const handleNext = async () => {
@@ -139,6 +161,9 @@ const QuizPage = () => {
       setDirection(1);
       setIsCorrect(null);
       setCurrentQuestionFeedback(null); // Limpiar feedback para la siguiente pregunta
+      // Reset submission state for next question
+      setIsSubmittingAnswer(false);
+      setSubmittingOption(null);
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption(null);
@@ -168,9 +193,7 @@ const QuizPage = () => {
       }
     }
 
-    if (userId) {
-      quizService.generateQuiz(decodeURITopic, userId);
-    }
+    quizService.generateQuiz(decodeURITopic);
     router.push(`/${username}/results?score=${score}&total=${questions.length}`);
   };
 
@@ -215,13 +238,21 @@ const QuizPage = () => {
     }
   };
 
+  if (isLoading) return <WaitingModal topic={decodeURITopic ?? 'General'} />;
+
   const getAnswerStyles = (isCorrect: boolean | null, option: string) => {
+    if (isSubmittingAnswer) {
+      // Durante submission, solo la opción seleccionada se ve diferente
+      if (option === submittingOption) {
+        return 'border-blue-400 bg-blue-50';
+      }
+      return 'opacity-50 cursor-not-allowed';
+    }
+
     if (isCorrect === null) return;
     if (isCorrect && option === selectedOption) return 'border-green-500 bg-green-100';
     if (!isCorrect && option === selectedOption) return 'border-red-500 bg-red-100';
   };
-
-  if (isLoading) return <WaitingModal topic={name ?? 'General'} />;
 
   if (!currentQuestion) return <ProblemModal />;
 
@@ -283,22 +314,30 @@ const QuizPage = () => {
                         id={`option-${index}`}
                         onClick={() => handleOptionSelect(currentQuestion.id, letter)}
                         className="peer sr-only"
-                        disabled={isCorrect !== null}
+                        disabled={isCorrect !== null || isSubmittingAnswer}
                       />
                       <Label
                         htmlFor={`option-${index}`}
-                        className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 cursor-pointer ${getAnswerStyles(
-                          isCorrect,
-                          letter,
-                        )}`}
+                        className={`flex flex-1 items-center justify-between rounded-md border-2 border-cyan-100 bg-white p-4 transition-all duration-200 ${
+                          isSubmittingAnswer && letter !== submittingOption
+                            ? 'cursor-not-allowed'
+                            : 'cursor-pointer'
+                        } ${getAnswerStyles(isCorrect, letter)}`}
                       >
-                        {text}
-                        {isCorrect && letter === selectedOption && (
+                        <span className="flex-1">{text}</span>
+
+                        {/* Loader para la opción que está siendo enviada */}
+                        {isSubmittingAnswer && letter === submittingOption && (
+                          <Loader2 className="h-5 w-5 text-blue-500 ml-2 animate-spin" />
+                        )}
+
+                        {/* Íconos de resultado después de la respuesta */}
+                        {isCorrect && letter === selectedOption && !isSubmittingAnswer && (
                           <CheckCircle2 className="h-5 w-5 text-green-500 ml-2" />
                         )}
-                        {isCorrect === false && letter === selectedOption && (
-                          <X className="h-5 w-5 text-red-500 ml-2" />
-                        )}
+                        {isCorrect === false &&
+                          letter === selectedOption &&
+                          !isSubmittingAnswer && <X className="h-5 w-5 text-red-500 ml-2" />}
                       </Label>
                     </AnimatedContainer>
                   ))}
