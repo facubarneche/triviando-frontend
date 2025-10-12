@@ -28,12 +28,12 @@ describe('TopicService', () => {
     });
   });
 
-  describe('createTopic', () => {
+  describe('generateTopic', () => {
     it('should call axiosService.post with correct payload and return data', async () => {
       const mockData = { id: 1, topic: 'history' };
       (topicService as any).axiosService.post = jest.fn().mockResolvedValue({ data: mockData });
 
-      const result = await topicService.createTopic('history', 1);
+      const result = await topicService.generateTopic('history', 1);
 
       expect((topicService as any).axiosService.post).toHaveBeenCalledWith('/preguntas/generate', {
         topic: 'history',
@@ -52,11 +52,11 @@ describe('TopicService', () => {
       await expect(topicService.getTopics({ id: 1 })).rejects.toThrow('Network error');
     });
 
-    it('should throw if createTopic fails', async () => {
+    it('should throw if generateTopic fails', async () => {
       (topicService as any).axiosService.post = jest
         .fn()
         .mockRejectedValue(new Error('Post error'));
-      await expect(topicService.createTopic('fail', 1)).rejects.toThrow('Post error');
+      await expect(topicService.generateTopic('fail', 1)).rejects.toThrow('Post error');
     });
   });
 });

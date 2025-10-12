@@ -18,13 +18,13 @@ import { Button } from '@/app/components/ui/button';
 interface CreateTopicModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateTopic: (topic: { name: string }) => void;
+  onGenerateTopic: (topic: { name: string }) => void;
 }
 
 export default function CreateTopicModal({
   isOpen,
   onClose,
-  onCreateTopic,
+  onGenerateTopic,
 }: CreateTopicModalProps) {
   const [topicName, setTopicName] = useState('');
   const [errors, setErrors] = useState<{ name?: string; general?: string }>({});
@@ -40,7 +40,7 @@ export default function CreateTopicModal({
       return;
     }
 
-    if (onCreateTopic) onCreateTopic({ name: topicName });
+    if (onGenerateTopic) onGenerateTopic({ name: topicName });
     setTopicName('');
     onClose();
   };

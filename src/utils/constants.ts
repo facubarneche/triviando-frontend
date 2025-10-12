@@ -55,7 +55,7 @@ export const APP_TEXTS = {
   topics: {
     title: 'Explora Temas',
     subtitle: 'Elige un tema para comenzar tu aventura de aprendizaje',
-    createTopic: 'Crear Nuevo Tema',
+    generateTopic: 'Crear Nuevo Tema',
     searchPlaceholder: 'Buscar temas...',
     noTopics: 'No hay temas disponibles',
     createFirst: 'Crea tu primer tema para comenzar',

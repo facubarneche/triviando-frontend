@@ -14,17 +14,17 @@ interface CreatingTopic {
 interface TopicsProps {
   topics: ITopic[];
   creatingTopics: CreatingTopic[];
-  onCreateTopic: (name: string) => Promise<void>;
+  onGenerateTopic: (name: string) => Promise<void>;
 }
 
-const Topics = ({ topics, creatingTopics, onCreateTopic }: TopicsProps) => {
+const Topics = ({ topics, creatingTopics, onGenerateTopic }: TopicsProps) => {
   return (
     <AnimatedList
       className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
       staggerDelay={0.1}
     >
       <AnimatedContainer key={'new-topic'} animation="slideUp" delay={0}>
-        <NewTopicCard onCreateTopic={onCreateTopic} />
+        <NewTopicCard onGenerateTopic={onGenerateTopic} />
       </AnimatedContainer>
 
       {/* Render creating topics */}

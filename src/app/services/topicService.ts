@@ -6,7 +6,7 @@ class TopicService extends BaseService {
     return data;
   };
 
-  createTopic = async (name: string, userId: number) => {
+  generateTopic = async (name: string, userId: number) => {
     const { data } = await this.axiosService.post('/preguntas/generate', {
       topic: name,
       userId,

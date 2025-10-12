@@ -14,7 +14,7 @@ jest.mock('@/app/components/topic-card', () => {
 
 jest.mock('@/app/(pages)/[username]/topics/components/NewTopicCard', () => {
   const MockNewTopicCard = (props: any) => (
-    <button data-testid="new-topic-card" onClick={() => props.onCreateTopic('Nuevo', 'Contexto')}>
+    <button data-testid="new-topic-card" onClick={() => props.onGenerateTopic('Nuevo', 'Contexto')}>
       Crear
     </button>
   );
@@ -31,7 +31,7 @@ jest.mock('@/app/(pages)/[username]/topics/components/TopicCardLoader', () => {
 });
 
 jest.mock('@/app/services/topicService', () => ({
-  topicService: { createTopic: jest.fn() },
+  topicService: { generateTopic: jest.fn() },
 }));
 jest.mock('react-toastify', () => ({
   toast: { success: jest.fn() },
@@ -56,19 +56,23 @@ describe('Topics component', () => {
   });
 
   it('renders initial topics', () => {
-    render(<Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={jest.fn()} />);
+    render(<Topics topics={mockTopics} creatingTopics={[]} onGenerateTopic={jest.fn()} />);
     expect(screen.getByText('Math')).toBeInTheDocument();
     expect(screen.getByText('Science')).toBeInTheDocument();
   });
 
   it('renders NewTopicCard', () => {
-    render(<Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={jest.fn()} />);
+    render(<Topics topics={mockTopics} creatingTopics={[]} onGenerateTopic={jest.fn()} />);
     expect(screen.getByTestId('new-topic-card')).toBeInTheDocument();
   });
 
   it('shows loader when creatingTopics contains a topic that does not exist', () => {
     render(
-      <Topics topics={mockTopics} creatingTopics={mockCreatingTopics} onCreateTopic={jest.fn()} />,
+      <Topics
+        topics={mockTopics}
+        creatingTopics={mockCreatingTopics}
+        onGenerateTopic={jest.fn()}
+      />,
     );
     expect(screen.getByTestId('topic-card-loader')).toHaveTextContent('LoaderTopic');
   });
@@ -87,7 +91,7 @@ describe('Topics component', () => {
       <Topics
         topics={mockTopics}
         creatingTopics={filteredCreatingTopics}
-        onCreateTopic={jest.fn()}
+        onGenerateTopic={jest.fn()}
       />,
     );
     expect(screen.queryByTestId('topic-card-loader')).not.toBeInTheDocument();
@@ -119,7 +123,7 @@ describe('Topics component', () => {
       <Topics
         topics={mockTopics}
         creatingTopics={multipleCreatingTopics}
-        onCreateTopic={jest.fn()}
+        onGenerateTopic={jest.fn()}
       />,
     );
     expect(screen.getByText('LoaderTopic1')).toBeInTheDocument();
@@ -127,17 +131,17 @@ describe('Topics component', () => {
   });
 
   it('handles error when topic creation fails', async () => {
-    (topicService.createTopic as jest.Mock).mockRejectedValueOnce(new Error('fail'));
+    (topicService.generateTopic as jest.Mock).mockRejectedValueOnce(new Error('fail'));
 
-    const onCreateTopic = async (name: string) => {
+    const onGenerateTopic = async (name: string) => {
       try {
-        await topicService.createTopic(name, 1);
+        await topicService.generateTopic(name, 1);
       } catch (error) {
         handleError(error);
       }
     };
 
-    render(<Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={onCreateTopic} />);
+    render(<Topics topics={mockTopics} creatingTopics={[]} onGenerateTopic={onGenerateTopic} />);
     fireEvent.click(screen.getByTestId('new-topic-card'));
 
     await waitFor(() => expect(handleError).toHaveBeenCalled());
@@ -145,14 +149,14 @@ describe('Topics component', () => {
 
   it('syncs topics when props change', () => {
     const { rerender } = render(
-      <Topics topics={mockTopics} creatingTopics={[]} onCreateTopic={jest.fn()} />,
+      <Topics topics={mockTopics} creatingTopics={[]} onGenerateTopic={jest.fn()} />,
     );
     expect(screen.getByText('Math')).toBeInTheDocument();
     rerender(
       <Topics
         topics={[{ name: 'History', icon: '📜', color: '#ccc', questionsCount: 1 }]}
         creatingTopics={[]}
-        onCreateTopic={jest.fn()}
+        onGenerateTopic={jest.fn()}
       />,
     );
     expect(screen.getByText('History')).toBeInTheDocument();

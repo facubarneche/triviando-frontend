@@ -6,10 +6,10 @@ import NewTopicModal from './NewTopicModal';
 import { useState } from 'react';
 
 interface NewTopicCardProps {
-  onCreateTopic: (name: string) => Promise<void>;
+  onGenerateTopic: (name: string) => Promise<void>;
 }
 
-const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
+const NewTopicCard = ({ onGenerateTopic }: NewTopicCardProps) => {
   const [open, setOpen] = useState(false);
   const cardAnimation = useCardAnimation();
 
@@ -38,7 +38,7 @@ const NewTopicCard = ({ onCreateTopic }: NewTopicCardProps) => {
       <NewTopicModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onCreateTopic={({ name }) => onCreateTopic(name)}
+        onGenerateTopic={({ name }) => onGenerateTopic(name)}
       />
     </AnimatedContainer>
   );
