@@ -1,6 +1,10 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { BaseService } from './baseService';
 import { useUserStore } from '../stores/userStore';
+import { getUserInfoFromToken } from '../security/jwtUtils';
+import { cloudinaryAvatarService } from './cloudinaryAvatarService';
+import type { Usuario } from '../domain/User';
 
 interface IUser {
   username: string;
@@ -36,12 +40,78 @@ export interface IUpdateUserData {
 }
 
 class UserService extends BaseService {
-  createUser = async ({ username, email, password }: IUser) => {
+  createUser = async ({ username, email, password }: IUser): Promise<Usuario> => {
     try {
+      // El backend devuelve un objeto con el token
       const { data } = await this.axiosService.post('/users', { username, email, password });
+      const token = data.token;
 
-      // Solo retornar los datos, no manejar cookies aquí
-      return data;
+      if (!token) {
+        throw new Error('No se recibió token del servidor');
+      }
+
+      // Guardar token en cookie
+      Cookies.set('token', token, {
+        expires: 1,
+        path: '/',
+        sameSite: 'lax',
+      });
+
+      // Extraer información del usuario desde el token JWT
+      const userInfo = getUserInfoFromToken(token);
+      if (!userInfo) {
+        throw new Error('Token JWT inválido recibido del servidor');
+      }
+
+      // Obtener datos completos del usuario desde el backend
+      let fullUserData;
+      try {
+        fullUserData = await this.getUserById(userInfo.id);
+      } catch (error) {
+        console.error('Error obteniendo datos completos del usuario:', error);
+        // Fallback: crear objeto básico con info del token
+        fullUserData = {
+          id: userInfo.id,
+          name: userInfo.fullname.split(' ')[0] || userInfo.fullname,
+          lastName: userInfo.fullname.split(' ').slice(1).join(' ') || '',
+          username: userInfo.username,
+          email: email, // Usar el email del registro
+          phoneNumber: '',
+          countryCode: '',
+          birthDate: '',
+          joinDate: '',
+          age: 0,
+        };
+      }
+
+      // Crear objeto Usuario compatible con Zustand
+      const user: Usuario = {
+        id: fullUserData.id,
+        name: fullUserData.name,
+        lastName: fullUserData.lastName,
+        username: fullUserData.username,
+        email: fullUserData.email,
+        account: userInfo.account,
+        token: token,
+        avatar: fullUserData.avatar,
+      };
+
+      // Guardar en Zustand store
+      useUserStore.getState().setUser(user);
+
+      // Buscar avatar del usuario en Cloudinary después del registro
+      if (!user.avatar) {
+        try {
+          const avatar = await cloudinaryAvatarService.getCurrentUserAvatar();
+          if (avatar) {
+            useUserStore.getState().setAvatar(avatar);
+          }
+        } catch {
+          // Avatar fetch failed, continue without avatar
+        }
+      }
+
+      return user;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response?.data?.error) {
         throw new Error(error.response.data.error);

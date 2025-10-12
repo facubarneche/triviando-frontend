@@ -1,44 +1,126 @@
 import { userService } from '../../services/userService';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useUserStore } from '../../stores/userStore';
+import { getUserInfoFromToken } from '../../security/jwtUtils';
+import { cloudinaryAvatarService } from '../../services/cloudinaryAvatarService';
+
+// Mock dependencies
+jest.mock('js-cookie');
+jest.mock('../../stores/userStore');
+jest.mock('../../security/jwtUtils');
+jest.mock('../../services/cloudinaryAvatarService');
 
 describe('UserService', () => {
+  const mockUserStore = {
+    getState: jest.fn(() => ({
+      setUser: jest.fn(),
+      setAvatar: jest.fn(),
+    })),
+  };
+
+  beforeEach(() => {
+    // Setup mocks
+    (useUserStore as unknown as jest.Mock).mockReturnValue(mockUserStore);
+    (getUserInfoFromToken as jest.Mock).mockReturnValue({
+      id: 1,
+      username: 'facuDev',
+      fullname: 'Facu Developer',
+      account: 'FREE',
+    });
+    (cloudinaryAvatarService.getCurrentUserAvatar as jest.Mock).mockResolvedValue(null);
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should send correct payload when creating a user', async () => {
+  it('should create user and update context correctly', async () => {
     const userPayload = {
       username: 'facuDev',
       email: 'facu@email.com',
       password: '12345678',
     };
 
-    const mockResponse = { id: 1, message: 'User created successfully' };
+    const mockResponse = { token: 'mock-jwt-token' };
+    const mockTokenData = {
+      id: 1,
+      username: 'facuDev',
+      fullname: 'Facu Developer',
+      account: 'FREE',
+    };
+    const mockUserData = {
+      id: 1,
+      name: 'Facu',
+      lastName: 'Developer',
+      username: 'facuDev',
+      email: 'facu@email.com',
+      phoneNumber: '',
+      countryCode: '',
+      birthDate: '',
+      joinDate: '',
+      age: 0,
+      avatar: 'avatar-id',
+    };
 
-    /**
-     * A Jest mock function that simulates an asynchronous POST request,
-     * resolving with an object containing the provided mock response data.
-     *
-     * @remarks
-     * This mock is typically used in unit tests to replace actual HTTP POST calls,
-     * allowing you to control and assert the returned data without making real network requests.
-     *
-     * @example
-     * postMock.mockResolvedValue({ data: mockResponse });
-     */
     const postMock = jest.fn().mockResolvedValue({ data: mockResponse });
+    const getUserByIdSpy = jest.spyOn(userService, 'getUserById').mockResolvedValue(mockUserData);
+    const setUserMock = jest.fn();
+    const setAvatarMock = jest.fn();
+
     // @ts-expect-error: Mocking axiosService.post for test in createUser
     userService.axiosService.post = postMock;
 
+    (getUserInfoFromToken as jest.Mock).mockReturnValue(mockTokenData);
+    (useUserStore.getState as jest.Mock).mockReturnValue({
+      setUser: setUserMock,
+      setAvatar: setAvatarMock,
+    });
+    (cloudinaryAvatarService.getCurrentUserAvatar as jest.Mock).mockResolvedValue(null);
+
     const result = await userService.createUser(userPayload);
 
-    expect(postMock).toHaveBeenCalledWith('/users', {
-      username: 'facuDev',
-      email: 'facu@email.com',
-      password: '12345678',
+    // Verify API call
+    expect(postMock).toHaveBeenCalledWith('/users', userPayload);
+
+    // Verify token storage
+    expect(Cookies.set).toHaveBeenCalledWith('token', 'mock-jwt-token', {
+      expires: 1,
+      path: '/',
+      sameSite: 'lax',
     });
 
-    expect(result).toEqual(mockResponse);
+    // Verify JWT decoding
+    expect(getUserInfoFromToken).toHaveBeenCalledWith('mock-jwt-token');
+
+    // Verify user data fetch
+    expect(getUserByIdSpy).toHaveBeenCalledWith(1);
+
+    // Verify store update
+    expect(setUserMock).toHaveBeenCalledWith({
+      id: 1,
+      name: 'Facu',
+      lastName: 'Developer',
+      username: 'facuDev',
+      email: 'facu@email.com',
+      account: 'FREE',
+      token: 'mock-jwt-token',
+      avatar: 'avatar-id',
+    });
+
+    // Verify return value
+    expect(result).toEqual({
+      id: 1,
+      name: 'Facu',
+      lastName: 'Developer',
+      username: 'facuDev',
+      email: 'facu@email.com',
+      account: 'FREE',
+      token: 'mock-jwt-token',
+      avatar: 'avatar-id',
+    });
+
+    getUserByIdSpy.mockRestore();
   });
 
   it('should throw error with backend message on createUser failure', async () => {

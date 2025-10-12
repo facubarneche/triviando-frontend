@@ -33,9 +33,11 @@ const FormRegister = () => {
   const onSubmit = async (data: FormData) => {
     try {
       setIsFetching(true);
-      const { username } = await userService.createUser({ ...data });
+      // Usar userService.createUser que ahora maneja cookies, tokens y contexto automáticamente
+      const user = await userService.createUser({ ...data });
       toast.success('Registro exitoso');
-      router.push(`/${username}/topics`);
+      // Redirigir usando el username del usuario registrado
+      router.push(`/${user.username}/topics`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       toast.error(e.message ?? 'Falló el registro');

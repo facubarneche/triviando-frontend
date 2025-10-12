@@ -29,9 +29,37 @@ export function middleware(request: NextRequest) {
   const publicRoutes = ['/login', '/register', '/policy', '/terms', '/unauthorized'];
   const isPublicRoute = publicRoutes.some((route) => url.pathname.startsWith(route));
 
+  // Rutas protegidas que requieren autenticación pero no siguen el patrón /{username}/...
+  const specialProtectedRoutes = ['/payment'];
+  const isSpecialProtectedRoute = specialProtectedRoutes.some((route) =>
+    url.pathname.startsWith(route),
+  );
+
   // Si es una ruta pública, permitir acceso
   if (isPublicRoute) {
     return NextResponse.next();
+  }
+
+  // Si es una ruta protegida especial, verificar solo autenticación
+  if (isSpecialProtectedRoute) {
+    if (!tokenCookie) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    try {
+      const token = tokenCookie.value;
+
+      // Verificar si el token ha expirado
+      if (isTokenExpired(token)) {
+        return NextResponse.redirect(new URL('/login', request.url));
+      }
+
+      // Token válido, permitir acceso
+      return NextResponse.next();
+    } catch (error) {
+      console.error('Error parsing JWT token:', error);
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
   }
 
   // Manejo de la ruta raíz '/'
