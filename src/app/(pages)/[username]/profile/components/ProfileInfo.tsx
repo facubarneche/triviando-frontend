@@ -35,7 +35,6 @@ const ProfileInfo = () => {
 
       try {
         const userData = await userService.getUserById(currentUser.id);
-        console.log('Fetched user data:', userData);
         setUser(userData);
       } catch (error) {
         handleError(error);
