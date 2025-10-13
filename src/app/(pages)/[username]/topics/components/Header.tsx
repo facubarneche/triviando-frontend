@@ -153,14 +153,14 @@ const Header = () => {
                   <div className="py-2">
                     <button
                       onClick={handleProfile}
-                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                       <User className="mr-3 h-4 w-4 text-teal-500" />
                       Perfil
                     </button>
                     <button
                       onClick={handleSubscription}
-                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                       <Crown className="mr-3 h-4 w-4 text-cyan-500" />
                       Suscripción
@@ -173,7 +173,7 @@ const Header = () => {
                   {/* Logout */}
                   <button
                     onClick={handleLogout}
-                    className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                   >
                     <LogOut className="mr-3 h-4 w-4" />
                     Cerrar Sesión

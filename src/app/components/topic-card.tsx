@@ -20,7 +20,7 @@ export default function TopicCard({ topic }: TopicCardProps) {
       <AnimatedContainer animation="fade" style={{ height: '100%' }} {...cardAnimation}>
         <Card
           hover={true}
-          className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300 cursor-pointer"
+          className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm transition-all duration-300 cursor-pointer"
         >
           <CardContent className="p-6 flex flex-col items-center text-center">
             <AnimatedContainer animation="bounce" delay={0.2}>
