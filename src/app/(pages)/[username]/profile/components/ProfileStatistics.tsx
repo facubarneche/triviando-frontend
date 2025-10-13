@@ -10,6 +10,10 @@ import AnimatedContainer from '@/app/components/AnimatedContainer';
 
 const ProfileStatistics = () => {
   const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(null);
+  const cardBaseClasses = 'border-0 shadow-lg bg-white/95 h-full hover:shadow-lg flex flex-col';
+  const headerBaseClasses =
+    'flex-1 flex flex-col items-center justify-center text-center px-4 pb-2';
+  const contentBaseClasses = 'flex-1 flex flex-col items-center justify-center text-center gap-3';
 
   useEffect(() => {
     const fetchUserStatistics = async () => {
@@ -42,22 +46,22 @@ const ProfileStatistics = () => {
     <div>
       <div className="grid gap-6 md:grid-cols-3 mb-6">
         <AnimatedContainer animation="scale" delay={0.1} className="h-full">
-          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg">
-            <CardHeader className="pb-2">
+          <Card className={cardBaseClasses}>
+            <CardHeader className={headerBaseClasses}>
               <CardTitle className="text-lg text-slate-600">Total de Quizzes</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className={contentBaseClasses}>
               <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.totalQuizzes}</p>
             </CardContent>
           </Card>
         </AnimatedContainer>
 
         <AnimatedContainer animation="scale" delay={0.2} className="h-full">
-          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg">
-            <CardHeader className="pb-2">
+          <Card className={cardBaseClasses}>
+            <CardHeader className={headerBaseClasses}>
               <CardTitle className="text-lg text-slate-600">Respuestas Correctas</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className={`${contentBaseClasses} gap-2`}>
               <p className="text-3xl font-bold text-[#5a189a]">{userStatistics.correctAnswers}</p>
               <p className="text-sm text-muted-foreground text-gray-600">
                 de {userStatistics.totalQuestions} preguntas
@@ -67,11 +71,11 @@ const ProfileStatistics = () => {
         </AnimatedContainer>
 
         <AnimatedContainer animation="scale" delay={0.3} className="h-full">
-          <Card className="border-0 shadow-lg bg-white/95 h-full hover:shadow-lg">
-            <CardHeader className="pb-2">
+          <Card className={cardBaseClasses}>
+            <CardHeader className={headerBaseClasses}>
               <CardTitle className="text-lg text-slate-600">Precisión</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className={contentBaseClasses}>
               <p className="text-3xl font-bold text-[#5a189a]">{accuracy}%</p>
               <Progress value={accuracy} className="h-2 mt-2 bg-[#9d4edd]/20" />
             </CardContent>
