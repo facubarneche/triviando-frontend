@@ -200,7 +200,7 @@ body {
 }
 
 .bg-premium-gradient button:not([class*='dropdown']):not([class*='menu']):hover {
-  transform: translateY(-1px);
+  transform: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 

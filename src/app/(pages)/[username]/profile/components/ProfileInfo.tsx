@@ -129,12 +129,12 @@ const ProfileInfo = () => {
                 </p>
               </AnimatedContainer>
 
-              <AnimatedContainer animation="slideUp" delay={0.4}>
+              <AnimatedContainer animation="slideUp" delay={0.4} disabled>
                 <div className="flex gap-2 mt-4 justify-center sm:justify-start">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
+                    className="gap-1 border-[#9d4edd] text-[#5a189a] hover:border-[#7b2cbf] hover:bg-[#9d4edd]/15 hover:text-[#5a189a]"
                     onClick={() => router.push(`/${user.username}/profile/edit`)}
                   >
                     <Edit className="h-4 w-4" />

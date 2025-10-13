@@ -349,6 +349,7 @@ const QuizPage = () => {
                     animation="slideUp"
                     delay={0.3}
                     className="mt-6 flex flex-col gap-3"
+                    disabled
                   >
                     {/* Botón Aprendamos juntos - solo para respuestas incorrectas */}
                     {isCorrect === false && (
