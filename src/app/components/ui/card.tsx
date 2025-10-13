@@ -14,8 +14,7 @@ const cardVariants = cva(
         solid: 'bg-white border-gray-200',
 
         // Card con gradiente sutil
-        gradient:
-          'bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-md border-white/30',
+        gradient: 'bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-md border-white/30',
 
         // Card destacado
         highlighted:
@@ -26,8 +25,7 @@ const cardVariants = cva(
           'bg-gradient-to-br from-green-50/95 to-emerald-50/95 backdrop-blur-md border-green-200/50',
 
         // Card de error
-        error:
-          'bg-gradient-to-br from-red-50/95 to-pink-50/95 backdrop-blur-md border-red-200/50',
+        error: 'bg-gradient-to-br from-red-50/95 to-pink-50/95 backdrop-blur-md border-red-200/50',
 
         // Card de warning
         warning:
@@ -57,11 +55,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, size, hover = false, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn(
-        cardVariants({ variant, size }),
-        hover && 'hover:shadow-xl',
-        className,
-      )}
+      className={cn(cardVariants({ variant, size }), hover && 'hover:shadow-xl', className)}
       {...props}
     />
   ),
@@ -79,7 +73,10 @@ const CardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivE
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('text-lg md:text-xl lg:text-2xl font-bold leading-tight tracking-tight text-gray-800', className)}
+      className={cn(
+        'text-lg md:text-xl lg:text-2xl font-bold leading-tight tracking-tight text-gray-800',
+        className,
+      )}
       {...props}
     />
   ),
@@ -99,11 +96,7 @@ CardDescription.displayName = 'CardDescription';
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('p-4 md:p-6 pt-0 text-gray-700', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('p-4 md:p-6 pt-0 text-gray-700', className)} {...props} />
   ),
 );
 CardContent.displayName = 'CardContent';
