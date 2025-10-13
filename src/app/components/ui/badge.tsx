@@ -14,7 +14,7 @@ const badgeVariants = cva(
           'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
         outline: 'text-foreground',
         premium:
-          'relative overflow-hidden border border-amber-200 bg-gradient-to-r from-[#f7e7b7] via-[#f3d48a] to-[#e8b75f] text-[#4a3510] shadow-[0_0_14px_rgba(240,196,119,0.35)] hover:from-[#f9edc4] hover:via-[#f5d99b] hover:to-[#e7ba63] hover:shadow-[0_0_18px_rgba(244,206,132,0.45)]',
+          'relative overflow-hidden border-none bg-gradient-to-r from-[#f7e7b7] via-[#f3d48a] to-[#e8b75f] text-[#4a3510] shadow-[0_0_14px_rgba(240,196,119,0.35)] hover:from-[#f9edc4] hover:via-[#f5d99b] hover:to-[#e7ba63] hover:shadow-[0_0_18px_rgba(244,206,132,0.45)]',
       },
     },
     defaultVariants: {
