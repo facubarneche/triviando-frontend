@@ -63,11 +63,5 @@ export function AccountBadge({
   );
 }
 
-// Hook para obtener el tipo de cuenta desde diferentes fuentes
-export function useAccountType(): AccountType | null {
-  // Implementación futura: integrar con useCurrentUser o store según necesidad
-  // Por ahora retornamos null para mantener compatibilidad
-  return null;
-}
 
 export default AccountBadge;

@@ -1,8 +1,7 @@
 'use client';
 
+import { AccountOptions, type AccountType } from '@/app/domain/User';
 import { useCurrentUser } from '@/app/utils/auth';
-
-type AccountType = 'FREE' | 'PREMIUM';
 
 interface BackgroundConfig {
   bodyClass: string;
@@ -10,10 +9,10 @@ interface BackgroundConfig {
 
 // Configuración modular para diferentes tipos de fondo según el account
 const backgroundConfig: Record<AccountType, BackgroundConfig> = {
-  FREE: {
+  [AccountOptions.FREE]: {
     bodyClass: 'bg-free-gradient',
   },
-  PREMIUM: {
+  [AccountOptions.PREMIUM]: {
     bodyClass: 'bg-premium-gradient',
   },
 } as const;
@@ -24,14 +23,14 @@ const backgroundConfig: Record<AccountType, BackgroundConfig> = {
 export function useAccountBackground() {
   const user = useCurrentUser();
 
-  const accountType: AccountType = user?.account || 'FREE';
+  const accountType: AccountType = user?.account || AccountOptions.FREE;
   const config = backgroundConfig[accountType];
 
   return {
     accountType,
     bodyClass: config.bodyClass,
-    isPremium: accountType === 'PREMIUM',
-    isFree: accountType === 'FREE',
+    isPremium: accountType === AccountOptions.PREMIUM,
+    isFree: accountType === AccountOptions.FREE,
   };
 }
 
@@ -39,7 +38,7 @@ export function useAccountBackground() {
  * Función helper que retorna las clases para aplicar al body
  */
 export function getBodyClassForAccount(account?: AccountType): string {
-  if (!account) return backgroundConfig.FREE.bodyClass;
+  if (!account) return backgroundConfig[AccountOptions.FREE].bodyClass;
   return backgroundConfig[account].bodyClass;
 }
 

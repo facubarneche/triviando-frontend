@@ -3,17 +3,14 @@ import { Progress } from '@/app/components/ui/progress';
 import { loginService } from '@/app/services/loginService';
 import { userService } from '@/app/services/userService';
 import { handleError } from '@/app/utils/errorHandler';
+import AnimatedContainer from '@/app/components/AnimatedContainer';
 import { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import { UserStatistics } from '../types';
-import AnimatedContainer from '@/app/components/AnimatedContainer';
+import { cardBaseClasses, contentBaseClasses, headerBaseClasses } from './styles';
 
 const ProfileStatistics = () => {
   const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(null);
-  const cardBaseClasses = 'border-0 shadow-lg bg-white/95 h-full hover:shadow-lg flex flex-col';
-  const headerBaseClasses =
-    'flex-1 flex flex-col items-center justify-center text-center px-4 pb-2';
-  const contentBaseClasses = 'flex-1 flex flex-col items-center justify-center text-center gap-3';
 
   useEffect(() => {
     const fetchUserStatistics = async () => {
