@@ -10,7 +10,7 @@ import AnimatedContainer from '@/app/components/AnimatedContainer';
 export default function Profile() {
   const { username } = useParams();
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
+    <div className="min-h-screen">
       <AnimatedContainer animation="slideDown" delay={0}>
         <header className="p-4">
           <Link
@@ -23,7 +23,7 @@ export default function Profile() {
         </header>
       </AnimatedContainer>
 
-      <main className="p-4 max-w-3xl mx-auto">
+      <main className="w-full p-4 md:px-6 lg:px-8 xl:px-10 max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto">
         <AnimatedContainer animation="slideUp" delay={0.2}>
           <ProfileInfo />
         </AnimatedContainer>

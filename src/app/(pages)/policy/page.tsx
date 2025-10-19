@@ -4,10 +4,9 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 
-
 export default function PolicyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
+    <div className="min-h-screen">
       <header className="p-4">
         <Link
           href="/register"

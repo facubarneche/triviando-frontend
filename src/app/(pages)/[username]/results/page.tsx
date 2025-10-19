@@ -60,7 +60,7 @@ function Results() {
   }, [percentage]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <AnimatedContainer animation="scale" delay={0} duration={0.5} className="w-full max-w-md">
         <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm">
           <CardHeader className="text-center">

@@ -1,4 +1,3 @@
-import { Badge } from '@/app/components/ui/badge';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
 import { CloudinaryAvatar } from '@/app/components/CloudinaryAvatar';
@@ -14,6 +13,8 @@ import { useCurrentUser } from '@/app/utils/auth';
 import { useUserAvatar } from '@/app/hooks/useUserAvatar';
 import { ProfileInfoSkeleton } from './ProfileInfoSkeleton';
 import AnimatedContainer from '@/app/components/AnimatedContainer';
+import { loginService } from '@/app/services/loginService';
+import { AccountBadge } from '@/app/components/AccountBadge';
 
 const ProfileInfo = () => {
   const { username } = useParams();
@@ -22,30 +23,18 @@ const ProfileInfo = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Avatar del usuario usando el hook personalizado
   const { avatarPublicId } = useUserAvatar();
 
   useEffect(() => {
     const fetchUser = async () => {
+      if (!currentUser?.id || currentUser.username !== username) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
       try {
-        // Si username es string, buscar por username, si es id, parsear a number
-        // Pero getUserById espera un number (id), así que hay que obtener el id del usuario logueado
-        // Si el perfil es el propio, usamos currentUser?.id, si no, habría que buscar por username
-        let userId: number;
-        if (currentUser?.username === username) {
-          if (!currentUser?.id) {
-            setUser(null);
-            setLoading(false);
-            return;
-          }
-          userId = currentUser.id;
-        } else {
-          // Si no es el usuario logueado, habría que buscar el id por username (no implementado aquí)
-          setUser(null);
-          setLoading(false);
-          return;
-        }
-        const userData = await userService.getUserById(userId);
+        const userData = await userService.getUserById(currentUser.id);
         setUser(userData);
       } catch (error) {
         handleError(error);
@@ -53,12 +42,12 @@ const ProfileInfo = () => {
         setLoading(false);
       }
     };
+
     fetchUser();
-  }, [username, currentUser?.id, currentUser?.username]);
+  }, [currentUser?.id, currentUser?.username, username]);
 
   const onLogOut = () => {
-    // Elimina la cookie 'usuario'
-    document.cookie = 'usuario=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    loginService.logout();
     router.push('/login');
   };
 
@@ -98,7 +87,7 @@ const ProfileInfo = () => {
                 fallbackText={
                   fullName
                     ? fullName.charAt(0) || ''
-                    : user.username?.charAt(0) || user.email.charAt(0)
+                    : user.username?.charAt(0) || user.email?.charAt(0) || ''
                 }
                 className="w-24 h-24 border-4 border-[#9d4edd]/30"
                 size={96}
@@ -110,12 +99,13 @@ const ProfileInfo = () => {
               <AnimatedContainer animation="slideLeft" delay={0.2}>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
                   <h1 className="text-2xl font-bold text-[#3c096c]">{user.username}</h1>
-                  <Badge
-                    variant="outline"
-                    className="bg-[#9d4edd]/10 text-[#5a189a] border-[#9d4edd]/30 self-center"
-                  >
-                    Quiz Master
-                  </Badge>
+                  {user.account && (
+                    <AccountBadge
+                      account={user.account}
+                      size="sm"
+                      className="self-center sm:self-auto"
+                    />
+                  )}
                 </div>
               </AnimatedContainer>
 
@@ -123,18 +113,20 @@ const ProfileInfo = () => {
                 {fullName && (
                   <h2 className="text-lg font-medium text-[#5a189a] mb-1">{fullName}</h2>
                 )}
-                <p className="text-muted-foreground">{user.email}</p>
-                <p className="text-sm text-muted-foreground text-gray-600 mt-2">
-                  Miembro desde {formatDateToMonthYear(user.joinDate)}
-                </p>
+                {user.email && <p className="text-muted-foreground">{user.email}</p>}
+                {user.joinDate && (
+                  <p className="text-sm text-muted-foreground text-gray-600 mt-2">
+                    Miembro desde {formatDateToMonthYear(user.joinDate)}
+                  </p>
+                )}
               </AnimatedContainer>
 
-              <AnimatedContainer animation="slideUp" delay={0.4}>
+              <AnimatedContainer animation="slideUp" delay={0.4} disabled>
                 <div className="flex gap-2 mt-4 justify-center sm:justify-start">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="gap-1 border-[#9d4edd] hover:bg-[#9d4edd]/10 text-[#5a189a]"
+                    className="gap-1 border-[#9d4edd] text-[#5a189a] hover:border-[#7b2cbf] hover:bg-[#9d4edd]/15 hover:text-[#5a189a]"
                     onClick={() => router.push(`/${user.username}/profile/edit`)}
                   >
                     <Edit className="h-4 w-4" />

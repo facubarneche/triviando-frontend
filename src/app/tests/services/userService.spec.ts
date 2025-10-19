@@ -1,4 +1,5 @@
 import { userService } from '../../services/userService';
+import type { IUserData } from '../../services/userService';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useUserStore } from '../../stores/userStore';
@@ -26,7 +27,7 @@ describe('UserService', () => {
       id: 1,
       username: 'facuDev',
       fullname: 'Facu Developer',
-      account: 'FREE',
+      account: 'FREE' as const,
     });
     (cloudinaryAvatarService.getCurrentUserAvatar as jest.Mock).mockResolvedValue(null);
   });
@@ -47,9 +48,9 @@ describe('UserService', () => {
       id: 1,
       username: 'facuDev',
       fullname: 'Facu Developer',
-      account: 'FREE',
+      account: 'FREE' as const,
     };
-    const mockUserData = {
+    const mockUserData: IUserData = {
       id: 1,
       name: 'Facu',
       lastName: 'Developer',
@@ -61,6 +62,7 @@ describe('UserService', () => {
       joinDate: '',
       age: 0,
       avatar: 'avatar-id',
+      account: 'FREE',
     };
 
     const postMock = jest.fn().mockResolvedValue({ data: mockResponse });
@@ -152,7 +154,7 @@ describe('UserService', () => {
 
   it('should get user by id', async () => {
     const userId = 5;
-    const mockUser = {
+    const mockUser: IUserData = {
       id: 5,
       name: 'Facu',
       lastName: 'Dev',
@@ -163,6 +165,7 @@ describe('UserService', () => {
       birthDate: '',
       joinDate: '',
       age: 20,
+      account: 'FREE',
     };
     const getMock = jest.fn().mockResolvedValue({ data: mockUser });
     // @ts-expect-error: Mocking axiosService.get for test in getUserById

@@ -5,7 +5,7 @@
 
 import { useUserStore } from '@/app/stores/userStore';
 import { useMemo } from 'react';
-import type { Usuario } from '@/app/stores/userStore';
+import type { Usuario } from '@/app/domain/User';
 
 /**
  * Hook para obtener el ID del usuario actual (Client-Side)

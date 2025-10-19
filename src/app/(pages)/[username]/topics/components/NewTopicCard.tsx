@@ -17,7 +17,7 @@ const NewTopicCard = ({ onGenerateTopic }: NewTopicCardProps) => {
     <AnimatedContainer style={{ height: '100%' }} animation="fade" {...cardAnimation}>
       <Card
         hover={true}
-        className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm hover:shadow-xl transition-shadow duration-200 cursor-pointer"
+        className="h-full border-0 shadow-lg bg-white/90 backdrop-blur-sm transition-shadow duration-200 cursor-pointer"
         onClick={(e) => {
           e.stopPropagation();
           setOpen(true);

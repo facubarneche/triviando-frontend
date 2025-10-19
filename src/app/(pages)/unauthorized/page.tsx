@@ -27,7 +27,7 @@ export default function Unauthorized() {
   }, [countdown, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex items-center justify-center p-4 overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden">
       <AnimatedContainer animation="slideUp" delay={0}>
         <Card className="border-0 shadow-2xl bg-white/90 backdrop-blur-sm p-8 text-center">
           <div className="flex flex-col items-center">

@@ -4,7 +4,7 @@ import { BaseService } from './baseService';
 import { useUserStore } from '../stores/userStore';
 import { getUserInfoFromToken } from '../security/jwtUtils';
 import { cloudinaryAvatarService } from './cloudinaryAvatarService';
-import type { Usuario } from '../domain/User';
+import type { AccountType, Usuario } from '../domain/User';
 
 interface IUser {
   username: string;
@@ -14,6 +14,7 @@ interface IUser {
 
 export interface IUserData {
   id: number;
+  account: AccountType;
   name: string;
   lastName: string;
   username: string;

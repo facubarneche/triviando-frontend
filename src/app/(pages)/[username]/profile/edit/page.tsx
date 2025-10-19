@@ -259,7 +259,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
+    <div className="min-h-screen">
       <header className="p-4">
         <Link
           href={`/${formData.username}/profile`}

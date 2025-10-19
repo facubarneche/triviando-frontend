@@ -257,7 +257,7 @@ const QuizPage = () => {
   if (!currentQuestion) return <ProblemModal />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 p-4">
+    <div className="min-h-screen p-4">
       <div className="max-w-2xl mx-auto">
         <Button
           variant="ghost"
@@ -349,6 +349,7 @@ const QuizPage = () => {
                     animation="slideUp"
                     delay={0.3}
                     className="mt-6 flex flex-col gap-3"
+                    disabled
                   >
                     {/* Botón Aprendamos juntos - solo para respuestas incorrectas */}
                     {isCorrect === false && (

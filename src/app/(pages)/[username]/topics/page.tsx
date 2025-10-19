@@ -144,7 +144,7 @@ export default function TopicsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600">
+    <div className="min-h-screen">
       <Header />
       <main className="p-4 max-w-4xl mx-auto">
         <StreakModal />

@@ -4,6 +4,13 @@ export interface LoginCredentials {
   password: string;
 }
 
+export enum AccountOptions {
+  FREE = 'FREE',
+  PREMIUM = 'PREMIUM',
+}
+
+export type AccountType = `${AccountOptions}`;
+
 //Respuesta del servidor al iniciar sesión
 export interface Usuario {
   id: number;
@@ -12,7 +19,7 @@ export interface Usuario {
   username: string;
   email?: string; // Email del usuario
   joinDate?: string; // Fecha de registro
-  account?: 'FREE' | 'PREMIUM'; // Tipo de cuenta
+  account?: AccountType; // Tipo de cuenta
   avatar?: string; // Cloudinary public_id for the avatar image
   token?: string; // JWT token para autenticación
 }

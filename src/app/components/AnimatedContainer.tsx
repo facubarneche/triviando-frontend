@@ -187,13 +187,13 @@ export const useButtonAnimation = () => {
 export const useCardAnimation = () => {
   return {
     whileHover: {
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
-      y: -2,
+      y: -4,
+      scale: 1.01,
     },
     transition: {
       duration: 0.2,
-      ease: 'easeInOut',
-      type: 'tween', // Más eficiente que spring
+      ease: 'easeOut',
+      type: 'tween',
     },
   };
 };
