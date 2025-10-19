@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { useAccountBackground } from '@/app/hooks/useAccountBackground';
 
 /**
@@ -9,6 +10,16 @@ import { useAccountBackground } from '@/app/hooks/useAccountBackground';
 export function DynamicBackground() {
   const { bodyClass } = useAccountBackground();
   const bodyRef = useRef<HTMLElement | null>(null);
+  const pathname = usePathname();
+
+  const isExcludedRoute = useMemo(() => {
+    if (!pathname) {
+      return false;
+    }
+
+    const excludedPrefixes = ['/login'];
+    return excludedPrefixes.some((route) => pathname.startsWith(route));
+  }, [pathname]);
 
   useEffect(() => {
     if (typeof document === 'undefined') {
@@ -23,8 +34,8 @@ export function DynamicBackground() {
     // Remover clases anteriores del body
     body.classList.remove(...removableClasses);
 
-    // Aplicar la clase correspondiente al tipo de cuenta si existe
-    if (bodyClass) {
+    if (!isExcludedRoute && bodyClass) {
+      // Aplicar la clase correspondiente al tipo de cuenta si corresponde a la ruta actual
       body.classList.add(bodyClass);
     }
 
@@ -35,7 +46,7 @@ export function DynamicBackground() {
       }
       bodyRef.current.classList.remove(...removableClasses);
     };
-  }, [bodyClass]);
+  }, [bodyClass, isExcludedRoute]);
 
   // Este componente no renderiza nada, solo aplica estilos al body
   return null;
