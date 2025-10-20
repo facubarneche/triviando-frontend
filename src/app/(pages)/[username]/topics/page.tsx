@@ -9,16 +9,20 @@ import { topicService } from '@/app/services/topicService';
 import { ITopic, ITopicDTO } from './types';
 import TopicsSkeleton from './components/TopicsSkeleton';
 import { StreakModal } from '@/app/components/modals/StreakModal';
+import { TopicLimitModal } from '@/app/components/modals/TopicLimitModal';
 import { handleError } from '@/app/utils/errorHandler';
 import { useCurrentUserId } from '@/app/utils/auth';
 import { toast } from 'react-toastify';
 import { useTopicCreationStore } from '@/app/stores/topicCreationStore';
+import { extractPlanLimitMessage, isPlanLimitError } from '@/app/utils/planLimitErrors';
 
 export default function TopicsPage() {
   const userId = useCurrentUserId();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [topics, setTopics] = useState<ITopic[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isTopicLimitModalOpen, setTopicLimitModalOpen] = useState(false);
+  const [topicLimitMessage, setTopicLimitMessage] = useState<string | null>(null);
   const { creatingTopics, setCreating, removeCreating, clearOldCreations, setRefreshCallback } =
     useTopicCreationStore();
   // Función para refrescar los tópicos
@@ -121,15 +125,17 @@ export default function TopicsPage() {
         );
 
         toast.success(`Tópico "${created.topic}" creado exitosamente.`);
-
-        // Remover del estado de creación (esto automáticamente ejecuta refresh)
-        removeCreating(name);
       } else {
         toast.error('Ocurrió un error al crear el tópico. Intenta nuevamente.');
-        removeCreating(name);
       }
     } catch (error) {
-      handleError(error);
+      if (isPlanLimitError(error, 'topics')) {
+        setTopicLimitMessage(extractPlanLimitMessage(error));
+        setTopicLimitModalOpen(true);
+      } else {
+        handleError(error);
+      }
+    } finally {
       removeCreating(name);
     }
   };
@@ -148,6 +154,14 @@ export default function TopicsPage() {
       <Header />
       <main className="p-4 max-w-4xl mx-auto">
         <StreakModal />
+        <TopicLimitModal
+          open={isTopicLimitModalOpen}
+          onClose={() => {
+            setTopicLimitModalOpen(false);
+            setTopicLimitMessage(null);
+          }}
+          message={topicLimitMessage}
+        />
         <Filter searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         {loading ? (
           <TopicsSkeleton />

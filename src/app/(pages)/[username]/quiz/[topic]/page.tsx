@@ -22,6 +22,9 @@ import Timer, { TimerHandle } from '../../../../components/Timer';
 import { playSound } from '@/app/utils/playSound';
 import QuestionFeedback from './components/QuestionFeedback';
 import { toast } from 'react-toastify';
+import { QuestionLimitModal } from '@/app/components/modals/QuestionLimitModal';
+import { extractPlanLimitMessage, isPlanLimitError } from '@/app/utils/planLimitErrors';
+import { handleError } from '@/app/utils/errorHandler';
 
 const QuizPage = () => {
   const userId = useCurrentUserId();
@@ -49,6 +52,8 @@ const QuizPage = () => {
   } | null>(null);
   const [isSubmittingAnswer, setIsSubmittingAnswer] = useState(false);
   const [submittingOption, setSubmittingOption] = useState<LetterType | null>(null);
+  const [isQuestionLimitModalOpen, setQuestionLimitModalOpen] = useState(false);
+  const [planLimitMessage, setPlanLimitMessage] = useState<string | null>(null);
   const confettiRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<TimerHandle>(null);
 
@@ -133,8 +138,12 @@ const QuizPage = () => {
         playSound('incorrect');
       }
     } catch (error) {
-      console.error('Error submitting answer:', error);
-      // En caso de error, permitir intentar de nuevo
+      if (isPlanLimitError(error, 'questions')) {
+        setPlanLimitMessage(extractPlanLimitMessage(error));
+        setQuestionLimitModalOpen(true);
+      } else {
+        handleError(error);
+      }
     } finally {
       setIsSubmittingAnswer(false);
       setSubmittingOption(null);
@@ -256,8 +265,23 @@ const QuizPage = () => {
 
   if (!currentQuestion) return <ProblemModal />;
 
+  const handleQuestionLimitClose = () => {
+    setQuestionLimitModalOpen(false);
+    setPlanLimitMessage(null);
+  };
+
+  const handleGoBackToTopics = () => {
+    router.push(`/${username}/topics`);
+  };
+
   return (
     <div className="min-h-screen p-4">
+      <QuestionLimitModal
+        open={isQuestionLimitModalOpen}
+        message={planLimitMessage}
+        onClose={handleQuestionLimitClose}
+        onKeepPracticing={handleGoBackToTopics}
+      />
       <div className="max-w-2xl mx-auto">
         <Button
           variant="ghost"
