@@ -22,6 +22,7 @@ import { useCurrentUser } from '@/app/utils/auth';
 import { suscriptionService } from '@/app/services/suscriptionService';
 import { userService } from '@/app/services/userService';
 import type { IUserData } from '@/app/services/userService';
+import { formatPremiumPrice, getPremiumBillingPeriodLabel } from '@/app/utils/premiumPricing';
 
 export default function Subscription() {
   const [isLoading, setIsLoading] = useState(false);
@@ -309,8 +310,10 @@ export default function Subscription() {
                 </div>
                 <CardTitle className="text-2xl mb-2">Plan Premium</CardTitle>
                 <div className="text-4xl font-bold mb-2">
-                  $9.99
-                  <span className="text-lg font-normal opacity-90">/mes</span>
+                  {formatPremiumPrice()}
+                  <span className="text-lg font-normal opacity-90">
+                    {getPremiumBillingPeriodLabel()}
+                  </span>
                 </div>
                 <p className="opacity-90">Facturación mensual</p>
               </CardHeader>
