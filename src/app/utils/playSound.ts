@@ -4,23 +4,37 @@
  */
 
 // Tipos de sonidos disponibles
-export type SoundType = 'correct' | 'incorrect' | 'excellent' | 'loser' | 'click' | 'hover';
+export type SoundType =
+  | 'correct_answer'
+  | 'incorrect'
+  | 'excellent'
+  | 'loser'
+  | 'click'
+  | 'hover'
+  | 'timer_safe'
+  | 'timer_warning'
+  | 'timer_critical';
 
 // Configuración de sonidos
 const SOUND_CONFIG = {
   baseVolume: 0.7,
   paths: {
-    correct: '/sounds/correct.mp3',
+    correct_answer: '/sounds/correct_answer.mp3',
     incorrect: '/sounds/incorrect.mp3',
     excellent: '/sounds/excelent.mp3',
     loser: '/sounds/looser.mp3',
-    click: '/sounds/click.mp3', 
+    click: '/sounds/click.mp3',
     hover: '/sounds/hover.mp3',
-  },
+    timer_safe: '/sounds/green_timer.mp3',
+    timer_warning: '/sounds/yellow_timer.mp3',
+    timer_critical: '/sounds/red_timer.mp3',
+  } satisfies Record<SoundType, string>,
 } as const;
 
 // Cache de audio para mejor rendimiento
 const audioCache = new Map<string, HTMLAudioElement>();
+
+const resolveSoundPath = (type: SoundType) => SOUND_CONFIG.paths[type];
 
 /**
  * Carga y cachea un archivo de audio
@@ -43,7 +57,7 @@ const loadAudio = (src: string): HTMLAudioElement => {
  */
 export const playSound = (type: SoundType, volume?: number) => {
   try {
-    const soundPath = SOUND_CONFIG.paths[type];
+    const soundPath = resolveSoundPath(type);
     if (!soundPath) {
       console.warn(`Sound type "${type}" not found`);
       return;
@@ -90,6 +104,21 @@ export const stopAllSounds = () => {
   });
 };
 
+export const stopSound = (type: SoundType) => {
+  const soundPath = resolveSoundPath(type);
+  if (!soundPath) {
+    return;
+  }
+
+  const cachedAudio = audioCache.get(soundPath);
+  if (!cachedAudio) {
+    return;
+  }
+
+  cachedAudio.pause();
+  cachedAudio.currentTime = 0;
+};
+
 /**
  * Configura el volumen global
  */
@@ -116,7 +145,7 @@ export const preloadSounds = () => {
  */
 export const useSounds = () => {
   return {
-    playCorrect: () => playSound('correct'),
+    playCorrect: () => playSound('correct_answer'),
     playIncorrect: () => playSound('incorrect'),
     playExcellent: () => playSound('excellent'),
     playLoser: () => playSound('loser'),
@@ -130,8 +159,16 @@ export const useSounds = () => {
 
 // Funciones de conveniencia para sonidos específicos de quiz
 export const playQuizSounds = {
-  correctAnswer: () => playSound('correct'),
+  correctAnswer: () => playSound('correct_answer'),
   incorrectAnswer: () => playSound('incorrect'),
   quizComplete: () => playSound('excellent'),
   quizFailed: () => playSound('loser'),
+  timerSafe: () => playSound('timer_safe'),
+  timerWarning: () => playSound('timer_warning'),
+  timerCritical: () => playSound('timer_critical'),
+};
+
+// Test-only helper to allow cache cleanup between specs
+export const __resetSoundCache = () => {
+  audioCache.clear();
 };
