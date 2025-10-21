@@ -113,7 +113,7 @@ const QuizPage = () => {
 
         if (score) {
           setScore((prev) => prev + 1);
-          playSound('correct');
+          playSound('correct_answer');
 
           // Trigger confetti
           if (confettiRef.current) {
